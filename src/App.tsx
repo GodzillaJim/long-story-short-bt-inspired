@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Dashboard from './screens/Dashboard';
 import LoginScreen from './screens/LoginScreen';
@@ -8,7 +9,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginScreen />} />
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/home" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   );
