@@ -1,4 +1,3 @@
-import { CssBaseline } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
@@ -22,12 +21,7 @@ const Dashboard = () => {
       }
     }
   }, [authToken, location, navigate]);
-  return (
-    <div>
-      <CssBaseline />
-      Hello dashboard
-    </div>
-  );
+  return <div>Hello world</div>;
 };
 
 export default Dashboard;
