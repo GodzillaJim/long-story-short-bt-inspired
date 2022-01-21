@@ -11,6 +11,7 @@ import MainLayout from './layout/MainLayout';
 import UserView from './screens/UserView';
 import TagsView from './screens/TagsView';
 import ArticlesView from './screens/ArticlesView';
+import EditArticleContainer from './screens/EditArticleContainer';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="users" element={<UserView />} />
           <Route path="tags" element={<TagsView />} />
           <Route path="articles" element={<ArticlesView />} />
+          <Route path={'articles/:id'} element={<EditArticleContainer />} />
         </Route>
       </Routes>
     </BrowserRouter>

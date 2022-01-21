@@ -1,4 +1,5 @@
 import {
+  Category,
   ChevronLeft,
   ChevronRight,
   Home,
@@ -81,6 +82,13 @@ const CustomSideBar = (props: ICustomSideBar) => {
       link: '/articles',
     },
     { classes, key: `key-${v4()}`, text: 'Tags', icon: <Tag />, link: '/tags' },
+    {
+      classes,
+      key: `key-${v4()}`,
+      text: 'Category',
+      icon: <Category />,
+      link: '/categories',
+    },
   ];
   return (
     <div>
