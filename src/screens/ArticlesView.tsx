@@ -1,11 +1,9 @@
 import { Check, Close, Edit, Home, Notes } from '@mui/icons-material';
 import {
-  Icon,
   IconButton,
   Pagination,
   Paper,
   TableCell,
-  TablePagination,
   TableRow,
 } from '@mui/material';
 import React, { useState } from 'react';
@@ -17,8 +15,7 @@ import { getArticles, IArticle } from '../data/Articles';
 import { SomeContainer } from './Dashboard';
 
 const ArticlesView = () => {
-  const [page, setPage] = useState<number>(1);
-  const [numberOfPages, setNumberOfPages] = useState<number>(10);
+  const [page] = useState<number>(1);
   const items = [
     {
       name: 'Admin',
@@ -55,7 +52,11 @@ const ArticlesView = () => {
       <SomeContainer>
         <div className="flex flex-col mb-4 h-100 gap-5">
           <div className="articles-top-section">
-            <TopSection items={items} actionText={'Create a Blog'} />
+            <TopSection
+              items={items}
+              onClick={() => navigate('/articles/create')}
+              actionText={'Create a Blog'}
+            />
           </div>
           <div className="articles-table">
             <DataList

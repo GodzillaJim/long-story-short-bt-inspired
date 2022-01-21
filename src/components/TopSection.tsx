@@ -1,4 +1,3 @@
-import { Home } from '@mui/icons-material';
 import { useMediaQuery } from '@mui/material';
 import React from 'react';
 import CustomAddButton from './CustomAddButton';
@@ -12,6 +11,7 @@ interface ITopSection {
     icon: JSX.Element;
   }[];
   actionText: string;
+  onClick?: () => void;
 }
 const TopSection = (props: ITopSection) => {
   const matches = useMediaQuery('(max-width:600px)');
@@ -24,7 +24,10 @@ const TopSection = (props: ITopSection) => {
           </div>
         )}
         <div>
-          <CustomAddButton onClick={() => ''} text={'Create Blog'} />
+          <CustomAddButton
+            onClick={() => props.onClick && props.onClick()}
+            text={'Create Blog'}
+          />
         </div>
       </div>
     </div>

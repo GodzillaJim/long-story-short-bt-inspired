@@ -36,7 +36,11 @@ const Dashboard = () => {
     <SomeContainer>
       <div className="flex flex-col gap-5">
         <div className="w-full dashboard-container-bar">
-          <TopSection items={items} actionText={'Create a Blog'} />
+          <TopSection
+            items={items}
+            onClick={() => navigate('/articles/create')}
+            actionText={'Create a Blog'}
+          />
         </div>
         <div className="dashboard-search-container">
           <Paper>Hello world</Paper>
