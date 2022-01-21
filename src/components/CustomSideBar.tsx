@@ -15,8 +15,9 @@ import {
   ListItemText,
   useMediaQuery,
 } from '@mui/material';
-import { makeStyles, useTheme } from '@mui/styles';
-import React, { useState } from 'react';
+import { makeStyles } from '@mui/styles';
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router';
 import { v4 } from 'uuid';
 
 const useStyles = makeStyles((theme: any) => ({
@@ -25,10 +26,12 @@ const useStyles = makeStyles((theme: any) => ({
     width: props.width,
     position: 'fixed',
     paddingTop: '30px',
-    backgroundColor: '#8a8a8a',
+    backgroundColor: '#FFF',
     left: 0,
     fontFamily: 'Source Sans Pro',
     transition: '0.5s',
+    borderRight: '1px solid #e6e6f9',
+    boxShadow: '2px 0px 5px 0px rgba(0,0,0,0.74)',
   }),
   listItem: {
     overflow: 'hidden',
@@ -55,6 +58,30 @@ const CustomSideBar = (props: ICustomSideBar) => {
   const handleMouseLeave = () => {
     props.setMouseOver();
   };
+  const items = [
+    {
+      classes,
+      key: `key-${v4()}`,
+      text: 'Home',
+      icon: <Home />,
+      link: '/home',
+    },
+    {
+      classes,
+      key: `key-${v4()}`,
+      text: 'Users',
+      icon: <Person />,
+      link: '/users',
+    },
+    {
+      classes,
+      key: `key-${v4()}`,
+      text: 'Articles',
+      icon: <Notes />,
+      link: '/articles',
+    },
+    { classes, key: `key-${v4()}`, text: 'Tags', icon: <Tag />, link: '/tags' },
+  ];
   return (
     <div>
       {matches && (
@@ -68,30 +95,9 @@ const CustomSideBar = (props: ICustomSideBar) => {
                 {!rtl ? <ChevronLeft /> : <ChevronRight />}
               </IconButton>
             </ListItem>
-            <CustomListItem
-              classes={classes}
-              key={`key-${v4()}`}
-              text="Home"
-              icon={<Home />}
-            />
-            <CustomListItem
-              classes={classes}
-              key={`key-${v4()}`}
-              text="Users"
-              icon={<Person />}
-            />
-            <CustomListItem
-              classes={classes}
-              key={`key-${v4()}`}
-              text="Notes"
-              icon={<Notes />}
-            />
-            <CustomListItem
-              classes={classes}
-              key={`key-${v4()}`}
-              text="Tags"
-              icon={<Tag />}
-            />
+            {items.map((item: any) => (
+              <CustomListItem {...item} />
+            ))}
           </List>
         </Drawer>
       )}
@@ -102,30 +108,9 @@ const CustomSideBar = (props: ICustomSideBar) => {
           className={classes.drawerContainer}>
           {!matches && (
             <List>
-              <CustomListItem
-                classes={classes}
-                key={`key-${v4()}`}
-                text="Home"
-                icon={<Home />}
-              />
-              <CustomListItem
-                classes={classes}
-                key={`key-${v4()}`}
-                text="Users"
-                icon={<Person />}
-              />
-              <CustomListItem
-                classes={classes}
-                key={`key-${v4()}`}
-                text="Notes"
-                icon={<Notes />}
-              />
-              <CustomListItem
-                classes={classes}
-                key={`key-${v4()}`}
-                text="Tags"
-                icon={<Tag />}
-              />
+              {items.map((item: any) => (
+                <CustomListItem {...item} />
+              ))}
             </List>
           )}
         </div>
@@ -138,12 +123,20 @@ interface IProp {
   text: string;
   icon: JSX.Element;
   classes: any;
+  link: string;
 }
 const CustomListItem = (props: IProp) => {
   const { classes } = props;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isActive = location.pathname === props.link;
   const matches = useMediaQuery('(max-width:600px)');
   return (
-    <ListItem className={classes.listItem} button>
+    <ListItem
+      onClick={() => navigate(props.link)}
+      className={classes.listItem}
+      button
+      color={isActive ? 'secondary' : 'inherit'}>
       <ListItemIcon className={matches ? classes.itemMargin : ''}>
         {props.icon}
       </ListItemIcon>

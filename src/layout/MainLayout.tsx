@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
       : props.open
       ? 'calc(100% - 240px)'
       : 'calc(100% - 60px)',
-    backgroundColor: 'lightgray',
     height: '100%',
     transition: 'margin-left .5s',
     marginLeft: !props.matches ? (props.mouseOver ? '220px' : '0px') : '0px',
@@ -49,7 +48,7 @@ const MainLayout = () => {
         </MDBCol>
       </MDBRow>
       <MDBRow className={classes.containerRow}>
-        <div className="flex flex-row">
+        <div className="flex flex-row w-full">
           <div className={classes.sidebar}>
             <CustomSideBar
               mouseOver={mouseOver}

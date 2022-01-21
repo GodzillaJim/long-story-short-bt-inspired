@@ -1,6 +1,9 @@
+import { Home } from '@mui/icons-material';
+import { Paper, useMediaQuery } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
+import TopSection from '../components/TopSection';
 import { RootState } from '../redux/combineReducers';
 
 const Dashboard = () => {
@@ -21,7 +24,38 @@ const Dashboard = () => {
       }
     }
   }, [authToken, location, navigate]);
-  return <div>Hello world</div>;
+  const items = [
+    {
+      name: 'Admin',
+      link: '/home',
+      isActive: false,
+      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
+    },
+  ];
+  return (
+    <SomeContainer>
+      <div className="flex flex-col gap-5">
+        <div className="w-full dashboard-container-bar">
+          <TopSection items={items} actionText={'Create a Blog'} />
+        </div>
+        <div className="dashboard-search-container">
+          <Paper>Hello world</Paper>
+        </div>
+      </div>
+    </SomeContainer>
+  );
+};
+
+export const SomeContainer = (props: { children: JSX.Element }) => {
+  const matches = useMediaQuery('(max-width:600px)');
+  return (
+    <div
+      className={
+        matches ? 'flex flex-col gap-5 my-3' : 'flex flex-col gap-5 my-3 mx-5'
+      }>
+      {props.children}
+    </div>
+  );
 };
 
 export default Dashboard;

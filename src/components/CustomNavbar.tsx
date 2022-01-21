@@ -13,8 +13,8 @@ import React from 'react';
 
 const useStyles = makeStyles((theme: DefaultTheme) => ({
   navbar: {
-    background: '',
-    borderBottom: '1px solid',
+    background: '#fff !important',
+    borderBottom: '1px solid #e6e6f9',
   },
   brandText: {
     fontStyle: 'italic',
@@ -42,7 +42,7 @@ const CustomNavbar = (props: ICustomNavbar) => {
 
   return (
     <div>
-      <AppBar className={classes.navbar} elevation={0}>
+      <AppBar className={classes.navbar} elevation={1}>
         <Toolbar>
           {matches && (
             <IconButton onClick={() => props.openDrawer(!props.open)}>
@@ -51,6 +51,7 @@ const CustomNavbar = (props: ICustomNavbar) => {
           )}
           <Typography
             className={classes.brandText}
+            color="textPrimary"
             variant="h6"
             component="div"
             sx={{ flexGrow: 1 }}>

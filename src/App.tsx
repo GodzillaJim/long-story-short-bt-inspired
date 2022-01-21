@@ -8,6 +8,9 @@ import './styles/tailwind.css';
 import Dashboard from './screens/Dashboard';
 import LoginScreen from './screens/LoginScreen';
 import MainLayout from './layout/MainLayout';
+import UserView from './screens/UserView';
+import TagsView from './screens/TagsView';
+import ArticlesView from './screens/ArticlesView';
 
 function App() {
   return (
@@ -16,6 +19,9 @@ function App() {
         <Route path="/login" element={<LoginScreen />} />
         <Route path="/" element={<MainLayout />}>
           <Route path="home" element={<Dashboard />} />
+          <Route path="users" element={<UserView />} />
+          <Route path="tags" element={<TagsView />} />
+          <Route path="articles" element={<ArticlesView />} />
         </Route>
       </Routes>
     </BrowserRouter>
