@@ -10,8 +10,9 @@ interface ITopSection {
     isActive: boolean;
     icon: JSX.Element;
   }[];
-  actionText: string;
+  actionText?: string;
   onClick?: () => void;
+  breadCrumbsOnly?: boolean;
 }
 const TopSection = (props: ITopSection) => {
   const matches = useMediaQuery('(max-width:600px)');
@@ -23,12 +24,14 @@ const TopSection = (props: ITopSection) => {
             <CustomBreadcrumbContainer items={props.items} />
           </div>
         )}
-        <div>
-          <CustomAddButton
-            onClick={() => props.onClick && props.onClick()}
-            text={'Create Blog'}
-          />
-        </div>
+        {!props.breadCrumbsOnly && (
+          <div>
+            <CustomAddButton
+              onClick={() => props.onClick && props.onClick()}
+              text={props.actionText || ''}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

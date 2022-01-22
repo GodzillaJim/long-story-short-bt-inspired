@@ -3,6 +3,7 @@ import { NavigateNext } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 import { v4 } from 'uuid';
+import { useNavigate } from 'react-router';
 
 interface IItem {
   name: string;
@@ -23,6 +24,7 @@ const useStyles = makeStyles({
 });
 const CustomBreadcrumbContainer = (props: IContainer) => {
   const classes = useStyles();
+  const navigate = useNavigate();
   return (
     <Breadcrumbs
       separator={<NavigateNext fontSize="small" />}
@@ -33,6 +35,10 @@ const CustomBreadcrumbContainer = (props: IContainer) => {
           key={`key-${v4()}`}
           underline="hover"
           color={item.isActive ? 'primary' : 'text.primary'}
+          onClick={(e: any) => {
+            e.preventDefault();
+            navigate(item.link);
+          }}
           href={item.link}>
           <div className="flex flex-row">
             <div>{item.icon}</div>
