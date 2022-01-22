@@ -1,71 +1,36 @@
-import { useEffect, useState } from 'react';
-import SunEditor from 'suneditor-react';
-import 'suneditor/dist/css/suneditor.min.css';
-
-const CustomRichTextEditor = () => {
-  const [content, setContent] = useState<string>('');
-  const options = {
-    rtl: false,
-    katex: 'window.katex',
-    imageGalleryUrl:
-      'https://etyswjpn79.execute-api.ap-northeast-1.amazonaws.com/suneditor-demo',
-    videoFileInput: false,
-    tabDisable: false,
-    buttonList: [
-      [
-        'undo',
-        'redo',
-        'font',
-        'fontSize',
-        'formatBlock',
-        'paragraphStyle',
-        'blockquote',
-        'bold',
-        'underline',
-        'italic',
-        'strike',
-        'subscript',
-        'superscript',
-        'fontColor',
-        'hiliteColor',
-        'textStyle',
-        'removeFormat',
-        'outdent',
-        'indent',
-        'align',
-        'horizontalRule',
-        'list',
-        'lineHeight',
-        'table',
-        'link',
-        'image',
-        'video',
-        'audio',
-        'math',
-        'imageGallery',
-        'fullScreen',
-        'showBlocks',
-        'codeView',
-        'preview',
-        'print',
-        'save',
-        'template',
-      ],
-    ],
-    'lang(In nodejs)': 'en',
-    height: '300px',
+import React, { useState } from 'react';
+import { Editor } from '@tinymce/tinymce-react';
+interface IProps {
+  handleChange: (newValue: string) => void;
+  value: string;
+}
+const CustomRichTextEditor = (props: IProps) => {
+  const [value, setValue] = useState<any>('');
+  const handleEditorChange = (a: string, e: any) => {
+    props.handleChange(a);
+    setValue(a);
   };
-  useEffect(() => {
-    console.log(content);
-  });
   return (
-    <div>
-      <SunEditor
-        setContents={content}
-        onChange={setContent}
-        setOptions={{ ...options }}
-      />
-    </div>
+    <Editor
+      apiKey="emuxgxkadilqqthyqj7hactojqo01jx5zp7jwyuujq0t2d1v"
+      initialValue="<p>Initial content</p>"
+      init={{
+        height: 500,
+        menubar: false,
+        plugins: [
+          'advlist autolink lists link image',
+          'charmap print preview anchor help',
+          'searchreplace visualblocks code',
+          'insertdatetime media table paste wordcount',
+        ],
+        toolbar:
+          'undo redo | formatselect | bold italic | \
+          alignleft aligncenter alignright | \
+          bullist numlist outdent indent | help',
+      }}
+      onEditorChange={handleEditorChange}
+    />
   );
 };
+
 export default CustomRichTextEditor;

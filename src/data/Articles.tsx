@@ -68,6 +68,9 @@ export const getArticles = () => {
 interface ICategory {
   name: string;
   createdAt: Date;
+  id: string;
+  label: string;
+  value: string;
 }
 export const getCategories = () => {
   const temp = [];
@@ -75,6 +78,9 @@ export const getCategories = () => {
     temp.push({
       name: lorem.generateWords(1),
       createdAt: new Date(),
+      id: v4(),
+      label: lorem.generateWords(1),
+      value: lorem.generateWords(1),
     } as ICategory);
   }
   return temp;

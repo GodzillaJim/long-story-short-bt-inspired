@@ -1,0 +1,34 @@
+.custom-select__control {
+    display: flex;
+    flex-direction: row;
+    border: none;
+  }
+  .custom-select_control:hover {
+    border: 1px solid #667dff;
+  }
+  .custom-select__control:focus {
+    border: 1px solid #667dff;
+  }
+  .custom-select__control:focus-visible {
+    border: none;
+  }
+  .custom-select__control:focus-within {
+    border: none;
+  }
+  .custom-select__control--menu-is-open:hover {
+    border: 1px solid #667dff;
+  }
+  .custom-select__control--menu-is-open:focus {
+    border: 1px solid #667dff;
+  }
+  .custom-select__control--menu-is-open:focus-visible {
+    border: none;
+  }
+  .custom-select__control--menu-is-open:focus-within {
+    border: none;
+  }
+  .isActive,
+  .isActive::after,
+  .is-open {
+    border: none;
+  }
