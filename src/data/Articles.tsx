@@ -20,7 +20,12 @@ export interface IArticle {
   prompt: string;
   category: string;
   tags: string[];
-  comments: { firstName: string; lastName: string; content: string }[];
+  comments: {
+    firstName: string;
+    lastName: string;
+    content: string;
+    date: Date;
+  }[];
   author: string;
   archived: boolean;
 }
@@ -30,7 +35,12 @@ export const getArticles = () => {
     const article = {
       id: `key-${v4()}`,
       title: lorem.generateWords(6),
-      content: lorem.generateParagraphs(4),
+      content:
+        '<p>/t' +
+        lorem.generateParagraphs(3) +
+        '</p><p>' +
+        lorem.generateParagraphs(3) +
+        '</p>',
       published: lorem.generator.generateRandomInteger(1, 100) % 2 === 0,
       summary: lorem.generateParagraphs(1),
       prompt: lorem.generateParagraphs(1),
@@ -45,16 +55,19 @@ export const getArticles = () => {
           firstName: lorem.generateWords(1),
           lastName: lorem.generateWords(1),
           content: lorem.generateSentences(3),
+          date: new Date(),
         },
         {
           firstName: lorem.generateWords(1),
           lastName: lorem.generateWords(1),
           content: lorem.generateSentences(3),
+          date: new Date(),
         },
         {
           firstName: lorem.generateWords(1),
           lastName: lorem.generateWords(1),
           content: lorem.generateSentences(3),
+          date: new Date(),
         },
       ],
       author: lorem.generateWords(1),

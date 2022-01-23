@@ -32,7 +32,8 @@ const useStyles = makeStyles((theme: any) => ({
     fontFamily: 'Source Sans Pro',
     transition: '0.5s',
     borderRight: '1px solid #e6e6f9',
-    boxShadow: '2px 0px 5px 0px rgba(0,0,0,0.74)',
+    boxShadow:
+      '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
   }),
   listItem: {
     overflow: 'hidden',

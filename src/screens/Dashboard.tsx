@@ -60,7 +60,7 @@ export const SomeContainer = (props: { children: JSX.Element }) => {
   return (
     <div
       className={
-        matches ? 'flex flex-col gap-5 my-3' : 'flex flex-col gap-5 my-3 mx-5'
+        matches ? 'flex flex-col gap-5 my-3' : 'flex flex-col gap-5 my-3 mx-3'
       }>
       {props.children}
     </div>
