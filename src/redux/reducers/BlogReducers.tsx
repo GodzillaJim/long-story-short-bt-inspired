@@ -6,6 +6,12 @@ import {
   FETCH_BLOG_FAIL,
   FETCH_BLOG_REQUEST,
   FETCH_BLOG_SUCCESS,
+  PUBLISH_ARTICLE_FAIL,
+  PUBLISH_ARTICLE_REQUEST,
+  PUBLISH_ARTICLE_SUCCESS,
+  UNPUBLISH_ARTICLE_FAIL,
+  UNPUBLISH_ARTICLE_REQUEST,
+  UNPUBLISH_ARTICLE_SUCCESS,
 } from '../constants/Constants';
 
 export interface IDefaultState {
@@ -41,6 +47,37 @@ export const blogDetailsReducer = (state = DefaultState, action: IAction) => {
       return { loading: false, error: null, blog: action.payload };
     case FETCH_BLOG_FAIL:
       return { loading: false, error: action.payload, blog: null };
+    default:
+      return state;
+  }
+};
+
+export const publishArticleReducer = (
+  state = DefaultState,
+  action: IAction
+) => {
+  switch (action.type) {
+    case PUBLISH_ARTICLE_REQUEST:
+      return { loading: true, error: null, blog: false };
+    case PUBLISH_ARTICLE_SUCCESS:
+      return { loading: false, error: null, blog: true };
+    case PUBLISH_ARTICLE_FAIL:
+      return { loading: false, error: action.payload, blog: false };
+    default:
+      return state;
+  }
+};
+export const unPublishArticleReducer = (
+  state = DefaultState,
+  action: IAction
+) => {
+  switch (action.type) {
+    case UNPUBLISH_ARTICLE_REQUEST:
+      return { loading: true, error: null, blog: false };
+    case UNPUBLISH_ARTICLE_SUCCESS:
+      return { loading: false, error: null, blog: true };
+    case UNPUBLISH_ARTICLE_FAIL:
+      return { loading: false, error: action.payload, blog: false };
     default:
       return state;
   }

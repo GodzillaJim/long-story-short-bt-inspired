@@ -1,7 +1,7 @@
 import { CssBaseline, useMediaQuery } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { MDBCol, MDBContainer, MDBRow } from 'mdbreact';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router';
 import CustomNavbar from '../components/CustomNavbar';
 import CustomSideBar from '../components/CustomSideBar';
@@ -52,7 +52,7 @@ const MainLayout = () => {
           <div className={classes.sidebar}>
             <CustomSideBar
               mouseOver={mouseOver}
-              setMouseOver={() => setMouseOver(!mouseOver)}
+              setMouseOver={() => setMouseOver(mouseOver ? false : true)}
               open={open}
               openDrawer={openDrawer}
             />
