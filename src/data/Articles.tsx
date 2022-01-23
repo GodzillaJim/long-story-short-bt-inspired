@@ -86,7 +86,7 @@ export const getCategories = () => {
   return temp;
 };
 
-interface ITags {
+export interface ITags {
   name: string;
 }
 export const getTags = () => {

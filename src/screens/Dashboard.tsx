@@ -1,15 +1,17 @@
 import { Home } from '@mui/icons-material';
 import { Paper, useMediaQuery } from '@mui/material';
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import TopSection from '../components/TopSection';
 import { RootState } from '../redux/combineReducers';
+import { CREATE_BLOG_RESET } from '../redux/constants/Constants';
 
 const Dashboard = () => {
   const { authToken } = useSelector((state: RootState) => state.auth);
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   useEffect(() => {
     if (authToken === '') {
       const data = sessionStorage.getItem('data');
@@ -38,7 +40,10 @@ const Dashboard = () => {
         <div className="w-full dashboard-container-bar">
           <TopSection
             items={items}
-            onClick={() => navigate('/articles/create')}
+            onClick={() => {
+              dispatch({ action: CREATE_BLOG_RESET });
+              navigate('/articles/create');
+            }}
             actionText={'Create a Blog'}
           />
         </div>

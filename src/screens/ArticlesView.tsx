@@ -7,15 +7,18 @@ import {
   TableRow,
 } from '@mui/material';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { v4 } from 'uuid';
 import DataList from '../components/DataList';
 import TopSection from '../components/TopSection';
 import { getArticles, IArticle } from '../data/Articles';
+import { CREATE_BLOG_RESET } from '../redux/constants/Constants';
 import { SomeContainer } from './Dashboard';
 
 const ArticlesView = () => {
   const [page] = useState<number>(1);
+  const dispatch = useDispatch();
   const items = [
     {
       name: 'Admin',
@@ -54,7 +57,10 @@ const ArticlesView = () => {
           <div className="articles-top-section">
             <TopSection
               items={items}
-              onClick={() => navigate('/articles/create')}
+              onClick={() => {
+                dispatch({ type: CREATE_BLOG_RESET });
+                navigate('/articles/create');
+              }}
               actionText={'Create a Blog'}
             />
           </div>
