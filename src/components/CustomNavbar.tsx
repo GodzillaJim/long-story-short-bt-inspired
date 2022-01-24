@@ -1,14 +1,19 @@
-import { PersonOutline, Menu as MenuIcon } from '@mui/icons-material';
+import { Menu as MenuIcon } from '@mui/icons-material';
 import {
   AppBar,
   IconButton,
-  Menu,
-  MenuItem,
   Toolbar,
   Typography,
   useMediaQuery,
 } from '@mui/material';
 import { DefaultTheme, makeStyles } from '@mui/styles';
+import {
+  MDBDropdown,
+  MDBDropdownItem,
+  MDBDropdownMenu,
+  MDBDropdownToggle,
+  MDBIcon,
+} from 'mdbreact';
 import React from 'react';
 
 const useStyles = makeStyles((theme: DefaultTheme) => ({
@@ -22,6 +27,9 @@ const useStyles = makeStyles((theme: DefaultTheme) => ({
     fontWeight: 'bold',
     textTransform: 'capitalize',
   },
+  userIcon: {
+    color: '#9c27b0',
+  },
 }));
 interface ICustomNavbar {
   open: boolean;
@@ -29,16 +37,7 @@ interface ICustomNavbar {
 }
 const CustomNavbar = (props: ICustomNavbar) => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const matches = useMediaQuery('(max-width:600px)');
-
-  const handleMenu = (event: any) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <div>
@@ -58,32 +57,15 @@ const CustomNavbar = (props: ICustomNavbar) => {
             Long Story Short
           </Typography>
           <div>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit">
-              <PersonOutline />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}>
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-            </Menu>
+            <MDBDropdown>
+              <MDBDropdownToggle nav caret>
+                <MDBIcon className={classes.userIcon} icon="user" />
+              </MDBDropdownToggle>
+              <MDBDropdownMenu className="dropdown-default">
+                <MDBDropdownItem href="#!">Account</MDBDropdownItem>
+                <MDBDropdownItem href="#!">Logout</MDBDropdownItem>
+              </MDBDropdownMenu>
+            </MDBDropdown>
           </div>
         </Toolbar>
       </AppBar>

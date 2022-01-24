@@ -32,8 +32,6 @@ const useStyles = makeStyles((theme: any) => ({
     fontFamily: 'Source Sans Pro',
     transition: '0.5s',
     borderRight: '1px solid #e6e6f9',
-    boxShadow:
-      '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)',
   }),
   listItem: {
     overflow: 'hidden',
@@ -114,7 +112,7 @@ const CustomSideBar = (props: ICustomSideBar) => {
         <div
           onMouseOut={handleMouseLeave}
           onMouseOver={handleMouseEnter}
-          className={classes.drawerContainer}>
+          className={`${classes.drawerContainer} MuiPaper-root MuiPaper-elevation MuiPaper-elevation1`}>
           {!matches && (
             <List>
               {items.map((item: any) => (
