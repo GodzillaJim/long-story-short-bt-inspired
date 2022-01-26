@@ -17,9 +17,10 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { v4 } from 'uuid';
+import './CustomSideBar.css';
 
 const useStyles = makeStyles((theme: any) => ({
   drawerContainer: (props: { width: string }) => ({
@@ -38,6 +39,12 @@ const useStyles = makeStyles((theme: any) => ({
     width: '100%',
     fontFamily: 'Source Sans Pro',
   },
+  listItemActive: {
+    backgroundColor: '#e9ddf8 !important',
+    overflow: 'hidden',
+    width: '100%',
+    fontFamily: 'Source Sans Pro',
+  },
   itemMargin: {
     marginRight: '12px',
   },
@@ -50,7 +57,7 @@ interface ICustomSideBar {
 }
 const CustomSideBar = (props: ICustomSideBar) => {
   const rtl: boolean = false;
-  const classes = useStyles({ width: props.mouseOver ? '240px' : '60px' });
+  const classes = useStyles({ width: '60px' });
   const matches = useMediaQuery('(max-width:600px)');
   const handleMouseEnter = () => {
     props.setMouseOver();
@@ -110,9 +117,9 @@ const CustomSideBar = (props: ICustomSideBar) => {
       )}
       {!matches && (
         <div
-          onMouseOut={handleMouseLeave}
-          onMouseOver={handleMouseEnter}
-          className={`${classes.drawerContainer} MuiPaper-root MuiPaper-elevation MuiPaper-elevation1`}>
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className={`${classes.drawerContainer} MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 sidebar `}>
           {!matches && (
             <List>
               {items.map((item: any) => (
@@ -138,12 +145,20 @@ const CustomListItem = (props: IProp) => {
   const navigate = useNavigate();
   const isActive = location.pathname === props.link;
   const matches = useMediaQuery('(max-width:600px)');
+
+  useEffect(() => {
+    console.log(
+      location.pathname,
+      props.link,
+      location.pathname === props.link
+    );
+  });
   return (
     <ListItem
       onClick={() => navigate(props.link)}
-      className={classes.listItem}
+      className={!isActive ? classes.listItem : classes.listItemActive}
       button
-      color={isActive ? 'secondary' : 'inherit'}>
+      color={isActive ? 'secondary' : 'primary'}>
       <ListItemIcon className={matches ? classes.itemMargin : ''}>
         {props.icon}
       </ListItemIcon>

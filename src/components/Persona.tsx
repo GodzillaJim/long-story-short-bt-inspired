@@ -14,7 +14,7 @@ const Persona = (props: IPersona) => {
       <div className="flex flex-row gap-2 w-full">
         <div>
           <Avatar>
-            <Person />
+            <Person color='secondary' />
           </Avatar>
         </div>
         <div className="w-full">

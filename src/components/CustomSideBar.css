@@ -1,0 +1,6 @@
+.sidebar{
+    width: 60px;
+}
+.sidebar:hover{
+    width: 240px;
+}
