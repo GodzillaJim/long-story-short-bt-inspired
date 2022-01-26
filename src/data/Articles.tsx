@@ -28,6 +28,7 @@ export interface IArticle {
   }[];
   author: string;
   archived: boolean;
+  createdOn: Date;
 }
 export const getArticles = () => {
   const temp: IArticle[] = [];
@@ -72,6 +73,7 @@ export const getArticles = () => {
       ],
       author: lorem.generateWords(1),
       archived: lorem.generator.generateRandomInteger(1, 100) % 2 === 0,
+      createdOn: new Date(),
     } as IArticle;
     temp.push(article);
   }

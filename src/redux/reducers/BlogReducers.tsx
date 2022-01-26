@@ -20,6 +20,7 @@ import {
   UNPUBLISH_ARTICLE_SUCCESS,
   UPDATE_ARTICLE_FAIL,
   UPDATE_ARTICLE_REQUEST,
+  UPDATE_ARTICLE_RESET,
   UPDATE_ARTICLE_SUCCESS,
 } from '../constants/Constants';
 
@@ -127,6 +128,8 @@ export const updateArticleReducer = (
       return { loading: false, error: null, success: true };
     case UPDATE_ARTICLE_FAIL:
       return { loading: false, error: action.payload, success: false };
+    case UPDATE_ARTICLE_RESET:
+      return { loading: true, error: null, success: false };
     default:
       return state;
   }

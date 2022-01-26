@@ -143,7 +143,7 @@ const CustomListItem = (props: IProp) => {
   const { classes } = props;
   const location = useLocation();
   const navigate = useNavigate();
-  const isActive = location.pathname === props.link;
+  const isActive = location.pathname.includes(props.link);
   const matches = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {

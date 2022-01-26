@@ -20,6 +20,7 @@ import { ITags } from '../data/Articles';
 interface ITagPicker {
   values: any[];
   setFieldValue: (newValue: string[]) => void;
+  disabled?: boolean;
 }
 const TagPicker = (props: ITagPicker) => {
   const [search, setSearch] = React.useState<string>('');
@@ -80,6 +81,7 @@ const TagPicker = (props: ITagPicker) => {
                   inputProps={{ 'aria-label': 'search' }}
                   value={search}
                   onChange={(e) => handleChange(e.target.value || '')}
+                  disabled={props.disabled}
                 />
               </Search>
             </div>

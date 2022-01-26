@@ -44,16 +44,16 @@ const CustomSelect = (props: ICustomSelect) => {
 export const customStyles = {
   control: (provided: any, state: any) => ({
     width: '100%',
-    background: state.isDisabled ? '#e8e6f2' : '#fff',
+    background: state.isDisabled ? '#e8e6f2' : '#e9ddf8',
     border:
       state.isFocused || state.isHovered || state.menuIsOpen
         ? '1px solid #667ff'
         : '1px solid rgba(0, 0, 0, 0.23)',
-    minHeight: '40px',
-    '&:hover': { border: '1px solid #000' },
-    '&:focus': { border: '1px solid #000' },
-    '&:active': { border: '1px solid #000' },
-    '&:focus-within': { border: '1px solid #000' },
+    minHeight: '36px',
+    '&:hover': { border: '1px solid  #000' },
+    '&:focus': { border: '1px solid  #1976d2' },
+    '&:active': { border: '1px solid  #1976d2' },
+    '&:focus-within': { border: '1px  solid #1976d2' },
     borderRadius: '4px',
     display: 'flex',
   }),
@@ -64,7 +64,7 @@ export const customStyles = {
     marginTop: '-2px',
     padding: '0 6px',
     '#custom-select__placeholder': {
-      fontWeight: 600,
+      fontWeight: 'normal',
       fontSize: '14px',
       display: state.isFocused ? 'none' : 'flex',
     },
@@ -78,7 +78,7 @@ export const customStyles = {
     ...provided,
     margin: '0px',
     paddingTop: '8px',
-    fontFamily: 'Source Sans Pro',
+    fontFamily: 'san serif',
     marginBottom: '8px',
   }),
   indicatorSeparator: (state: any) => ({

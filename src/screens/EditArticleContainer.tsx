@@ -17,7 +17,6 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useFormik } from 'formik';
-import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
@@ -34,8 +33,10 @@ import {
   fetchCategoriesAction,
   publishArticleAction,
   unPublishArticleAction,
+  updateArticleAction,
 } from '../redux/actions/BlogActions';
 import { RootState } from '../redux/combineReducers';
+import { UPDATE_ARTICLE_RESET } from '../redux/constants/Constants';
 import { IArticle } from './CreateArticleContainer';
 import { SomeContainer } from './Dashboard';
 
@@ -55,6 +56,10 @@ const useStyles = makeStyles({
 });
 
 const EditArticleContainer = () => {
+  const { id } = useParams();
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const [isEditing, setEditing] = useState<boolean>(false);
   const message = 'This field is required';
   const {
     values,
@@ -64,7 +69,6 @@ const EditArticleContainer = () => {
     setFieldValue,
     setValues,
     submitForm,
-    initialValues,
     isValid,
   } = useFormik<IArticle>({
     initialValues: {
@@ -85,13 +89,11 @@ const EditArticleContainer = () => {
     }),
     onSubmit: (values: IArticle) => {
       console.log(values);
+      const article = { ...values, id: id ? parseInt(id) : 1 };
+      dispatch(updateArticleAction(article));
     },
   });
 
-  const { id } = useParams();
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const [isEditing, setEditing] = useState<boolean>(false);
   const { loading, error, blog } = useSelector(
     (state: RootState) => state.blogDetails
   );
@@ -111,16 +113,29 @@ const EditArticleContainer = () => {
     blog: unPublished,
   } = useSelector((state: RootState) => state.unPublishArticle);
 
-  const enableSubmit = () => {
-    return _.isEqual(initialValues, values) && isValid;
-  };
+  const {
+    loading: updating,
+    error: updateError,
+    success: updated,
+  } = useSelector((state: RootState) => state.updateArticle);
+
+  useEffect(() => {
+    if (updated) {
+      toast.success('Changes saved successfully!', {
+        onClose: () => dispatch({ type: UPDATE_ARTICLE_RESET }),
+      });
+    }
+    if (updateError) {
+      toast.error(updateError);
+    }
+  }, [updating, updateError, updated, dispatch]);
   useEffect(() => {
     if (!unPublishing) {
       if (unPublishingError) {
         toast.error(unPublishingError);
       }
       if (unPublished) {
-        toast.success('unPublished successfully');
+        toast.success('Article Unpublished successfully');
       }
     }
   }, [unPublishing, unPublished, unPublishingError]);
@@ -265,7 +280,7 @@ const EditArticleContainer = () => {
                                   touched.title ? errors.title : undefined
                                 }
                                 fullWidth
-                                disabled={loading}
+                                disabled={loading || updating}
                               />
                             )}
                           </div>
@@ -295,6 +310,7 @@ const EditArticleContainer = () => {
                                       labelId="category-select-label"
                                       id="category-select"
                                       value={values.category}
+                                      disabled={updating}
                                       label="Category"
                                       placeholder="Select article category"
                                       onChange={(e: any) =>
@@ -339,7 +355,7 @@ const EditArticleContainer = () => {
                                 <TextareaAutosize
                                   title="Content"
                                   name="content"
-                                  disabled={loading}
+                                  disabled={loading || updating}
                                   value={values.content}
                                   onChange={(e) =>
                                     setFieldValue('summary', e.target.value)
@@ -413,6 +429,7 @@ const EditArticleContainer = () => {
                         {!publishing && !unPublishing && (
                           <Button
                             className="m-auto"
+                            disabled={updating}
                             color={!blog.published ? 'primary' : 'secondary'}
                             onClick={
                               blog.published
@@ -438,7 +455,7 @@ const EditArticleContainer = () => {
                                 <TextareaAutosize
                                   title="Summary"
                                   name="summary"
-                                  disabled={loading}
+                                  disabled={loading || updating}
                                   value={values.summary}
                                   onChange={(e) =>
                                     setFieldValue('summary', e.target.value)
@@ -486,7 +503,7 @@ const EditArticleContainer = () => {
                                 <TextareaAutosize
                                   title="prompt"
                                   name="prompt"
-                                  disabled={loading}
+                                  disabled={loading || updating}
                                   value={values.prompt}
                                   onChange={(e) =>
                                     setFieldValue('prompt', e.target.value)
@@ -535,6 +552,7 @@ const EditArticleContainer = () => {
                                   setFieldValue('tags', newValue)
                                 }
                                 values={values.tags}
+                                disabled={updating}
                               />
                             )}
                             {!isEditing && (
@@ -565,13 +583,14 @@ const EditArticleContainer = () => {
                               <Button
                                 onClick={() => setEditing(!isEditing)}
                                 color="secondary"
+                                disabled={updating}
                                 variant="outlined">
                                 Cancel
                               </Button>
                             </div>
                             <div>
                               <Button
-                                disabled={!enableSubmit}
+                                disabled={!isValid || updating}
                                 onClick={() => submitForm()}
                                 color="secondary"
                                 variant="contained">

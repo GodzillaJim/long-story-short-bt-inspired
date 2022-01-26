@@ -19,6 +19,9 @@ import {
   UNPUBLISH_ARTICLE_FAIL,
   UNPUBLISH_ARTICLE_REQUEST,
   UNPUBLISH_ARTICLE_SUCCESS,
+  UPDATE_ARTICLE_FAIL,
+  UPDATE_ARTICLE_REQUEST,
+  UPDATE_ARTICLE_SUCCESS,
 } from '../constants/Constants';
 import { getArticles, getCategories, getTags } from '../../data/Articles';
 
@@ -83,3 +86,17 @@ export const fetchTagsAction = () => async (dispatch: Dispatch<any>) => {
     dispatch({ type: FETCH_TAGS_FAIL, payload: exception.message });
   }
 };
+interface IIDAarticle extends IArticle {
+  id: number;
+}
+export const updateArticleAction =
+  (article: IIDAarticle) => async (dispatch: Dispatch<any>) => {
+    try {
+      dispatch({ type: UPDATE_ARTICLE_REQUEST });
+      // TODO: Implement axios update article
+      dispatch({ type: UPDATE_ARTICLE_SUCCESS });
+      dispatch(fetchBlogDetailsAction(article.id));
+    } catch (exception: any) {
+      dispatch({ type: UPDATE_ARTICLE_FAIL, payload: exception.message });
+    }
+  };
