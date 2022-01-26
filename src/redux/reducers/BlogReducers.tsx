@@ -1,4 +1,10 @@
 import {
+  ADD_TAGS_BULK_FAIL,
+  ADD_TAGS_BULK_REQUEST,
+  ADD_TAGS_BULK_SUCCESS,
+  ADD_TAG_FAIL,
+  ADD_TAG_REQUEST,
+  ADD_TAG_SUCCESS,
   CREATE_BLOG_FAIL,
   CREATE_BLOG_REQUEST,
   CREATE_BLOG_RESET,
@@ -113,6 +119,36 @@ export const tagsReducer = (state = DefaultState, action: IAction) => {
       return { loading: false, error: null, blog: action.payload };
     case FETCH_TAGS_FAIL:
       return { loading: false, error: action.payload, blog: null };
+    default:
+      return state;
+  }
+};
+export const addTagReducer = (
+  state = { loading: false, error: null, success: false },
+  action: IAction
+) => {
+  switch (action.type) {
+    case ADD_TAG_REQUEST:
+      return { loading: true, error: null, success: false };
+    case ADD_TAG_SUCCESS:
+      return { loading: false, error: null, success: true };
+    case ADD_TAG_FAIL:
+      return { loading: false, error: action.payload, success: false };
+    default:
+      return state;
+  }
+};
+export const addTagBulkReducer = (
+  state = { loading: false, error: null, success: false },
+  action: IAction
+) => {
+  switch (action.type) {
+    case ADD_TAGS_BULK_REQUEST:
+      return { loading: true, error: null, success: false };
+    case ADD_TAGS_BULK_SUCCESS:
+      return { loading: false, error: null, success: true };
+    case ADD_TAGS_BULK_FAIL:
+      return { loading: false, error: action.payload, success: false };
     default:
       return state;
   }

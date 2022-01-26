@@ -1,6 +1,12 @@
 import { IArticle } from '../../screens/CreateArticleContainer';
 import { Dispatch } from 'react';
 import {
+  ADD_TAGS_BULK_FAIL,
+  ADD_TAGS_BULK_REQUEST,
+  ADD_TAGS_BULK_SUCCESS,
+  ADD_TAG_FAIL,
+  ADD_TAG_REQUEST,
+  ADD_TAG_SUCCESS,
   CREATE_BLOG_FAIL,
   CREATE_BLOG_REQUEST,
   CREATE_BLOG_SUCCESS,
@@ -86,6 +92,28 @@ export const fetchTagsAction = () => async (dispatch: Dispatch<any>) => {
     dispatch({ type: FETCH_TAGS_FAIL, payload: exception.message });
   }
 };
+
+export const addTagAction =
+  (tag: string) => async (dispatch: Dispatch<any>) => {
+    try {
+      dispatch({ type: ADD_TAG_REQUEST });
+      //TODO: Implement axios add tag
+      dispatch({ type: ADD_TAG_SUCCESS });
+    } catch (exception: any) {
+      dispatch({ type: ADD_TAG_FAIL, payload: exception.message });
+    }
+  };
+
+export const addTagsBulkAction =
+  (tags: string[]) => async (dispatch: Dispatch<any>) => {
+    try {
+      dispatch({ type: ADD_TAGS_BULK_REQUEST });
+      //TODO: Implement axios add many tags
+      dispatch({ type: ADD_TAGS_BULK_SUCCESS });
+    } catch (exception: any) {
+      dispatch({ type: ADD_TAGS_BULK_FAIL, payload: exception.message });
+    }
+  };
 interface IIDAarticle extends IArticle {
   id: number;
 }

@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import { authReducer } from "./reducers/AuthReducer";
-import { blogDetailsReducer, categoriesReducer, createBlogReducer, publishArticleReducer, tagsReducer, unPublishArticleReducer, updateArticleReducer } from "./reducers/BlogReducers";
+import { addTagBulkReducer, addTagReducer, blogDetailsReducer, categoriesReducer, createBlogReducer, publishArticleReducer, tagsReducer, unPublishArticleReducer, updateArticleReducer } from "./reducers/BlogReducers";
 
 export const combinedReducer = combineReducers({
     auth: authReducer,
@@ -10,6 +10,8 @@ export const combinedReducer = combineReducers({
     unPublishArticle: unPublishArticleReducer,
     categories: categoriesReducer,
     tags: tagsReducer,
-    updateArticle: updateArticleReducer
+    updateArticle: updateArticleReducer,
+    addTag: addTagReducer,
+    addTagsBulk: addTagBulkReducer
 })
 export type RootState = ReturnType<typeof combinedReducer>
