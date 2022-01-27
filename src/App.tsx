@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import {BrowserRouter as Browser, Route, Routes} from 'react-router-dom';
+
 import './app.css';
 import 'mdbreact/dist/css/mdb.css';
 import 'bootstrap-css-only/css/bootstrap.css';
@@ -13,10 +14,11 @@ import TagsView from './screens/TagsView';
 import ArticlesView from './screens/ArticlesView';
 import EditArticleContainer from './screens/EditArticleContainer';
 import CreateArticleContainer from './screens/CreateArticleContainer';
+import CategoriesView from './screens/CategoriesView';
 
 function App() {
   return (
-    <BrowserRouter>
+    <Browser>
       <Routes>
         <Route path="/login" element={<LoginScreen />} />
         <Route path="/" element={<MainLayout />}>
@@ -26,9 +28,10 @@ function App() {
           <Route path="articles" element={<ArticlesView />} />
           <Route path="articles/create" element={<CreateArticleContainer />} />
           <Route path={'articles/:id'} element={<EditArticleContainer />} />
+          <Route path={'categories'} element={<CategoriesView />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </Browser>
   );
 }
 

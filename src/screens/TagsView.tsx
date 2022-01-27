@@ -1,4 +1,4 @@
-import { Home, Tag } from '@mui/icons-material';
+import {Home, Tag} from '@mui/icons-material';
 import {
   Paper,
   CircularProgress,
@@ -9,12 +9,14 @@ import {
   Typography,
   TextareaAutosize,
 } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
-import { SomeContainer } from './Dashboard';
+import React, {useEffect, useMemo, useState} from 'react';
+import {makeStyles} from '@mui/styles';
+import {useDispatch, useSelector} from 'react-redux';
+import {v4} from 'uuid';
+import {toast} from 'react-toastify';
+
 import TopSection from '../components/TopSection';
-import { makeStyles } from '@mui/styles';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/combineReducers';
+import {RootState} from '../redux/combineReducers';
 import CustomError from '../components/CustomError';
 import {
   addTagAction,
@@ -22,11 +24,12 @@ import {
   addTagsBulkAction,
 } from '../redux/actions/BlogActions';
 import CustomSearchBox from '../components/CustomSearchBox';
-import { ITags } from '../data/Articles';
-import { v4 } from 'uuid';
+import {ITags} from '../data/Articles';
 import './TagsView.css';
 import CustomToastify from '../components/CustomToastify';
-import { toast } from 'react-toastify';
+
+
+import {SomeContainer} from './Dashboard';
 
 const useStyles = makeStyles({
   container: {
@@ -88,13 +91,13 @@ const TagsView = () => {
       name: 'Admin',
       link: '/',
       isActive: false,
-      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Home sx={{mr: 0.5}} fontSize="medium" />,
     },
     {
       name: 'Tags',
       link: '/tags',
       isActive: true,
-      icon: <Tag sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Tag sx={{mr: 0.5}} fontSize="medium" />,
     },
   ];
   const handleRetry = () => {
@@ -104,8 +107,7 @@ const TagsView = () => {
     let temp = tags || [];
     if (search !== '') {
       temp = tags.filter((tag: ITags) =>
-        tag.name.toLowerCase().includes(search.toLowerCase())
-      );
+        tag.name.toLowerCase().includes(search.toLowerCase()));
     }
     return temp;
   }, [search, tags]);
@@ -114,12 +116,12 @@ const TagsView = () => {
   });
   const handleAddTag = () => {
     dispatch(addTagAction(search));
-    //TODO: Add tag
+    // TODO: Add tag
   };
   const addManyTags = () => {
     const tagArr = newTags.split(',');
     dispatch(addTagsBulkAction(tagArr));
-    //TODO: Add many tags
+    // TODO: Add many tags
   };
   return (
     <SomeContainer>
@@ -193,7 +195,7 @@ const TagsView = () => {
                             name="many-tags add-many-tags-text-area"
                             className={classes.addManyTags}
                             value={newTags}
-                            onChange={(e) => setNewTags(e.target.value)}
+                            onChange={(event) => setNewTags(event.target.value)}
                             minRows={5}
                             placeholder={'tag1, tag2, tag3, etc'}
                           />

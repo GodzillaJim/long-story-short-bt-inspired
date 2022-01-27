@@ -40,6 +40,7 @@
     "delay-cli": "^1.1.0",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
+    "eslint-plugin-shopify": "^35.1.0",
     "formik": "^2.2.9",
     "html-to-draftjs": "^1.5.0",
     "immutable": "^4.0.0",
@@ -93,7 +94,8 @@
     "build:css": "cross-env TAILWIND_MODE=build NODE_ENV=production postcss src/styles/tailwind.css -o src/styles/index.css",
     "watch:css": "cross-env TAILWIND_MODE=watch NODE_ENV=development postcss src/styles/tailwind.css -o src/styles/index.css --watch",
     "react-scripts:start": "delay 5 && react-scripts start",
-    "react-scripts:build": "react-scripts build"
+    "react-scripts:build": "react-scripts build",
+    "lint": "eslint . --ext .ts"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -111,6 +113,9 @@
     ]
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.10.1",
+    "@typescript-eslint/parser": "^5.10.1",
+    "eslint": "^8.7.0",
     "mini-css-extract-plugin": "2.4.5"
   }
 }

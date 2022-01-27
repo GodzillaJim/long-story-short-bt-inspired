@@ -1,5 +1,5 @@
-import { LoremIpsum } from 'lorem-ipsum';
-import { v4 } from 'uuid';
+import {LoremIpsum} from 'lorem-ipsum';
+import {v4} from 'uuid';
 
 export const lorem = new LoremIpsum({
   sentencesPerParagraph: {
@@ -32,16 +32,16 @@ export interface IArticle {
 }
 export const getArticles = () => {
   const temp: IArticle[] = [];
-  for (let a = 0; a < 10; a++) {
+  for (let numOfArticles = 0; numOfArticles < 10; numOfArticles++) {
     const article = {
       id: `key-${v4()}`,
       title: lorem.generateWords(6),
       content:
-        '<p>/t' +
-        lorem.generateParagraphs(3) +
-        '</p><p>' +
-        lorem.generateParagraphs(3) +
-        '</p>',
+        `<p>/t${
+        lorem.generateParagraphs(3)
+        }</p><p>${
+        lorem.generateParagraphs(3)
+        }</p>`,
       published: lorem.generator.generateRandomInteger(1, 100) % 2 === 0,
       summary: lorem.generateParagraphs(1),
       prompt: lorem.generateParagraphs(1),
@@ -80,7 +80,7 @@ export const getArticles = () => {
   return temp;
 };
 
-interface ICategory {
+export interface ICategory {
   name: string;
   createdAt: Date;
   id: string;
@@ -89,7 +89,7 @@ interface ICategory {
 }
 export const getCategories = () => {
   const temp = [];
-  for (let a = 0; a < 100; a++) {
+  for (let numOfCategories = 0; numOfCategories < 100; numOfCategories++) {
     temp.push({
       name: lorem.generateWords(1),
       createdAt: new Date(),
@@ -106,8 +106,8 @@ export interface ITags {
 }
 export const getTags = () => {
   const temp = [];
-  for (let a = 0; a < 100; a++) {
-    temp.push({ name: lorem.generateWords(1) } as ITags);
+  for (let numOfTags = 0; numOfTags < 100; numOfTags++) {
+    temp.push({name: lorem.generateWords(1)} as ITags);
   }
   return temp;
 };
