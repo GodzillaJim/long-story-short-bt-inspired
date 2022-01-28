@@ -1,4 +1,4 @@
-import { useMediaQuery } from "@mui/material";
+import { CircularProgress, useMediaQuery } from "@mui/material";
 import React from "react";
 
 import CustomAddButton from "./CustomAddButton";
@@ -14,6 +14,7 @@ interface ITopSection {
   actionText?: string;
   onClick?: () => void;
   breadCrumbsOnly?: boolean;
+  loading?:boolean
 }
 const TopSection = (props: ITopSection) => {
   const matches = useMediaQuery("(max-width:600px)");
@@ -27,10 +28,10 @@ const TopSection = (props: ITopSection) => {
         )}
         {!props.breadCrumbsOnly && (
           <div>
-            <CustomAddButton
+            {props.loading ? <CircularProgress size={20} variant="indeterminate"/> : <CustomAddButton
               onClick={() => props.onClick && props.onClick()}
               text={props.actionText || ""}
-            />
+            />}
           </div>
         )}
       </div>

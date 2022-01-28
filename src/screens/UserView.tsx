@@ -23,6 +23,7 @@ import { IUser } from "../data/Users";
 import { v4 } from "uuid";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import AddUserContainter from './AddUserContainter';
 
 const useStyles = makeStyles({
   usersPaper: {
@@ -39,6 +40,7 @@ const UserView = () => {
   const [email, setEmail] = useState<string>("");
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [addUser, setAddUser] = useState<boolean>(false)
   const classes = useStyles();
   const { loading, error, users } = useSelector(
     (state: RootState) => state.allUsers
@@ -63,7 +65,9 @@ const UserView = () => {
     },
   ];
 
-  const handleAddUser = () => {};
+  const handleAddUser = () => {
+    setAddUser(!addUser)
+  };
   const handleRetry = () => {
     dispatch(getAllUsersAction());
   };
@@ -107,6 +111,7 @@ const UserView = () => {
             items={items}
             actionText={"Add User"}
             onClick={handleAddUser}
+            loading={addUser}
           />
           <div className="table-search">
             <Paper>
@@ -212,6 +217,7 @@ const UserView = () => {
               </div>
             )}
           </div>
+          <AddUserContainter open={addUser} onClose={()=> setAddUser(!addUser)}  />
         </div>
       </SomeContainer>
     </div>
