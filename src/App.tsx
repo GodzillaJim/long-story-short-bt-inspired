@@ -29,6 +29,7 @@ function App() {
           <Route path="articles/create" element={<CreateArticleContainer />} />
           <Route path={'articles/:id'} element={<EditArticleContainer />} />
           <Route path={'categories'} element={<CategoriesView />} />
+          <Route path={'categories/:id'} element={<CategoriesView/>}/>
         </Route>
       </Routes>
     </Browser>

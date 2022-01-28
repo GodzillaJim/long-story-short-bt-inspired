@@ -20,6 +20,9 @@ import {
   FETCH_TAGS_FAIL,
   FETCH_TAGS_REQUEST,
   FETCH_TAGS_SUCCESS,
+  GET_ARTICLES_BY_CATEGORIES_FAIL,
+  GET_ARTICLES_BY_CATEGORIES_REQUEST,
+  GET_ARTICLES_BY_CATEGORIES_SUCCESS,
   PUBLISH_ARTICLE_FAIL,
   PUBLISH_ARTICLE_REQUEST,
   PUBLISH_ARTICLE_SUCCESS,
@@ -29,8 +32,10 @@ import {
   UPDATE_ARTICLE_FAIL,
   UPDATE_ARTICLE_REQUEST,
   UPDATE_ARTICLE_SUCCESS,
+  FETCH_ALL_ARTICLES_REQUEST,
+  FETCH_ALL_ARTICLES_SUCCESS, FETCH_ALL_ARTICLES_FAIL, UPDATE_CATEGORY_REQUEST, UPDATE_CATEGORY_SUCCESS, UPDATE_CATEGORY_FAIL, ADD_CATEGORY_REQUEST, ADD_CATEGORY_SUCCESS, ADD_CATEGORY_FAIL,
 } from '../constants/Constants';
-import {getArticles, getCategories, getTags} from '../../data/Articles';
+import {getArticles, getCategories, getTags, ICategory} from '../../data/Articles';
 
 export const createBlogAction =
   (blog: IArticle) => async (dispatch: Dispatch<any>) => {
@@ -43,6 +48,15 @@ export const createBlogAction =
       dispatch({type: CREATE_BLOG_FAIL, payload: exception.message});
     }
   };
+export const fetchAllArticlesAction = () => async (dispatch: Dispatch<any>) => {
+  try {
+    dispatch({type: FETCH_ALL_ARTICLES_REQUEST});
+    // TODO: Implement axios get all articles
+    dispatch({type: FETCH_ALL_ARTICLES_SUCCESS, payload: getArticles()});
+  } catch (exception:any) {
+    dispatch({type: FETCH_ALL_ARTICLES_FAIL, payload: exception.message || "Something went wrong"});
+  }
+};
 export const fetchBlogDetailsAction =
   (id: number) => async (dispatch: Dispatch<any>) => {
     try {
@@ -127,5 +141,34 @@ export const fetchCategoriesAction = () => async (dispatch: Dispatch<any>) => {
     dispatch({type: FETCH_CATEGORIES_SUCCESS, payload: getCategories()});
   } catch (exception: any) {
     dispatch({type: FETCH_CATEGORIES_FAIL, payload: exception.message});
+  }
+};
+export const getCategoryArticlesAction = (categoryId: string) => async (dispatch: Dispatch<any>) => {
+  try {
+    dispatch({type: GET_ARTICLES_BY_CATEGORIES_REQUEST});
+    // TODO: Implement axios get articles by category
+    dispatch({type: GET_ARTICLES_BY_CATEGORIES_SUCCESS, payload: getArticles().slice(1, 5)});
+  } catch (exception:any) {
+    dispatch({type: GET_ARTICLES_BY_CATEGORIES_FAIL, payload: exception.message || "Something went wrong"});
+  }
+};
+
+export const updateCategoryAction = (category: ICategory) => async (dispatch: Dispatch<any>) => {
+  try {
+    dispatch({type: UPDATE_CATEGORY_REQUEST});
+    // TODO: Implement axios post update category
+    dispatch({type: UPDATE_CATEGORY_SUCCESS});
+  } catch (exception:any) {
+    dispatch({type: UPDATE_CATEGORY_FAIL, payload: exception.message || "Something went wrong"});
+  }
+};
+
+export const addCategoryAction = (categories: string []) => async (dispatch : Dispatch<any>) => {
+  try {
+    dispatch({type: ADD_CATEGORY_REQUEST});
+    // TODO: Implement axios post create category
+    dispatch({type: ADD_CATEGORY_SUCCESS});
+  } catch (exception:any) {
+    dispatch({type: ADD_CATEGORY_FAIL, payload: exception.message || "Something went wrong"});
   }
 };

@@ -1,4 +1,6 @@
 import {
+  ADD_CATEGORY_REQUEST,
+  ADD_CATEGORY_SUCCESS,
   ADD_TAGS_BULK_FAIL,
   ADD_TAGS_BULK_REQUEST,
   ADD_TAGS_BULK_SUCCESS,
@@ -9,6 +11,9 @@ import {
   CREATE_BLOG_REQUEST,
   CREATE_BLOG_RESET,
   CREATE_BLOG_SUCCESS,
+  FETCH_ALL_ARTICLES_FAIL,
+  FETCH_ALL_ARTICLES_REQUEST,
+  FETCH_ALL_ARTICLES_SUCCESS,
   FETCH_BLOG_FAIL,
   FETCH_BLOG_REQUEST,
   FETCH_BLOG_SUCCESS,
@@ -31,6 +36,9 @@ import {
   UPDATE_ARTICLE_REQUEST,
   UPDATE_ARTICLE_RESET,
   UPDATE_ARTICLE_SUCCESS,
+  UPDATE_CATEGORY_FAIL,
+  UPDATE_CATEGORY_REQUEST,
+  UPDATE_CATEGORY_SUCCESS,
 } from '../constants/Constants';
 
 export interface IDefaultState {
@@ -43,6 +51,18 @@ export interface IAction {
   type: string;
   payload: any;
 }
+export const allArticlesReducer = (state = {loading: false, error: null, articles: null}, action: IAction) => {
+  switch (action.type) {
+    case FETCH_ALL_ARTICLES_REQUEST:
+      return {loading: true, error: null, articles: null};
+    case FETCH_ALL_ARTICLES_SUCCESS:
+      return {loading: false, error: null, articles: action.payload};
+    case FETCH_ALL_ARTICLES_FAIL:
+      return {loading: false, error: action.payload, articles: null};
+    default:
+      return state;
+  }
+};
 export const createBlogReducer = (state = DefaultState, action: IAction) => {
   switch (action.type) {
     case CREATE_BLOG_REQUEST:
@@ -181,6 +201,32 @@ export const updateArticleReducer = (
       return {loading: false, error: action.payload, success: false};
     case UPDATE_ARTICLE_RESET:
       return {loading: true, error: null, success: false};
+    default:
+      return state;
+  }
+};
+
+export const updateCategoryReducer = (state = {loading: false, error: null, success: false}, action: IAction) => {
+  switch (action.type) {
+    case UPDATE_CATEGORY_REQUEST:
+      return {loading: true, error: null, success: false};
+    case UPDATE_CATEGORY_SUCCESS:
+      return {loading: false, error: null, success: true};
+    case UPDATE_CATEGORY_FAIL:
+      return {loading: false, error: action.payload, success: false};
+    default:
+      return state;
+  }
+};
+
+export const addCategoryReducer = (state = {loading: false, error: null, success: false}, action: IAction) => {
+  switch (action.type) {
+    case ADD_CATEGORY_REQUEST:
+      return {loading: true, error: null, success: false};
+    case ADD_CATEGORY_SUCCESS:
+      return {loading: false, error: null, success: true};
+    case ADD_TAGS_BULK_FAIL:
+      return {loading: false, error: action.payload, success: false};
     default:
       return state;
   }

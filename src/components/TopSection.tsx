@@ -1,5 +1,6 @@
-import { useMediaQuery } from '@mui/material';
+import {useMediaQuery} from '@mui/material';
 import React from 'react';
+
 import CustomAddButton from './CustomAddButton';
 import CustomBreadcrumbContainer from './CustomBreadcrumbContainer';
 

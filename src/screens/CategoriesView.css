@@ -1,0 +1,6 @@
+.table-container{
+    height: calc(100vh - 240px)
+}
+.custom-button:focus{
+    outline: none
+}

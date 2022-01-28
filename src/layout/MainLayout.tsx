@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
       : 'calc(100% - 60px)',
     height: '100%',
     transition: 'margin-left .5s',
-    marginLeft: !props.matches ? (props.mouseOver ? '220px' : '0px') : '0px',
+    marginLeft: !props.matches ? (props.mouseOver ? '200px' : '0px') : '0px',
   }),
   topBar: {
     marginBottom: '0px',

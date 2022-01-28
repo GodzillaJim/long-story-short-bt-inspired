@@ -1,6 +1,6 @@
 import React from 'react';
-import { Search as SearchIcon } from '@mui/icons-material';
-import { alpha, InputBase, styled, Theme, useTheme } from '@mui/material';
+import {Search as SearchIcon} from '@mui/icons-material';
+import {alpha, InputBase, styled, Theme, useTheme} from '@mui/material';
 
 interface ICustomSearchBox {
   value: string;
@@ -8,6 +8,7 @@ interface ICustomSearchBox {
   disabled?: boolean;
   maxWidth?: string;
   color?: 'primary' | 'secondary';
+  placeholder?: string
 }
 const CustomSearchBox = (props: ICustomSearchBox) => {
   const theme = useTheme();
@@ -21,8 +22,8 @@ const CustomSearchBox = (props: ICustomSearchBox) => {
           <SearchIcon color={props.color || 'secondary'} />
         </SearchIconWrapper>
         <StyledInputBase
-          placeholder="Search…"
-          inputProps={{ 'aria-label': 'search' }}
+          placeholder={props.placeholder || "Search…"}
+          inputProps={{'aria-label': 'search'}}
           value={props.value}
           onChange={(e) => props.onChange(e.target.value || '')}
           disabled={props.disabled}
@@ -35,7 +36,7 @@ const CustomSearchBox = (props: ICustomSearchBox) => {
 };
 
 const StyledInputBase = styled(InputBase)(
-  ({ theme, maxWidth }: { theme: Theme; maxWidth: string }) => ({
+  ({theme, maxWidth}: { theme: Theme; maxWidth: string }) => ({
     color: 'inherit',
     '& .MuiInputBase-input': {
       padding: theme.spacing(1, 1, 1, 0),
@@ -47,9 +48,9 @@ const StyledInputBase = styled(InputBase)(
         width: '20ch',
       },
     },
-  })
+  }),
 );
-const SearchIconWrapper = styled('div')(({ theme }) => ({
+const SearchIconWrapper = styled('div')(({theme}) => ({
   padding: theme.spacing(0, 2),
   height: '100%',
   position: 'absolute',
@@ -85,6 +86,6 @@ const Search = styled('div')(
       marginLeft: theme.spacing(3),
       width: 'auto',
     },
-  })
+  }),
 );
 export default CustomSearchBox;

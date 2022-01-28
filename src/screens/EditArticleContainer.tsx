@@ -1,4 +1,4 @@
-import { Edit, Home, Notes } from '@mui/icons-material';
+import {Edit, Home, Notes} from '@mui/icons-material';
 import {
   Button,
   Chip,
@@ -15,14 +15,15 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import { useFormik } from 'formik';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router';
-import { toast } from 'react-toastify';
-import { v4 } from 'uuid';
-import { array, object, string } from 'yup';
+import {makeStyles} from '@mui/styles';
+import {useFormik} from 'formik';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {useParams} from 'react-router';
+import {toast} from 'react-toastify';
+import {v4} from 'uuid';
+import {array, object, string} from 'yup';
+
 import CustomToastify from '../components/CustomToastify';
 import DefaultText from '../components/DefaultText';
 import Persona from '../components/Persona';
@@ -35,10 +36,11 @@ import {
   unPublishArticleAction,
   updateArticleAction,
 } from '../redux/actions/BlogActions';
-import { RootState } from '../redux/combineReducers';
-import { UPDATE_ARTICLE_RESET } from '../redux/constants/Constants';
-import { IArticle } from './CreateArticleContainer';
-import { SomeContainer } from './Dashboard';
+import {RootState} from '../redux/combineReducers';
+import {UPDATE_ARTICLE_RESET} from '../redux/constants/Constants';
+
+import {IArticle} from './CreateArticleContainer';
+import {SomeContainer} from './Dashboard';
 
 const useStyles = makeStyles({
   rootLoading: {
@@ -56,7 +58,7 @@ const useStyles = makeStyles({
 });
 
 const EditArticleContainer = () => {
-  const { id } = useParams();
+  const {id} = useParams();
   const classes = useStyles();
   const dispatch = useDispatch();
   const [isEditing, setEditing] = useState<boolean>(false);
@@ -89,13 +91,13 @@ const EditArticleContainer = () => {
     }),
     onSubmit: (values: IArticle) => {
       console.log(values);
-      const article = { ...values, id: id ? parseInt(id) : 1 };
+      const article = {...values, id: id ? parseInt(id) : 1};
       dispatch(updateArticleAction(article));
     },
   });
 
-  const { loading, error, blog } = useSelector(
-    (state: RootState) => state.blogDetails
+  const {loading, error, blog} = useSelector(
+    (state: RootState) => state.blogDetails,
   );
   const {
     loading: publishing,
@@ -122,7 +124,7 @@ const EditArticleContainer = () => {
   useEffect(() => {
     if (updated) {
       toast.success('Changes saved successfully!', {
-        onClose: () => dispatch({ type: UPDATE_ARTICLE_RESET }),
+        onClose: () => dispatch({type: UPDATE_ARTICLE_RESET}),
       });
     }
     if (updateError) {
@@ -156,7 +158,7 @@ const EditArticleContainer = () => {
       }
     }
   }, [loading, error, blog, id, dispatch]);
-  //TODO Fetch article by id
+  // TODO Fetch article by id
   const handleRetry = () => {
     if (id) {
       dispatch(fetchBlogDetailsAction(parseInt(id)));
@@ -167,19 +169,19 @@ const EditArticleContainer = () => {
       name: 'Admin',
       link: '/',
       isActive: false,
-      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Home sx={{mr: 0.5}} fontSize="medium" />,
     },
     {
       name: 'Articles',
       link: '/articles',
       isActive: false,
-      icon: <Notes sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Notes sx={{mr: 0.5}} fontSize="medium" />,
     },
     {
       name: id || 'article',
       link: `/articles/${id}`,
       isActive: true,
-      icon: <Edit sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Edit sx={{mr: 0.5}} fontSize="medium" />,
     },
   ];
   const handlePublishArticle = () => {
@@ -195,13 +197,13 @@ const EditArticleContainer = () => {
   const handleTitleChange = (e: any) => {
     setFieldValue('title', e.target.value || '');
   };
-  //TODO: Implement fetch categories from backend
+  // TODO: Implement fetch categories from backend
   const getCategoriesList = () => {
     return categories || [];
   };
   const handleEdit = () => {
     if (blog) {
-      const { title, summary, content, category, prompt, tags } = blog;
+      const {title, summary, content, category, prompt, tags} = blog;
       setValues({
         title,
         summary,
@@ -255,7 +257,7 @@ const EditArticleContainer = () => {
               <form noValidate onSubmit={handleSubmit}>
                 <div className="w-full grid grid-cols-12 p-3">
                   <div
-                    style={{ borderRight: '1px solid rgba(0,0,0,0.2)' }}
+                    style={{borderRight: '1px solid rgba(0,0,0,0.2)'}}
                     className="col-span-9 pt-4 px-3 pr-2">
                     <div className="flex flex-col gap-5">
                       <div className="title-and-category">
@@ -316,7 +318,7 @@ const EditArticleContainer = () => {
                                       onChange={(e: any) =>
                                         setFieldValue(
                                           'category',
-                                          e.target.value
+                                          e.target.value,
                                         )
                                       }>
                                       {getCategoriesList().map((cat: any) => (
@@ -422,7 +424,7 @@ const EditArticleContainer = () => {
                     <div className="flex flex-col p-3 justify-center gap-3">
                       <div className="flex flex-row justify-center text-center">
                         {(publishing || unPublishing) && (
-                          <div style={{ width: 'fit-content' }}>
+                          <div style={{width: 'fit-content'}}>
                             <CircularProgress variant="indeterminate" />
                           </div>
                         )}
