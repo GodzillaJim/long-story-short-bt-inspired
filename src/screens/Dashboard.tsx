@@ -1,11 +1,11 @@
-import { Home } from '@mui/icons-material';
-import { Paper, useMediaQuery } from '@mui/material';
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router';
-import TopSection from '../components/TopSection';
-import { RootState } from '../redux/combineReducers';
-import { CREATE_BLOG_RESET } from '../redux/constants/Constants';
+import { Home } from "@mui/icons-material";
+import { Paper, useMediaQuery } from "@mui/material";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router";
+import TopSection from "../components/TopSection";
+import { RootState } from "../redux/combineReducers";
+import { CREATE_BLOG_RESET } from "../redux/constants/ArticleConstants";
 
 const Dashboard = () => {
   const { authToken } = useSelector((state: RootState) => state.auth);
@@ -13,12 +13,12 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    if (authToken === '') {
-      const data = sessionStorage.getItem('data');
+    if (authToken === "") {
+      const data = sessionStorage.getItem("data");
       if (data) {
         const { token } = JSON.parse(data);
-        if (token && token !== '') {
-          if (location.pathname !== '/login') {
+        if (token && token !== "") {
+          if (location.pathname !== "/login") {
             const redirect = location.pathname;
             navigate(`/login?redirect=${redirect}`);
           }
@@ -28,8 +28,8 @@ const Dashboard = () => {
   }, [authToken, location, navigate]);
   const items = [
     {
-      name: 'Admin',
-      link: '/home',
+      name: "Admin",
+      link: "/home",
       isActive: false,
       icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
     },
@@ -42,9 +42,9 @@ const Dashboard = () => {
             items={items}
             onClick={() => {
               dispatch({ action: CREATE_BLOG_RESET });
-              navigate('/articles/create');
+              navigate("/articles/create");
             }}
-            actionText={'Create a Blog'}
+            actionText={"Create a Blog"}
           />
         </div>
         <div className="dashboard-search-container">
@@ -56,12 +56,13 @@ const Dashboard = () => {
 };
 
 export const SomeContainer = (props: { children: JSX.Element }) => {
-  const matches = useMediaQuery('(max-width:600px)');
+  const matches = useMediaQuery("(max-width:600px)");
   return (
     <div
       className={
-        matches ? 'flex flex-col gap-5 my-3' : 'flex flex-col gap-5 my-3 mx-3'
-      }>
+        matches ? "flex flex-col gap-5 my-3" : "flex flex-col gap-5 my-3 mx-3"
+      }
+    >
       {props.children}
     </div>
   );

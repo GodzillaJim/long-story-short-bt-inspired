@@ -1,8 +1,8 @@
-import {useMediaQuery} from '@mui/material';
-import React from 'react';
+import { useMediaQuery } from "@mui/material";
+import React from "react";
 
-import CustomAddButton from './CustomAddButton';
-import CustomBreadcrumbContainer from './CustomBreadcrumbContainer';
+import CustomAddButton from "./CustomAddButton";
+import CustomBreadcrumbContainer from "./CustomBreadcrumbContainer";
 
 interface ITopSection {
   items: {
@@ -16,7 +16,7 @@ interface ITopSection {
   breadCrumbsOnly?: boolean;
 }
 const TopSection = (props: ITopSection) => {
-  const matches = useMediaQuery('(max-width:600px)');
+  const matches = useMediaQuery("(max-width:600px)");
   return (
     <div>
       <div className="flex flex-row justify-between">
@@ -29,7 +29,7 @@ const TopSection = (props: ITopSection) => {
           <div>
             <CustomAddButton
               onClick={() => props.onClick && props.onClick()}
-              text={props.actionText || ''}
+              text={props.actionText || ""}
             />
           </div>
         )}

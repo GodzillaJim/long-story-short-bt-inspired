@@ -1,4 +1,4 @@
-import {Home, Tag} from '@mui/icons-material';
+import { Home, Tag } from "@mui/icons-material";
 import {
   Paper,
   CircularProgress,
@@ -8,48 +8,47 @@ import {
   Button,
   Typography,
   TextareaAutosize,
-} from '@mui/material';
-import React, {useEffect, useMemo, useState} from 'react';
-import {makeStyles} from '@mui/styles';
-import {useDispatch, useSelector} from 'react-redux';
-import {v4} from 'uuid';
-import {toast} from 'react-toastify';
+} from "@mui/material";
+import React, { useEffect, useMemo, useState } from "react";
+import { makeStyles } from "@mui/styles";
+import { useDispatch, useSelector } from "react-redux";
+import { v4 } from "uuid";
+import { toast } from "react-toastify";
 
-import TopSection from '../components/TopSection';
-import {RootState} from '../redux/combineReducers';
-import CustomError from '../components/CustomError';
+import TopSection from "../components/TopSection";
+import { RootState } from "../redux/combineReducers";
+import CustomError from "../components/CustomError";
 import {
   addTagAction,
   fetchTagsAction,
   addTagsBulkAction,
-} from '../redux/actions/BlogActions';
-import CustomSearchBox from '../components/CustomSearchBox';
-import {ITags} from '../data/Articles';
-import './TagsView.css';
-import CustomToastify from '../components/CustomToastify';
+} from "../redux/actions/BlogActions";
+import CustomSearchBox from "../components/CustomSearchBox";
+import { ITags } from "../data/Articles";
+import "./TagsView.css";
+import CustomToastify from "../components/CustomToastify";
 
-
-import {SomeContainer} from './Dashboard';
+import { SomeContainer } from "./Dashboard";
 
 const useStyles = makeStyles({
   container: {
-    height: 'calc(100vh - 150px)',
+    height: "calc(100vh - 150px)",
   },
   addManyTags: {
-    backgroundColor: '#e9ddf8',
-    padding: '12px',
-    width: '50%',
-    borderRadius: '4px',
-    '&:focus-visible': {
-      outline: 'none',
+    backgroundColor: "#e9ddf8",
+    padding: "12px",
+    width: "50%",
+    borderRadius: "4px",
+    "&:focus-visible": {
+      outline: "none",
     },
   },
 });
 const TagsView = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [search, setSearch] = useState<string>('');
-  const [newTags, setNewTags] = useState<string>('');
+  const [search, setSearch] = useState<string>("");
+  const [newTags, setNewTags] = useState<string>("");
   const {
     loading,
     error,
@@ -67,7 +66,7 @@ const TagsView = () => {
   } = useSelector((state: RootState) => state.addTag);
   useEffect(() => {
     if (success) {
-      toast.success('Tag added successfully');
+      toast.success("Tag added successfully");
     }
     if (addTagError) {
       toast.error(addTagError);
@@ -83,21 +82,21 @@ const TagsView = () => {
       toast.error(addingBulkError);
     }
     if (addingBulkSuccess) {
-      toast.success('Tags added');
+      toast.success("Tags added");
     }
   }, [addingBulk, addingBulkError, addingBulkSuccess]);
   const items = [
     {
-      name: 'Admin',
-      link: '/',
+      name: "Admin",
+      link: "/",
       isActive: false,
-      icon: <Home sx={{mr: 0.5}} fontSize="medium" />,
+      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
     },
     {
-      name: 'Tags',
-      link: '/tags',
+      name: "Tags",
+      link: "/tags",
       isActive: true,
-      icon: <Tag sx={{mr: 0.5}} fontSize="medium" />,
+      icon: <Tag sx={{ mr: 0.5 }} fontSize="medium" />,
     },
   ];
   const handleRetry = () => {
@@ -105,9 +104,10 @@ const TagsView = () => {
   };
   const filterTags = useMemo(() => {
     let temp = tags || [];
-    if (search !== '') {
+    if (search !== "") {
       temp = tags.filter((tag: ITags) =>
-        tag.name.toLowerCase().includes(search.toLowerCase()));
+        tag.name.toLowerCase().includes(search.toLowerCase())
+      );
     }
     return temp;
   }, [search, tags]);
@@ -119,7 +119,7 @@ const TagsView = () => {
     // TODO: Add tag
   };
   const addManyTags = () => {
-    const tagArr = newTags.split(',');
+    const tagArr = newTags.split(",");
     dispatch(addTagsBulkAction(tagArr));
     // TODO: Add many tags
   };
@@ -147,7 +147,7 @@ const TagsView = () => {
                     <div>
                       <CustomSearchBox
                         value={search}
-                        maxWidth={'500px'}
+                        maxWidth={"500px"}
                         onChange={(newValue: string) => setSearch(newValue)}
                         color="primary"
                       />
@@ -174,7 +174,8 @@ const TagsView = () => {
                               <Button
                                 onClick={handleAddTag}
                                 color="primary"
-                                variant="text">
+                                variant="text"
+                              >
                                 Add Tag
                               </Button>
                             )}
@@ -186,7 +187,7 @@ const TagsView = () => {
                     <div>
                       <div className="flex flex-col mx-3 gap-2">
                         <div>
-                          <Typography variant="h6" fontWeight={'bold'}>
+                          <Typography variant="h6" fontWeight={"bold"}>
                             Add Many Tags
                           </Typography>
                         </div>
@@ -197,7 +198,7 @@ const TagsView = () => {
                             value={newTags}
                             onChange={(event) => setNewTags(event.target.value)}
                             minRows={5}
-                            placeholder={'tag1, tag2, tag3, etc'}
+                            placeholder={"tag1, tag2, tag3, etc"}
                           />
                         </div>
                         <div>
@@ -212,7 +213,8 @@ const TagsView = () => {
                               variant="outlined"
                               color="secondary"
                               onClick={addManyTags}
-                              disabled={newTags === ''}>
+                              disabled={newTags === ""}
+                            >
                               Add Tags
                             </Button>
                           )}

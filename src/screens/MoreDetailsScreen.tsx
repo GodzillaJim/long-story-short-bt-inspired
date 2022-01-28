@@ -1,4 +1,4 @@
-import { Search as SearchIcon } from '@mui/icons-material';
+import { Search as SearchIcon } from "@mui/icons-material";
 import {
   alpha,
   Chip,
@@ -8,12 +8,12 @@ import {
   styled,
   TextField,
   Typography,
-} from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import { useMemo, useState } from 'react';
-import { v4 } from 'uuid';
-import { getTags, ITags } from '../data/Articles';
-import { getNoneStopWords } from '../helpers/Language';
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { useMemo, useState } from "react";
+import { v4 } from "uuid";
+import { getTags, ITags } from "../data/Articles";
+import { getNoneStopWords } from "../helpers/Language";
 
 interface IProps {
   values: any;
@@ -22,24 +22,24 @@ interface IProps {
 }
 const useStyles = makeStyles({
   tagsContainer: {
-    minHeight: '300px',
-    width: '100%',
-    border: '1px solid rgba(0,0,0,0.1)',
+    minHeight: "300px",
+    width: "100%",
+    border: "1px solid rgba(0,0,0,0.1)",
   },
 });
 const MoreDetailsScreen = (props: IProps) => {
   const { values, setFieldValue } = props;
-  const [search, setSearch] = useState<string>('');
+  const [search, setSearch] = useState<string>("");
   const tags = useMemo(() => {
     let temp = getTags();
     const title: string = values.title;
-    if (title !== '') {
+    if (title !== "") {
       const nonStopTags: ITags[] = getNoneStopWords(title).map(
         (word: string) => ({ name: word } as ITags)
       );
       temp = [...temp, ...nonStopTags];
     }
-    if (search !== '') {
+    if (search !== "") {
       temp = temp.filter((tag: ITags) =>
         tag.name.toLowerCase().includes(search.toLowerCase())
       );
@@ -52,20 +52,20 @@ const MoreDetailsScreen = (props: IProps) => {
   const classes = useStyles();
   const handleRemoveTag = (tag: ITags) => {
     setFieldValue(
-      'tags',
+      "tags",
       values.tags.filter((t: ITags) => t.name !== tag.name)
     );
   };
   const handleSelectTag = (tag: ITags) => {
     const newTags = values.tags.filter((t: ITags) => t.name !== tag.name);
-    setFieldValue('tags', [...newTags, tag]);
+    setFieldValue("tags", [...newTags, tag]);
   };
   return (
     <div>
       <div className="flex flex-col w-full">
         <div className="prompt w-1/3 mb-4">
           <TextField
-            onChange={(e: any) => setFieldValue('prompt', e.target.value)}
+            onChange={(e: any) => setFieldValue("prompt", e.target.value)}
             name="prompt"
             size="small"
             value={values.prompt}
@@ -102,7 +102,7 @@ const MoreDetailsScreen = (props: IProps) => {
                 </SearchIconWrapper>
                 <StyledInputBase
                   placeholder="Search…"
-                  inputProps={{ 'aria-label': 'search' }}
+                  inputProps={{ "aria-label": "search" }}
                   onChange={(e: any) => setSearch(e.target.value)}
                   disabled={props.loading}
                 />
@@ -118,7 +118,7 @@ const MoreDetailsScreen = (props: IProps) => {
                   <Grid key={`key-${v4()}`} item>
                     <Chip
                       onClick={() =>
-                        setFieldValue('tags', [...values.tags, tag])
+                        setFieldValue("tags", [...values.tags, tag])
                       }
                       color="primary"
                       onDelete={() => handleRemoveTag(tag)}
@@ -153,54 +153,54 @@ const MoreDetailsScreen = (props: IProps) => {
   );
 };
 
-const Search = styled('div')(({ theme }: any) => ({
-  position: 'relative',
-  borderRadius: '25px',
-  border: '1px solid rgba(0,0,0,0.2)',
-  backgroundColor: alpha('#e9ddf8', 0.15),
-  '&:hover': {
+const Search = styled("div")(({ theme }: any) => ({
+  position: "relative",
+  borderRadius: "25px",
+  border: "1px solid rgba(0,0,0,0.2)",
+  backgroundColor: alpha("#e9ddf8", 0.15),
+  "&:hover": {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
-    border: '1px solid rgba(0,0,0,0.8)',
+    border: "1px solid rgba(0,0,0,0.8)",
   },
-  '&:focus': {
+  "&:focus": {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
-    border: '1px solid',
+    border: "1px solid",
     borderColor: theme.palette.primary,
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
-  [theme.breakpoints.up('sm')]: {
+  [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
-    width: '600px',
+    width: "600px",
   },
-  [theme.breakpoints.down('sm')]: {
-    width: 'auto',
+  [theme.breakpoints.down("sm")]: {
+    width: "auto",
   },
 }));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
+const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
+  color: "inherit",
+  "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(2)})`,
-    transition: theme.transitions.create('width'),
-    [theme.breakpoints.up('sm')]: {
+    transition: theme.transitions.create("width"),
+    [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(3),
-      width: '500px',
+      width: "500px",
     },
-    [theme.breakpoints.down('sm')]: {
-      width: 'auto',
+    [theme.breakpoints.down("sm")]: {
+      width: "auto",
     },
   },
 }));

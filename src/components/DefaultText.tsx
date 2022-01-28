@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Typography } from "@mui/material";
 
 export interface IDefaultText {
   label: string;
@@ -13,10 +13,10 @@ const DefaultText = (props: IDefaultText) => {
           <Typography variant="body2">{label}</Typography>
         </div>
         <div>
-          {typeof value === 'string' && (
+          {typeof value === "string" && (
             <Typography variant="h6">{value}</Typography>
           )}
-          {typeof value !== 'string' && value}
+          {typeof value !== "string" && value}
         </div>
       </div>
     </div>

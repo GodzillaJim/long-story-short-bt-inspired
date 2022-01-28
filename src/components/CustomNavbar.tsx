@@ -1,34 +1,34 @@
-import { Menu as MenuIcon } from '@mui/icons-material';
+import { Menu as MenuIcon } from "@mui/icons-material";
 import {
   AppBar,
   IconButton,
   Toolbar,
   Typography,
   useMediaQuery,
-} from '@mui/material';
-import { DefaultTheme, makeStyles } from '@mui/styles';
+} from "@mui/material";
+import { DefaultTheme, makeStyles } from "@mui/styles";
 import {
   MDBDropdown,
   MDBDropdownItem,
   MDBDropdownMenu,
   MDBDropdownToggle,
   MDBIcon,
-} from 'mdbreact';
-import React from 'react';
+} from "mdbreact";
+import React from "react";
 
 const useStyles = makeStyles((theme: DefaultTheme) => ({
   navbar: {
-    background: '#fff !important',
-    borderBottom: '1px solid #e6e6f9',
+    background: "#fff !important",
+    borderBottom: "1px solid #e6e6f9",
   },
   brandText: {
-    fontStyle: 'italic',
-    fontFamily: 'Source Sans Pro',
-    fontWeight: 'bold',
-    textTransform: 'capitalize',
+    fontStyle: "italic",
+    fontFamily: "Source Sans Pro",
+    fontWeight: "bold",
+    textTransform: "capitalize",
   },
   userIcon: {
-    color: '#9c27b0',
+    color: "#9c27b0",
   },
 }));
 interface ICustomNavbar {
@@ -37,7 +37,7 @@ interface ICustomNavbar {
 }
 const CustomNavbar = (props: ICustomNavbar) => {
   const classes = useStyles();
-  const matches = useMediaQuery('(max-width:600px)');
+  const matches = useMediaQuery("(max-width:600px)");
 
   return (
     <div>
@@ -53,7 +53,8 @@ const CustomNavbar = (props: ICustomNavbar) => {
             color="textPrimary"
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1 }}>
+            sx={{ flexGrow: 1 }}
+          >
             Long Story Short
           </Typography>
           <div>

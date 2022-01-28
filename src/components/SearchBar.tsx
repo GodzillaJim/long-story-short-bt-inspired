@@ -1,5 +1,5 @@
-import React from 'react';
-import CustomSearchBar from './CustomSearchBar';
+import React from "react";
+import CustomSearchBar from "./CustomSearchBar";
 
 interface ISearchBar {
   title: string;

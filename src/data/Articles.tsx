@@ -1,5 +1,5 @@
-import {LoremIpsum} from 'lorem-ipsum';
-import {v4} from 'uuid';
+import { LoremIpsum } from "lorem-ipsum";
+import { v4 } from "uuid";
 
 export const lorem = new LoremIpsum({
   sentencesPerParagraph: {
@@ -36,12 +36,9 @@ export const getArticles = () => {
     const article = {
       id: `key-${v4()}`,
       title: lorem.generateWords(6),
-      content:
-        `<p>/t${
-        lorem.generateParagraphs(3)
-        }</p><p>${
-        lorem.generateParagraphs(3)
-        }</p>`,
+      content: `<p>/t${lorem.generateParagraphs(
+        3
+      )}</p><p>${lorem.generateParagraphs(3)}</p>`,
       published: lorem.generator.generateRandomInteger(1, 100) % 2 === 0,
       summary: lorem.generateParagraphs(1),
       prompt: lorem.generateParagraphs(1),
@@ -107,7 +104,7 @@ export interface ITags {
 export const getTags = () => {
   const temp = [];
   for (let numOfTags = 0; numOfTags < 100; numOfTags++) {
-    temp.push({name: lorem.generateWords(1)} as ITags);
+    temp.push({ name: lorem.generateWords(1) } as ITags);
   }
   return temp;
 };

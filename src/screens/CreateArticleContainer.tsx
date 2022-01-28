@@ -1,4 +1,4 @@
-import { Edit, Home, Notes } from '@mui/icons-material';
+import { Edit, Home, Notes } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -12,21 +12,21 @@ import {
   Tab,
   Tabs,
   TextField,
-} from '@mui/material';
-import { useFormik } from 'formik';
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
-import { v4 } from 'uuid';
-import { array, object, string } from 'yup';
-import { a11yProps, TabPanel } from '../components/CustomTabs';
-import CustomRichTextEditor from '../components/richtexteditor/CustomRichTextEditor';
-import TopSection from '../components/TopSection';
-import { getCategories } from '../data/Articles';
-import { ToastContainer, toast } from 'react-toastify';
-import MoreDetailsScreen from './MoreDetailsScreen';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/combineReducers';
-import { createBlogAction } from '../redux/actions/BlogActions';
+} from "@mui/material";
+import { useFormik } from "formik";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { v4 } from "uuid";
+import { array, object, string } from "yup";
+import { a11yProps, TabPanel } from "../components/CustomTabs";
+import CustomRichTextEditor from "../components/richtexteditor/CustomRichTextEditor";
+import TopSection from "../components/TopSection";
+import { getCategories } from "../data/Articles";
+import { ToastContainer, toast } from "react-toastify";
+import MoreDetailsScreen from "./MoreDetailsScreen";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/combineReducers";
+import { createBlogAction } from "../redux/actions/BlogActions";
 
 export interface IArticle {
   title: string;
@@ -37,7 +37,7 @@ export interface IArticle {
   tags: any[];
 }
 const CreateArticleContainer = () => {
-  const message = 'This field is required';
+  const message = "This field is required";
   const [activeTab, setActiveTab] = useState<number>(0);
   const { loading, error, blog } = useSelector(
     (state: RootState) => state.createBlog
@@ -46,12 +46,12 @@ const CreateArticleContainer = () => {
   const dispatch = useDispatch();
   const formik = useFormik<IArticle>({
     initialValues: {
-      title: 'Sample Title',
-      prompt: 'Sample Prompt',
-      summary: 'Sample summary',
-      content: 'Sample content',
+      title: "Sample Title",
+      prompt: "Sample Prompt",
+      summary: "Sample summary",
+      content: "Sample content",
       tags: [],
-      category: '',
+      category: "",
     },
     validationSchema: object().shape({
       title: string().required(message),
@@ -69,7 +69,7 @@ const CreateArticleContainer = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (blog) {
-      toast.success('Blog created successfully. Redirecting to details page', {
+      toast.success("Blog created successfully. Redirecting to details page", {
         onOpen: () => {},
         onClose: () => {
           navigate(`/articles/${blog.id}`);
@@ -77,25 +77,25 @@ const CreateArticleContainer = () => {
       });
     }
     if (error) {
-      toast.error('Blog creation failed');
+      toast.error("Blog creation failed");
     }
   }, [loading, blog, error, navigate]);
   const items = [
     {
-      name: 'Admin',
-      link: '/',
+      name: "Admin",
+      link: "/",
       isActive: false,
       icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
     },
     {
-      name: 'Articles',
-      link: '/articles',
+      name: "Articles",
+      link: "/articles",
       isActive: false,
       icon: <Notes sx={{ mr: 0.5 }} fontSize="medium" />,
     },
     {
-      name: 'Write',
-      link: '/articles/create',
+      name: "Write",
+      link: "/articles/create",
       isActive: true,
       icon: <Edit sx={{ mr: 0.5 }} fontSize="medium" />,
     },
@@ -123,22 +123,23 @@ const CreateArticleContainer = () => {
       <div>
         <form className="mb-3" noValidate onSubmit={formik.handleSubmit}>
           <Paper>
-            <Box sx={{ width: '100%' }}>
-              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Box sx={{ width: "100%" }}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <Tabs
                   value={activeTab}
                   onChange={(e: any, newValue: any) => setActiveTab(newValue)}
                   className="ml-3"
-                  aria-label="basic tabs example">
-                  <Tab label={'Basic Details'} {...a11yProps(0)} />
-                  <Tab label={'More Details'} {...a11yProps(1)} />
+                  aria-label="basic tabs example"
+                >
+                  <Tab label={"Basic Details"} {...a11yProps(0)} />
+                  <Tab label={"More Details"} {...a11yProps(1)} />
                 </Tabs>
               </Box>
               <TabPanel index={0} value={activeTab}>
                 <BasicDetails loading={loading} {...formik} />
               </TabPanel>
               <TabPanel index={1} value={activeTab}>
-                <MoreDetailsScreen loading={loading} {...formik} />{' '}
+                <MoreDetailsScreen loading={loading} {...formik} />{" "}
               </TabPanel>
             </Box>
             <div className="save-buttons text-right pr-4 pb-3">
@@ -147,21 +148,22 @@ const CreateArticleContainer = () => {
                 <div className="flex flex-row gap-5 justify-end">
                   <div>
                     <Button
-                      type={'button'}
+                      type={"button"}
                       disabled={loading}
                       onClick={() =>
                         activeTab === 0
-                          ? navigate('/articles')
+                          ? navigate("/articles")
                           : setActiveTab(0)
                       }
                       color="primary"
-                      variant="outlined">
-                      {activeTab === 0 ? 'Cancel' : 'Previous'}
+                      variant="outlined"
+                    >
+                      {activeTab === 0 ? "Cancel" : "Previous"}
                     </Button>
                   </div>
                   <div>
                     <Button
-                      type={'button'}
+                      type={"button"}
                       onClick={() =>
                         activeTab === 0 ? setActiveTab(1) : formik.submitForm()
                       }
@@ -169,8 +171,9 @@ const CreateArticleContainer = () => {
                       disabled={
                         activeTab === 1 && formik.values.tags.length < 5
                       }
-                      variant="contained">
-                      {activeTab === 0 ? 'Next' : 'Save'}
+                      variant="contained"
+                    >
+                      {activeTab === 0 ? "Next" : "Save"}
                     </Button>
                   </div>
                 </div>
@@ -195,7 +198,7 @@ const BasicDetails = (props: {
     return getCategories();
   };
   const handleTitleChange = (e: any) => {
-    setFieldValue('title', e.target.value);
+    setFieldValue("title", e.target.value);
   };
   return (
     <div className="flex flex-col gap-5">
@@ -206,7 +209,7 @@ const BasicDetails = (props: {
             id="title"
             value={values.title}
             onChange={handleTitleChange}
-            label={'Title'}
+            label={"Title"}
             variant="outlined"
             size="small"
             helperText={touched.title ? errors.title : undefined}
@@ -225,7 +228,8 @@ const BasicDetails = (props: {
               value={values.category}
               label="Category"
               placeholder="Select article category"
-              onChange={(e: any) => setFieldValue('category', e.target.value)}>
+              onChange={(e: any) => setFieldValue("category", e.target.value)}
+            >
               {getCategoriesList().map((cat: any) => (
                 <MenuItem key={`key-${v4()}`} value={cat.value}>
                   {cat.label}
@@ -241,7 +245,7 @@ const BasicDetails = (props: {
           value={values.content}
           loading={loading}
           handleChange={(newValue: string) =>
-            setFieldValue('content', newValue)
+            setFieldValue("content", newValue)
           }
         />
       </div>
@@ -253,7 +257,7 @@ const BasicDetails = (props: {
               name="summary"
               disabled={loading}
               value={values.summary}
-              onChange={(e) => setFieldValue('summary', e.target.value)}
+              onChange={(e) => setFieldValue("summary", e.target.value)}
               variant="outlined"
               size="small"
               label="Summary"

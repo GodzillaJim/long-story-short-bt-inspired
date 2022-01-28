@@ -1,6 +1,6 @@
-import React from 'react';
-import Select from 'react-select';
-import './CustomSelect.css';
+import React from "react";
+import Select from "react-select";
+import "./CustomSelect.css";
 
 interface ICustomSelect {
   options: any[];
@@ -43,54 +43,54 @@ const CustomSelect = (props: ICustomSelect) => {
 
 export const customStyles = {
   control: (provided: any, state: any) => ({
-    width: '100%',
-    background: state.isDisabled ? '#e8e6f2' : '#e9ddf8',
+    width: "100%",
+    background: state.isDisabled ? "#e8e6f2" : "#e9ddf8",
     border:
       state.isFocused || state.isHovered || state.menuIsOpen
-        ? '1px solid #667ff'
-        : '1px solid rgba(0, 0, 0, 0.23)',
-    minHeight: '36px',
-    '&:hover': { border: '1px solid  #000' },
-    '&:focus': { border: '1px solid  #1976d2' },
-    '&:active': { border: '1px solid  #1976d2' },
-    '&:focus-within': { border: '1px  solid #1976d2' },
-    borderRadius: '4px',
-    display: 'flex',
+        ? "1px solid #667ff"
+        : "1px solid rgba(0, 0, 0, 0.23)",
+    minHeight: "36px",
+    "&:hover": { border: "1px solid  #000" },
+    "&:focus": { border: "1px solid  #1976d2" },
+    "&:active": { border: "1px solid  #1976d2" },
+    "&:focus-within": { border: "1px  solid #1976d2" },
+    borderRadius: "4px",
+    display: "flex",
   }),
 
   valueContainer: (provided: any, state: any) => ({
     ...provided,
-    height: '31px',
-    marginTop: '-2px',
-    padding: '0 6px',
-    '#custom-select__placeholder': {
-      fontWeight: 'normal',
-      fontSize: '14px',
-      display: state.isFocused ? 'none' : 'flex',
+    height: "31px",
+    marginTop: "-2px",
+    padding: "0 6px",
+    "#custom-select__placeholder": {
+      fontWeight: "normal",
+      fontSize: "14px",
+      display: state.isFocused ? "none" : "flex",
     },
     div: {
-      fontSize: '14px',
+      fontSize: "14px",
       fontWeight: 600,
     },
   }),
 
   input: (provided: any, state: any) => ({
     ...provided,
-    margin: '0px',
-    paddingTop: '8px',
-    fontFamily: 'san serif',
-    marginBottom: '8px',
+    margin: "0px",
+    paddingTop: "8px",
+    fontFamily: "san serif",
+    marginBottom: "8px",
   }),
   indicatorSeparator: (state: any) => ({
-    display: 'none',
+    display: "none",
   }),
   indicatorsContainer: (provided: any, state: any) => ({
     ...provided,
-    height: '31px',
+    height: "31px",
   }),
   option: (provided: any, state: any) => ({
     ...provided,
-    fontFamily: 'san serif',
+    fontFamily: "san serif",
   }),
 };
 export default CustomSelect;

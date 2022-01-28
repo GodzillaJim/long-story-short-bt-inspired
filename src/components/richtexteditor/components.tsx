@@ -1,6 +1,6 @@
-import React, { Ref, PropsWithChildren, LegacyRef } from 'react';
-import ReactDOM from 'react-dom';
-import { cx, css } from '@emotion/css';
+import React, { Ref, PropsWithChildren, LegacyRef } from "react";
+import ReactDOM from "react-dom";
+import { cx, css } from "@emotion/css";
 
 interface BaseProps {
   className: string;
@@ -31,11 +31,11 @@ export const Button = React.forwardRef(
           cursor: pointer;
           color: ${reversed
             ? active
-              ? 'white'
-              : '#aaa'
+              ? "white"
+              : "#aaa"
             : active
-            ? 'black'
-            : '#ccc'};
+            ? "black"
+            : "#ccc"};
         `
       )}
     />
@@ -58,7 +58,7 @@ export const EditorValue = React.forwardRef(
     const textLines = value.document.nodes
       .map((node: any) => node.text)
       .toArray()
-      .join('\n');
+      .join("\n");
     return (
       <div
         ref={ref}
@@ -68,7 +68,8 @@ export const EditorValue = React.forwardRef(
           css`
             margin: 30px -20px 0;
           `
-        )}>
+        )}
+      >
         <div
           className={css`
             font-size: 14px;
@@ -76,7 +77,8 @@ export const EditorValue = React.forwardRef(
             color: #404040;
             border-top: 2px solid #eeeeee;
             background: #f8f8f8;
-          `}>
+          `}
+        >
           Slate's value as text
         </div>
         <div
@@ -88,7 +90,8 @@ export const EditorValue = React.forwardRef(
             div {
               margin: 0 0 0.5em;
             }
-          `}>
+          `}
+        >
           {textLines}
         </div>
       </div>
@@ -105,7 +108,7 @@ export const Icon = React.forwardRef(
       {...props}
       ref={ref}
       className={cx(
-        'material-icons',
+        "material-icons",
         className,
         css`
           font-size: 18px;
@@ -162,7 +165,7 @@ export const Menu = React.forwardRef(
 );
 
 export const Portal = ({ children }: any) => {
-  return typeof document === 'object'
+  return typeof document === "object"
     ? ReactDOM.createPortal(children, document.body)
     : null;
 };

@@ -1,46 +1,48 @@
-.search-bar{
-    background-color: #fff;
-    border-radius: 4px;
-    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+.search-bar {
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 }
-.search-bar-title{
-    border: 1px solid rgb(204, 200, 200);
-    height: 36px;
-    border-radius: 4px;
-    width: 100%;
-    padding-left: 12px;
-    background-color: #e9ddf8;
+.search-bar-title {
+  border: 1px solid rgb(204, 200, 200);
+  height: 36px;
+  border-radius: 4px;
+  width: 100%;
+  padding-left: 12px;
+  background-color: #e9ddf8;
 }
-.search-bar-title:hover{
-    border: 1px solid #000;
+.search-bar-title:hover {
+  border: 1px solid #000;
 }
-.search-bar-title:focus{
-    border: 1px solid #1976d2;
+.search-bar-title:focus {
+  border: 1px solid #1976d2;
 }
-.search-bar-title:focus-visible{
-    border: 1px solid #1976d2;
-    outline: none;
+.search-bar-title:focus-visible {
+  border: 1px solid #1976d2;
+  outline: none;
 }
-.form-control:hover{
-    border: 1px solid #000;
+.form-control:hover {
+  border: 1px solid #000;
 }
-.form-control:focus{
-    border: 1px solid #1976d2;
+.form-control:focus {
+  border: 1px solid #1976d2;
 }
-.form-control:focus-visible{
-    border: 1px solid #1976d2;
-    outline: none;
+.form-control:focus-visible {
+  border: 1px solid #1976d2;
+  outline: none;
 }
-.form-control{
-    border: 1px solid rgb(204, 200, 200);
-    height: 36px;
-    border-radius: 4px;
-    width: 100%;
-    padding-left: 12px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: grey;
-    background-color: #645e6b;
+.form-control {
+  border: 1px solid rgb(204, 200, 200);
+  height: 36px;
+  border-radius: 4px;
+  width: 100%;
+  padding-left: 12px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: grey;
+  background-color: #645e6b;
 }
-.shadow{
-    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+.shadow {
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 }

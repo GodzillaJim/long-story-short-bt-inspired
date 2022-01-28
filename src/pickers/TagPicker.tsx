@@ -1,4 +1,4 @@
-import { Search as SearchIcon } from '@mui/icons-material';
+import { Search as SearchIcon } from "@mui/icons-material";
 import {
   alpha,
   CircularProgress,
@@ -9,13 +9,13 @@ import {
   Chip,
   Divider,
   Button,
-} from '@mui/material';
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../redux/combineReducers';
-import { fetchTagsAction } from '../redux/actions/BlogActions';
-import { v4 } from 'uuid';
-import { ITags } from '../data/Articles';
+} from "@mui/material";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../redux/combineReducers";
+import { fetchTagsAction } from "../redux/actions/BlogActions";
+import { v4 } from "uuid";
+import { ITags } from "../data/Articles";
 
 interface ITagPicker {
   values: any[];
@@ -23,7 +23,7 @@ interface ITagPicker {
   disabled?: boolean;
 }
 const TagPicker = (props: ITagPicker) => {
-  const [search, setSearch] = React.useState<string>('');
+  const [search, setSearch] = React.useState<string>("");
   const dispatch = useDispatch();
   const {
     loading,
@@ -40,7 +40,7 @@ const TagPicker = (props: ITagPicker) => {
   }, [loading, error, tags, dispatch]);
   const filterTags = React.useMemo(() => {
     let temp = tags || [];
-    if (search !== '') {
+    if (search !== "") {
       return temp.filter((tag: ITags) =>
         tag.name.toLowerCase().includes(search.toLowerCase())
       );
@@ -64,7 +64,7 @@ const TagPicker = (props: ITagPicker) => {
         <div>
           {loading && <CircularProgress size="20px" variant="indeterminate" />}
           {error && (
-            <Typography variant="subtitle1" color={'red'}>
+            <Typography variant="subtitle1" color={"red"}>
               {error}
             </Typography>
           )}
@@ -78,9 +78,9 @@ const TagPicker = (props: ITagPicker) => {
                 </SearchIconWrapper>
                 <StyledInputBase
                   placeholder="Search…"
-                  inputProps={{ 'aria-label': 'search' }}
+                  inputProps={{ "aria-label": "search" }}
                   value={search}
-                  onChange={(e) => handleChange(e.target.value || '')}
+                  onChange={(e) => handleChange(e.target.value || "")}
                   disabled={props.disabled}
                 />
               </Search>
@@ -101,7 +101,7 @@ const TagPicker = (props: ITagPicker) => {
               </Grid>
             </div>
             <Divider />
-            <div style={{ minHeight: '100px' }}>
+            <div style={{ minHeight: "100px" }}>
               <Grid container spacing={1}>
                 {filterTags.map(
                   (tag: any, index: number) =>
@@ -121,7 +121,8 @@ const TagPicker = (props: ITagPicker) => {
                     <Button
                       onClick={() => handleTagAdd({ name: search } as ITags)}
                       color="primary"
-                      variant="text">
+                      variant="text"
+                    >
                       Add New Tag
                     </Button>
                   </Grid>
@@ -135,43 +136,43 @@ const TagPicker = (props: ITagPicker) => {
   );
 };
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
+  color: "inherit",
+  "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: "20ch",
     },
   },
 }));
-const SearchIconWrapper = styled('div')(({ theme }) => ({
+const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 }));
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: '24px',
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: "24px",
   backgroundColor: alpha(theme.palette.grey[500], 0.15),
-  '&:hover': {
+  "&:hover": {
     backgroundColor: alpha(theme.palette.grey[700], 0.25),
   },
-  '&:active': {
+  "&:active": {
     backgroundColor: alpha(theme.palette.grey[700], 0.25),
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
-    width: 'auto',
+    width: "auto",
   },
 }));
 

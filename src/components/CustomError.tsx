@@ -1,5 +1,5 @@
-import React from 'react';
-import { Typography, Button } from '@mui/material';
+import React from "react";
+import { Typography, Button } from "@mui/material";
 
 interface ICustomError {
   message: string;

@@ -1,4 +1,4 @@
-import {Edit, Home, Notes} from '@mui/icons-material';
+import { Edit, Home, Notes } from "@mui/icons-material";
 import {
   CircularProgress,
   FormControlLabel,
@@ -9,29 +9,32 @@ import {
   Switch,
   TableCell,
   TableRow,
-} from '@mui/material';
-import {format} from 'date-fns';
-import React, {useEffect, useMemo, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {useNavigate} from 'react-router';
-import {v4} from 'uuid';
+} from "@mui/material";
+import { format } from "date-fns";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { v4 } from "uuid";
 
-import CustomError from '../components/CustomError';
-import CustomSelect from '../components/CustomSelect';
-import DataList from '../components/DataList';
-import TopSection from '../components/TopSection';
-import {IArticle} from '../data/Articles';
-import {fetchAllArticlesAction, fetchCategoriesAction} from '../redux/actions/BlogActions';
-import {RootState} from '../redux/combineReducers';
-import {CREATE_BLOG_RESET} from '../redux/constants/Constants';
+import CustomError from "../components/CustomError";
+import CustomSelect from "../components/CustomSelect";
+import DataList from "../components/DataList";
+import TopSection from "../components/TopSection";
+import { IArticle } from "../data/Articles";
+import {
+  fetchAllArticlesAction,
+  fetchCategoriesAction,
+} from "../redux/actions/BlogActions";
+import { RootState } from "../redux/combineReducers";
+import { CREATE_BLOG_RESET } from "../redux/constants/ArticleConstants";
 
-import './ArticlesView.css';
-import {SomeContainer} from './Dashboard';
+import "./ArticlesView.css";
+import { SomeContainer } from "./Dashboard";
 
 const ArticlesView = () => {
   const [page] = useState<number>(1);
   const dispatch = useDispatch();
-  const [title, setTitle] = useState<string>('');
+  const [title, setTitle] = useState<string>("");
   const [category, setCategory] = useState<any>();
   const [published, setPublished] = useState<boolean>(false);
   const [archived, setArchived] = useState<boolean>(false);
@@ -40,12 +43,16 @@ const ArticlesView = () => {
     error,
     blog: categories,
   } = useSelector((state: RootState) => state.categories);
-  const {loading: loadingAllArticles, error: allArticleError, articles} = useSelector((state: RootState) => state.allArticles);
+  const {
+    loading: loadingAllArticles,
+    error: allArticleError,
+    articles,
+  } = useSelector((state: RootState) => state.allArticles);
   useEffect(() => {
     if (!loadingAllArticles && !allArticleError && !articles) {
       dispatch(fetchAllArticlesAction());
     }
-  }, [loadingAllArticles, allArticleError, articles]);
+  }, [loadingAllArticles, allArticleError, articles, dispatch]);
   useEffect(() => {
     if (!loading && !categories && !error) {
       dispatch(fetchCategoriesAction());
@@ -53,16 +60,16 @@ const ArticlesView = () => {
   }, [categories, loading, error, dispatch]);
   const items = [
     {
-      name: 'Admin',
-      link: '/',
+      name: "Admin",
+      link: "/",
       isActive: false,
-      icon: <Home sx={{mr: 0.5}} fontSize="medium" />,
+      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
     },
     {
-      name: 'Articles',
-      link: '/articles',
+      name: "Articles",
+      link: "/articles",
       isActive: true,
-      icon: <Notes sx={{mr: 0.5}} fontSize="medium" />,
+      icon: <Notes sx={{ mr: 0.5 }} fontSize="medium" />,
     },
   ];
   const articleList = useMemo(() => {
@@ -70,19 +77,21 @@ const ArticlesView = () => {
     if (category) {
       temp = temp.filter((cat: IArticle) => cat.category === category.name);
     }
-    if (title !== '') {
+    if (title !== "") {
       temp = temp.filter((article: IArticle) =>
-        article.title.toLowerCase().includes(title.toLowerCase()));
+        article.title.toLowerCase().includes(title.toLowerCase())
+      );
     }
     temp = temp.filter((article: IArticle) => article.archived === archived);
     return temp.filter((article: IArticle) => article.published === published);
   }, [title, category, published, archived, articles]);
-  const headers = ['ID', 'Title', 'Category', 'Content', 'Created On', ''];
+  const headers = ["ID", "Title", "Category", "Content", "Created On", ""];
   const navigate = useNavigate();
   const cellStyle = {
-    fontFamily: 'Sans Serif',
-    width: 'calc((100% - 48px) / 6)',
+    fontFamily: "Sans Serif",
+    width: "calc((100% - 48px) / 6)",
   };
+
   return (
     <div className="w-full">
       <SomeContainer>
@@ -91,10 +100,10 @@ const ArticlesView = () => {
             <TopSection
               items={items}
               onClick={() => {
-                dispatch({type: CREATE_BLOG_RESET});
-                navigate('/articles/create');
+                dispatch({ type: CREATE_BLOG_RESET });
+                navigate("/articles/create");
               }}
-              actionText={'Create a Blog'}
+              actionText={"Create a Blog"}
             />
           </div>
           <div className="search-bar">
@@ -159,31 +168,39 @@ const ArticlesView = () => {
             </div>
           </div>
           <div className="articles-table text-center">
-            { loadingAllArticles && <CircularProgress variant="indeterminate" /> }
-            { allArticleError && <CustomError message={allArticleError} onClick={() => dispatch(fetchAllArticlesAction())} />}
-            { articles && <DataList
-              onRenderRow={(item: IArticle) => (
-                <TableRow key={`key-${v4()}`}>
-                  <TableCell sx={{}}>{item.id}</TableCell>
-                  <TableCell sx={cellStyle}>{item.title}</TableCell>
-                  <TableCell sx={cellStyle}>{item.category}</TableCell>
-                  <TableCell sx={cellStyle}>
-                    {`${item.content.substring(0, 100)}...`}
-                  </TableCell>
-                  <TableCell sx={cellStyle}>
-                    {format(item.createdOn, 'dd/MM/yyyy')}
-                  </TableCell>
-                  <TableCell sx={{width: '48px'}}>
-                    <IconButton
-                      onClick={() => navigate(`/articles/${item.id}`)}>
-                      <Edit sx={{color: '#1d0a33'}} />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              )}
-              headers={headers}
-              items={articleList}
-            />}
+            {loadingAllArticles && <CircularProgress variant="indeterminate" />}
+            {allArticleError && (
+              <CustomError
+                message={allArticleError}
+                onClick={() => dispatch(fetchAllArticlesAction())}
+              />
+            )}
+            {articles && (
+              <DataList
+                onRenderRow={(item: IArticle) => (
+                  <TableRow key={`key-${v4()}`}>
+                    <TableCell sx={{}}>{item.id}</TableCell>
+                    <TableCell sx={cellStyle}>{item.title}</TableCell>
+                    <TableCell sx={cellStyle}>{item.category}</TableCell>
+                    <TableCell sx={cellStyle}>
+                      {`${item.content.substring(0, 100)}...`}
+                    </TableCell>
+                    <TableCell sx={cellStyle}>
+                      {format(item.createdOn, "dd/MM/yyyy")}
+                    </TableCell>
+                    <TableCell sx={{ width: "48px" }}>
+                      <IconButton
+                        onClick={() => navigate(`/articles/${item.id}`)}
+                      >
+                        <Edit sx={{ color: "#1d0a33" }} />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                )}
+                headers={headers}
+                items={articleList}
+              />
+            )}
           </div>
           <div className="flex justify-center">
             {articleList.length > 10 && (

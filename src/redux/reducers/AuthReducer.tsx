@@ -3,11 +3,11 @@ import {
   AUTH_LOGIN_REQUEST,
   AUTH_LOGIN_SUCESS,
   AUTH_LOGOUT_REQUEST,
-} from '../constants/Constants';
+} from "../constants/ArticleConstants";
 
 export const authReducer = (
   state = {
-    authToken: '',
+    authToken: "",
     user: null,
     isAdmin: false,
     loading: false,
@@ -22,7 +22,7 @@ export const authReducer = (
         loading: true,
         user: null,
         isAdmin: false,
-        authToken: '',
+        authToken: "",
         error: null,
       };
     case AUTH_LOGIN_SUCESS:
@@ -34,7 +34,7 @@ export const authReducer = (
         loading: false,
         error: action.payload,
         user: null,
-        authToken: '',
+        authToken: "",
       };
     case AUTH_LOGOUT_REQUEST:
       return {

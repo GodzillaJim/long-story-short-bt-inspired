@@ -1,8 +1,8 @@
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import * as React from 'react';
-import { v4 } from 'uuid';
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import * as React from "react";
+import { v4 } from "uuid";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -19,7 +19,8 @@ export function TabPanel(props: TabPanelProps) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}>
+      {...other}
+    >
       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
@@ -28,7 +29,7 @@ export function TabPanel(props: TabPanelProps) {
 export function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
@@ -47,13 +48,14 @@ export default function CustomTabs(props: ICustomTabs) {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+    <Box sx={{ width: "100%" }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}
           onChange={handleChange}
           className="ml-3"
-          aria-label="basic tabs example">
+          aria-label="basic tabs example"
+        >
           {props.items.map((item: ITab, index: number) => (
             <Tab
               key={`key-${v4()}`}

@@ -6,22 +6,22 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import React from 'react';
-import { v4 } from 'uuid';
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import React from "react";
+import { v4 } from "uuid";
 
 interface IDataList {
   items: any[];
   headers: string[];
   label?: string;
-  onRenderRow: (row: any) => JSX.Element;
+  onRenderRow: (row: any, index: number) => JSX.Element;
 }
 const useStyles = makeStyles({
   headers: {
-    fontFamily: 'Source Sans Pro !important',
-    fontWeight: 'bold !important',
-    width: 'calc((100% - 48px) / 6)',
+    fontFamily: "Source Sans Pro !important",
+    fontWeight: "bold !important",
+    width: "calc((100% - 48px) / 6)",
   },
 });
 const DataList = (props: IDataList) => {
@@ -30,7 +30,7 @@ const DataList = (props: IDataList) => {
   return (
     <div>
       <TableContainer component={Paper}>
-        <Table aria-label={label || 'simple data table'}>
+        <Table aria-label={label || "simple data table"}>
           <TableHead>
             <TableRow>
               {headers.map((header: string) => (
@@ -41,7 +41,9 @@ const DataList = (props: IDataList) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {items.map((item: any) => props.onRenderRow(item))}
+            {items.map((item: any, index: number) =>
+              props.onRenderRow(item, index)
+            )}
           </TableBody>
         </Table>
       </TableContainer>

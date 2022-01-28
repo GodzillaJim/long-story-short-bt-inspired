@@ -1,6 +1,6 @@
-import { Person } from '@mui/icons-material';
-import { Avatar, Typography } from '@mui/material';
-import { getTimeCreated } from '../helpers/Time';
+import { Person } from "@mui/icons-material";
+import { Avatar, Typography } from "@mui/material";
+import { getTimeCreated } from "../helpers/Time";
 
 export interface IPersona {
   fullName: string;
@@ -14,7 +14,7 @@ const Persona = (props: IPersona) => {
       <div className="flex flex-row gap-2 w-full">
         <div>
           <Avatar>
-            <Person color='secondary' />
+            <Person color="secondary" />
           </Avatar>
         </div>
         <div className="w-full">

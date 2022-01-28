@@ -1,7 +1,22 @@
-import {combineReducers} from "redux";
+import { combineReducers } from "redux";
 
-import {authReducer} from "./reducers/AuthReducer";
-import {addCategoryReducer, addTagBulkReducer, addTagReducer, allArticlesReducer, blogDetailsReducer, categoriesReducer, categoryArticlesReducer, createBlogReducer, publishArticleReducer, tagsReducer, unPublishArticleReducer, updateArticleReducer, updateCategoryReducer} from "./reducers/BlogReducers";
+import { authReducer } from "./reducers/AuthReducer";
+import {
+  addCategoryReducer,
+  addTagBulkReducer,
+  addTagReducer,
+  allArticlesReducer,
+  blogDetailsReducer,
+  categoriesReducer,
+  categoryArticlesReducer,
+  createBlogReducer,
+  publishArticleReducer,
+  tagsReducer,
+  unPublishArticleReducer,
+  updateArticleReducer,
+  updateCategoryReducer,
+} from "./reducers/BlogReducers";
+import { allUsersReducer } from "./reducers/UsersReducer";
 
 export const combinedReducer = combineReducers({
   auth: authReducer,
@@ -18,5 +33,6 @@ export const combinedReducer = combineReducers({
   allArticles: allArticlesReducer,
   updateCategory: updateCategoryReducer,
   addCategory: addCategoryReducer,
+  allUsers: allUsersReducer,
 });
-export type RootState = ReturnType<typeof combinedReducer>
+export type RootState = ReturnType<typeof combinedReducer>;

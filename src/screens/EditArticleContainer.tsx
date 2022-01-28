@@ -1,4 +1,4 @@
-import {Edit, Home, Notes} from '@mui/icons-material';
+import { Edit, Home, Notes } from "@mui/icons-material";
 import {
   Button,
   Chip,
@@ -14,55 +14,55 @@ import {
   TextareaAutosize,
   TextField,
   Typography,
-} from '@mui/material';
-import {makeStyles} from '@mui/styles';
-import {useFormik} from 'formik';
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {useParams} from 'react-router';
-import {toast} from 'react-toastify';
-import {v4} from 'uuid';
-import {array, object, string} from 'yup';
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import { useFormik } from "formik";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { toast } from "react-toastify";
+import { v4 } from "uuid";
+import { array, object, string } from "yup";
 
-import CustomToastify from '../components/CustomToastify';
-import DefaultText from '../components/DefaultText';
-import Persona from '../components/Persona';
-import TopSection from '../components/TopSection';
-import TagPicker from '../pickers/TagPicker';
+import CustomToastify from "../components/CustomToastify";
+import DefaultText from "../components/DefaultText";
+import Persona from "../components/Persona";
+import TopSection from "../components/TopSection";
+import TagPicker from "../pickers/TagPicker";
 import {
   fetchBlogDetailsAction,
   fetchCategoriesAction,
   publishArticleAction,
   unPublishArticleAction,
   updateArticleAction,
-} from '../redux/actions/BlogActions';
-import {RootState} from '../redux/combineReducers';
-import {UPDATE_ARTICLE_RESET} from '../redux/constants/Constants';
+} from "../redux/actions/BlogActions";
+import { RootState } from "../redux/combineReducers";
+import { UPDATE_ARTICLE_RESET } from "../redux/constants/ArticleConstants";
 
-import {IArticle} from './CreateArticleContainer';
-import {SomeContainer} from './Dashboard';
+import { IArticle } from "./CreateArticleContainer";
+import { SomeContainer } from "./Dashboard";
 
 const useStyles = makeStyles({
   rootLoading: {
-    height: 'calc(100vh - 100px)',
-    marginTop: '12px',
-    marginBottom: '12px',
-    paddingTop: '200px',
+    height: "calc(100vh - 100px)",
+    marginTop: "12px",
+    marginBottom: "12px",
+    paddingTop: "200px",
   },
   retryButton: {
-    fontWeight: 'bold !important',
-    fontSize: '1.2em !important',
-    width: 'fit-content',
-    margin: 'auto !important',
+    fontWeight: "bold !important",
+    fontSize: "1.2em !important",
+    width: "fit-content",
+    margin: "auto !important",
   },
 });
 
 const EditArticleContainer = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const classes = useStyles();
   const dispatch = useDispatch();
   const [isEditing, setEditing] = useState<boolean>(false);
-  const message = 'This field is required';
+  const message = "This field is required";
   const {
     values,
     touched,
@@ -74,12 +74,12 @@ const EditArticleContainer = () => {
     isValid,
   } = useFormik<IArticle>({
     initialValues: {
-      title: 'Sample Title',
-      prompt: 'Sample Prompt',
-      summary: 'Sample summary',
-      content: 'Sample content',
+      title: "Sample Title",
+      prompt: "Sample Prompt",
+      summary: "Sample summary",
+      content: "Sample content",
       tags: [],
-      category: '',
+      category: "",
     },
     validationSchema: object().shape({
       title: string().required(message),
@@ -91,13 +91,13 @@ const EditArticleContainer = () => {
     }),
     onSubmit: (values: IArticle) => {
       console.log(values);
-      const article = {...values, id: id ? parseInt(id) : 1};
+      const article = { ...values, id: id ? parseInt(id) : 1 };
       dispatch(updateArticleAction(article));
     },
   });
 
-  const {loading, error, blog} = useSelector(
-    (state: RootState) => state.blogDetails,
+  const { loading, error, blog } = useSelector(
+    (state: RootState) => state.blogDetails
   );
   const {
     loading: publishing,
@@ -123,8 +123,8 @@ const EditArticleContainer = () => {
 
   useEffect(() => {
     if (updated) {
-      toast.success('Changes saved successfully!', {
-        onClose: () => dispatch({type: UPDATE_ARTICLE_RESET}),
+      toast.success("Changes saved successfully!", {
+        onClose: () => dispatch({ type: UPDATE_ARTICLE_RESET }),
       });
     }
     if (updateError) {
@@ -137,7 +137,7 @@ const EditArticleContainer = () => {
         toast.error(unPublishingError);
       }
       if (unPublished) {
-        toast.success('Article Unpublished successfully');
+        toast.success("Article Unpublished successfully");
       }
     }
   }, [unPublishing, unPublished, unPublishingError]);
@@ -147,7 +147,7 @@ const EditArticleContainer = () => {
         toast.error(publishingError);
       }
       if (published) {
-        toast.success('Published successfully');
+        toast.success("Published successfully");
       }
     }
   }, [publishing, publishingError, published]);
@@ -166,22 +166,22 @@ const EditArticleContainer = () => {
   };
   const items = [
     {
-      name: 'Admin',
-      link: '/',
+      name: "Admin",
+      link: "/",
       isActive: false,
-      icon: <Home sx={{mr: 0.5}} fontSize="medium" />,
+      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
     },
     {
-      name: 'Articles',
-      link: '/articles',
+      name: "Articles",
+      link: "/articles",
       isActive: false,
-      icon: <Notes sx={{mr: 0.5}} fontSize="medium" />,
+      icon: <Notes sx={{ mr: 0.5 }} fontSize="medium" />,
     },
     {
-      name: id || 'article',
+      name: id || "article",
       link: `/articles/${id}`,
       isActive: true,
-      icon: <Edit sx={{mr: 0.5}} fontSize="medium" />,
+      icon: <Edit sx={{ mr: 0.5 }} fontSize="medium" />,
     },
   ];
   const handlePublishArticle = () => {
@@ -195,7 +195,7 @@ const EditArticleContainer = () => {
     }
   };
   const handleTitleChange = (e: any) => {
-    setFieldValue('title', e.target.value || '');
+    setFieldValue("title", e.target.value || "");
   };
   // TODO: Implement fetch categories from backend
   const getCategoriesList = () => {
@@ -203,7 +203,7 @@ const EditArticleContainer = () => {
   };
   const handleEdit = () => {
     if (blog) {
-      const {title, summary, content, category, prompt, tags} = blog;
+      const { title, summary, content, category, prompt, tags } = blog;
       setValues({
         title,
         summary,
@@ -225,7 +225,7 @@ const EditArticleContainer = () => {
               <TopSection
                 items={items}
                 onClick={handleEdit}
-                actionText={'Edit Article'}
+                actionText={"Edit Article"}
               />
             </div>
           </div>
@@ -239,14 +239,15 @@ const EditArticleContainer = () => {
           {error && (
             <Paper className={classes.rootLoading}>
               <div className="flex flex-col gap-1 justify-center">
-                <Typography textAlign={'center'} variant="h6" color="red">
+                <Typography textAlign={"center"} variant="h6" color="red">
                   {error}
                 </Typography>
                 <Button
                   className={classes.retryButton}
                   color="primary"
                   onClick={handleRetry}
-                  variant="text">
+                  variant="text"
+                >
                   Retry
                 </Button>
               </div>
@@ -257,8 +258,9 @@ const EditArticleContainer = () => {
               <form noValidate onSubmit={handleSubmit}>
                 <div className="w-full grid grid-cols-12 p-3">
                   <div
-                    style={{borderRight: '1px solid rgba(0,0,0,0.2)'}}
-                    className="col-span-9 pt-4 px-3 pr-2">
+                    style={{ borderRight: "1px solid rgba(0,0,0,0.2)" }}
+                    className="col-span-9 pt-4 px-3 pr-2"
+                  >
                     <div className="flex flex-col gap-5">
                       <div className="title-and-category">
                         <div className="grid grid-cols-2 gap-5">
@@ -275,7 +277,7 @@ const EditArticleContainer = () => {
                                 id="title"
                                 value={values.title}
                                 onChange={handleTitleChange}
-                                label={'Title'}
+                                label={"Title"}
                                 variant="outlined"
                                 size="small"
                                 helperText={
@@ -305,7 +307,8 @@ const EditArticleContainer = () => {
                                   <FormControl fullWidth size="small">
                                     <InputLabel
                                       margin="dense"
-                                      id="demo-simple-select-label">
+                                      id="demo-simple-select-label"
+                                    >
                                       Category
                                     </InputLabel>
                                     <Select
@@ -317,14 +320,16 @@ const EditArticleContainer = () => {
                                       placeholder="Select article category"
                                       onChange={(e: any) =>
                                         setFieldValue(
-                                          'category',
-                                          e.target.value,
+                                          "category",
+                                          e.target.value
                                         )
-                                      }>
+                                      }
+                                    >
                                       {getCategoriesList().map((cat: any) => (
                                         <MenuItem
                                           key={`key-${v4()}`}
-                                          value={cat.value}>
+                                          value={cat.value}
+                                        >
                                           {cat.label}
                                         </MenuItem>
                                       ))}
@@ -332,8 +337,8 @@ const EditArticleContainer = () => {
                                     {(categoryLoading || categoryError) && (
                                       <FormHelperText>
                                         {categoryLoading
-                                          ? 'Loading categories'
-                                          : 'Categories failed to load. Try reloading'}
+                                          ? "Loading categories"
+                                          : "Categories failed to load. Try reloading"}
                                       </FormHelperText>
                                     )}
                                   </FormControl>
@@ -360,13 +365,13 @@ const EditArticleContainer = () => {
                                   disabled={loading || updating}
                                   value={values.content}
                                   onChange={(e) =>
-                                    setFieldValue('summary', e.target.value)
+                                    setFieldValue("summary", e.target.value)
                                   }
                                   minRows={6}
                                   style={{
-                                    width: '100%',
-                                    textAlign: 'justify',
-                                    padding: '4px',
+                                    width: "100%",
+                                    textAlign: "justify",
+                                    padding: "4px",
                                   }}
                                 />
                               </div>
@@ -375,15 +380,15 @@ const EditArticleContainer = () => {
                           {!isEditing && (
                             <div>
                               <div>
-                                <Typography fontWeight={'bold'} variant="body1">
+                                <Typography fontWeight={"bold"} variant="body1">
                                   Contents
                                 </Typography>
                               </div>
                               <div>
                                 <div
                                   style={{
-                                    fontFamily: 'sans-serif',
-                                    textAlign: 'justify',
+                                    fontFamily: "sans-serif",
+                                    textAlign: "justify",
                                   }}
                                   dangerouslySetInnerHTML={{
                                     __html: blog.content,
@@ -398,7 +403,7 @@ const EditArticleContainer = () => {
                       <div className="comments">
                         <div className="flex flex-col gap-3">
                           <div>
-                            <Typography fontWeight={'bold'} variant="body1">
+                            <Typography fontWeight={"bold"} variant="body1">
                               Comments
                             </Typography>
                           </div>
@@ -424,7 +429,7 @@ const EditArticleContainer = () => {
                     <div className="flex flex-col p-3 justify-center gap-3">
                       <div className="flex flex-row justify-center text-center">
                         {(publishing || unPublishing) && (
-                          <div style={{width: 'fit-content'}}>
+                          <div style={{ width: "fit-content" }}>
                             <CircularProgress variant="indeterminate" />
                           </div>
                         )}
@@ -432,14 +437,15 @@ const EditArticleContainer = () => {
                           <Button
                             className="m-auto"
                             disabled={updating}
-                            color={!blog.published ? 'primary' : 'secondary'}
+                            color={!blog.published ? "primary" : "secondary"}
                             onClick={
                               blog.published
                                 ? handleUnPublishArticle
                                 : handlePublishArticle
                             }
-                            variant="contained">
-                            {!blog.published ? 'Publish' : 'Unpublish'}
+                            variant="contained"
+                          >
+                            {!blog.published ? "Publish" : "Unpublish"}
                           </Button>
                         )}
                       </div>
@@ -460,12 +466,12 @@ const EditArticleContainer = () => {
                                   disabled={loading || updating}
                                   value={values.summary}
                                   onChange={(e) =>
-                                    setFieldValue('summary', e.target.value)
+                                    setFieldValue("summary", e.target.value)
                                   }
                                   minRows={6}
                                   style={{
-                                    width: '100%',
-                                    textAlign: 'justify',
+                                    width: "100%",
+                                    textAlign: "justify",
                                   }}
                                 />
                               </div>
@@ -474,16 +480,17 @@ const EditArticleContainer = () => {
                           {!isEditing && (
                             <div className="flex flex-col gap-1">
                               <div>
-                                <Typography fontWeight={'bold'} variant="body1">
+                                <Typography fontWeight={"bold"} variant="body1">
                                   Summary
                                 </Typography>
                               </div>
                               <div>
                                 <div
                                   style={{
-                                    fontFamily: 'sans-serif',
-                                    textAlign: 'justify',
-                                  }}>
+                                    fontFamily: "sans-serif",
+                                    textAlign: "justify",
+                                  }}
+                                >
                                   {blog.summary}
                                 </div>
                               </div>
@@ -508,12 +515,12 @@ const EditArticleContainer = () => {
                                   disabled={loading || updating}
                                   value={values.prompt}
                                   onChange={(e) =>
-                                    setFieldValue('prompt', e.target.value)
+                                    setFieldValue("prompt", e.target.value)
                                   }
                                   minRows={6}
                                   style={{
-                                    width: '100%',
-                                    textAlign: 'justify',
+                                    width: "100%",
+                                    textAlign: "justify",
                                   }}
                                 />
                               </div>
@@ -522,16 +529,17 @@ const EditArticleContainer = () => {
                           {!isEditing && (
                             <div className="flex flex-col gap-1">
                               <div>
-                                <Typography fontWeight={'bold'} variant="body1">
+                                <Typography fontWeight={"bold"} variant="body1">
                                   Prompt
                                 </Typography>
                               </div>
                               <div>
                                 <div
                                   style={{
-                                    fontFamily: 'sans-serif',
-                                    textAlign: 'justify',
-                                  }}>
+                                    fontFamily: "sans-serif",
+                                    textAlign: "justify",
+                                  }}
+                                >
                                   {blog.prompt}
                                 </div>
                               </div>
@@ -544,14 +552,14 @@ const EditArticleContainer = () => {
                         <div className="contents overflow-auto">
                           <div className="flex flex-col gap-1">
                             <div>
-                              <Typography fontWeight={'bold'} variant="body1">
+                              <Typography fontWeight={"bold"} variant="body1">
                                 Tags
                               </Typography>
                             </div>
                             {isEditing && (
                               <TagPicker
                                 setFieldValue={(newValue) =>
-                                  setFieldValue('tags', newValue)
+                                  setFieldValue("tags", newValue)
                                 }
                                 values={values.tags}
                                 disabled={updating}
@@ -586,7 +594,8 @@ const EditArticleContainer = () => {
                                 onClick={() => setEditing(!isEditing)}
                                 color="secondary"
                                 disabled={updating}
-                                variant="outlined">
+                                variant="outlined"
+                              >
                                 Cancel
                               </Button>
                             </div>
@@ -595,7 +604,8 @@ const EditArticleContainer = () => {
                                 disabled={!isValid || updating}
                                 onClick={() => submitForm()}
                                 color="secondary"
-                                variant="contained">
+                                variant="contained"
+                              >
                                 Save
                               </Button>
                             </div>

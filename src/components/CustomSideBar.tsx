@@ -6,7 +6,7 @@ import {
   Notes,
   Person,
   Tag,
-} from '@mui/icons-material';
+} from "@mui/icons-material";
 import {
   Drawer,
   IconButton,
@@ -15,38 +15,38 @@ import {
   ListItemIcon,
   ListItemText,
   useMediaQuery,
-} from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import React, { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router';
-import { v4 } from 'uuid';
-import './CustomSideBar.css';
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router";
+import { v4 } from "uuid";
+import "./CustomSideBar.css";
 
 const useStyles = makeStyles((theme: any) => ({
   drawerContainer: (props: { width: string }) => ({
-    height: '100%',
+    height: "100%",
     width: props.width,
-    position: 'fixed',
-    paddingTop: '30px',
-    backgroundColor: '#FFF',
+    position: "fixed",
+    paddingTop: "30px",
+    backgroundColor: "#FFF",
     left: 0,
-    fontFamily: 'Source Sans Pro',
-    transition: '0.5s',
-    borderRight: '1px solid #e6e6f9',
+    fontFamily: "Source Sans Pro",
+    transition: "0.5s",
+    borderRight: "1px solid #e6e6f9",
   }),
   listItem: {
-    overflow: 'hidden',
-    width: '100%',
-    fontFamily: 'Source Sans Pro',
+    overflow: "hidden",
+    width: "100%",
+    fontFamily: "Source Sans Pro",
   },
   listItemActive: {
-    backgroundColor: '#e9ddf8 !important',
-    overflow: 'hidden',
-    width: '100%',
-    fontFamily: 'Source Sans Pro',
+    backgroundColor: "#e9ddf8 !important",
+    overflow: "hidden",
+    width: "100%",
+    fontFamily: "Source Sans Pro",
   },
   itemMargin: {
-    marginRight: '12px',
+    marginRight: "12px",
   },
 }));
 interface ICustomSideBar {
@@ -57,8 +57,8 @@ interface ICustomSideBar {
 }
 const CustomSideBar = (props: ICustomSideBar) => {
   const rtl: boolean = false;
-  const classes = useStyles({ width: '60px' });
-  const matches = useMediaQuery('(max-width:600px)');
+  const classes = useStyles({ width: "60px" });
+  const matches = useMediaQuery("(max-width:600px)");
   const handleMouseEnter = () => {
     props.setMouseOver();
   };
@@ -69,31 +69,31 @@ const CustomSideBar = (props: ICustomSideBar) => {
     {
       classes,
       key: `key-${v4()}`,
-      text: 'Home',
+      text: "Home",
       icon: <Home />,
-      link: '/home',
+      link: "/home",
     },
     {
       classes,
       key: `key-${v4()}`,
-      text: 'Users',
+      text: "Users",
       icon: <Person />,
-      link: '/users',
+      link: "/users",
     },
     {
       classes,
       key: `key-${v4()}`,
-      text: 'Articles',
+      text: "Articles",
       icon: <Notes />,
-      link: '/articles',
+      link: "/articles",
     },
-    { classes, key: `key-${v4()}`, text: 'Tags', icon: <Tag />, link: '/tags' },
+    { classes, key: `key-${v4()}`, text: "Tags", icon: <Tag />, link: "/tags" },
     {
       classes,
       key: `key-${v4()}`,
-      text: 'Category',
+      text: "Category",
       icon: <Category />,
-      link: '/categories',
+      link: "/categories",
     },
   ];
   return (
@@ -102,7 +102,8 @@ const CustomSideBar = (props: ICustomSideBar) => {
         <Drawer
           anchor="left"
           onClose={() => props.openDrawer(!props.open)}
-          open={props.open}>
+          open={props.open}
+        >
           <List>
             <ListItem key={`key-${v4()}`}>
               <IconButton onClick={() => props.openDrawer(!props.open)}>
@@ -119,7 +120,8 @@ const CustomSideBar = (props: ICustomSideBar) => {
         <div
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className={`${classes.drawerContainer} MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 sidebar `}>
+          className={`${classes.drawerContainer} MuiPaper-root MuiPaper-elevation MuiPaper-elevation1 sidebar `}
+        >
           {!matches && (
             <List>
               {items.map((item: any) => (
@@ -144,7 +146,7 @@ const CustomListItem = (props: IProp) => {
   const location = useLocation();
   const navigate = useNavigate();
   const isActive = location.pathname.includes(props.link);
-  const matches = useMediaQuery('(max-width:600px)');
+  const matches = useMediaQuery("(max-width:600px)");
 
   useEffect(() => {
     console.log(
@@ -158,8 +160,9 @@ const CustomListItem = (props: IProp) => {
       onClick={() => navigate(props.link)}
       className={!isActive ? classes.listItem : classes.listItemActive}
       button
-      color={isActive ? 'secondary' : 'primary'}>
-      <ListItemIcon className={matches ? classes.itemMargin : ''}>
+      color={isActive ? "secondary" : "primary"}
+    >
+      <ListItemIcon className={matches ? classes.itemMargin : ""}>
         {props.icon}
       </ListItemIcon>
       <ListItemText primary={props.text} />
