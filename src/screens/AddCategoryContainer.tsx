@@ -37,7 +37,7 @@ const AddCategoryContainer = (props: IAddCategoryContainer) => {
       toast.success("Category(ies) created successfully!");
       setFieldValue("categories", "");
     }
-  }, [loading, error, success]);
+  }, [loading, error, success, setFieldValue]);
   const handleCreateCategories = () => {
     submitForm();
   };

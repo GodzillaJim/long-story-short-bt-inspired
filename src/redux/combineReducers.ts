@@ -16,7 +16,7 @@ import {
   updateArticleReducer,
   updateCategoryReducer,
 } from "./reducers/BlogReducers";
-import { allUsersReducer } from "./reducers/UsersReducer";
+import { activateUserReducer, allUsersReducer, changePasswordReducer, createUserReducer, deactivateUserReducer, demoteAdminReducer, makeAdminReducer, userReducer } from "./reducers/UsersReducer";
 
 export const combinedReducer = combineReducers({
   auth: authReducer,
@@ -34,5 +34,12 @@ export const combinedReducer = combineReducers({
   updateCategory: updateCategoryReducer,
   addCategory: addCategoryReducer,
   allUsers: allUsersReducer,
+  createUser: createUserReducer,
+  user: userReducer,
+  changePassword: changePasswordReducer,
+  makeAdmin: makeAdminReducer,
+  demoteAdmin: demoteAdminReducer,
+  activateUser: activateUserReducer,
+  deactivateUser: deactivateUserReducer
 });
 export type RootState = ReturnType<typeof combinedReducer>;

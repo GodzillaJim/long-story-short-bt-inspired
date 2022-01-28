@@ -15,6 +15,7 @@ import ArticlesView from "./screens/ArticlesView";
 import EditArticleContainer from "./screens/EditArticleContainer";
 import CreateArticleContainer from "./screens/CreateArticleContainer";
 import CategoriesView from "./screens/CategoriesView";
+import UserDetaisView from "./screens/UserDetaisView";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route path="home" element={<Dashboard />} />
           <Route path="users" element={<UserView />} />
+          <Route path="users/:id" element={<UserDetaisView/>}/>
           <Route path="tags" element={<TagsView />} />
           <Route path="articles" element={<ArticlesView />} />
           <Route path="articles/create" element={<CreateArticleContainer />} />

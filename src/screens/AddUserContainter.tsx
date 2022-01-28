@@ -1,14 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import { IUser } from "../data/Users";
 import { string, object } from "yup";
 import CustomDialog from "../components/CustomDialog";
-import { IconButton, InputAdornment, TextField, FormGroup, FormControlLabel, Switch, Button } from "@mui/material";
+import {
+  IconButton,
+  InputAdornment,
+  TextField,
+  FormGroup,
+  FormControlLabel,
+  Switch,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 import { format } from "date-fns";
 import { ContentCopy } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import CustomToastify from "../components/CustomToastify";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { createUserAction } from "../redux/actions/UserActions";
+import { RootState } from "../redux/combineReducers";
+import { useNavigate } from "react-router";
 
 interface IAddUserContainer {
   open: boolean;
@@ -23,6 +36,24 @@ const useStyles = makeStyles({
 });
 const AddUserContainter = (props: IAddUserContainer) => {
   const message = "This is required";
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loading, user, error } = useSelector(
+    (state: RootState) => state.createUser
+  );
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+    if (user) {
+      toast.success("User created successfully!", {
+        onClose: () => {
+          navigate(`/users/${user.id}`);
+        },
+      });
+    }
+  }, [loading, user, error, navigate]);
+  
   const classes = useStyles();
   const { values, errors, touched, setFieldValue, handleSubmit, isValid } =
     useFormik<IUser>({
@@ -45,19 +76,22 @@ const AddUserContainter = (props: IAddUserContainer) => {
       }),
       onSubmit: (vals: IUser) => {
         //TODO: Implement create user
+        dispatch(createUserAction(vals));
       },
     });
   const handleCopyPassword = async () => {
-    await navigator
-    .clipboard
-    .writeText(values.password)
-    .then(()=> {
-        toast.success("Password copied successfully")
-    })
-    .catch(()=> {
-        toast.error("Copying password failed!")
-    })
+    await navigator.clipboard
+      .writeText(values.password)
+      .then(() => {
+        toast.success("Password copied successfully");
+      })
+      .catch(() => {
+        toast.error("Copying password failed!");
+      });
   };
+  useEffect(()=> {
+    console.log(errors, touched, values)
+  }, [touched, errors, values])
   return (
     <CustomDialog
       width="600px"
@@ -79,6 +113,7 @@ const AddUserContainter = (props: IAddUserContainer) => {
                     value={values.id}
                     size="small"
                     fullWidth
+                    disabled={loading}
                   />
                 </div>
                 <div className="col-span-1">
@@ -90,6 +125,7 @@ const AddUserContainter = (props: IAddUserContainer) => {
                     value={format(values.createdOn, "dd/MM/yyyy")}
                     size="small"
                     fullWidth
+                    disabled={loading}
                   />
                 </div>
               </div>
@@ -107,7 +143,10 @@ const AddUserContainter = (props: IAddUserContainer) => {
                     }
                     size="small"
                     fullWidth
-                    helperText={touched.firstName ? errors.firstName : undefined}
+                    helperText={
+                      touched.firstName ? errors.firstName : undefined
+                    }
+                    disabled={loading}
                   />
                 </div>
                 <div className="col-span-1">
@@ -121,10 +160,24 @@ const AddUserContainter = (props: IAddUserContainer) => {
                     }
                     size="small"
                     fullWidth
+                    disabled={loading}
                     helperText={touched.lastName ? errors.lastName : undefined}
                   />
                 </div>
               </div>
+            </div>
+            <div>
+            <TextField
+                name="username"
+                variant="outlined"
+                label="Username"
+                value={values.username}
+                onChange={(event) => setFieldValue("username", event.target.value)}
+                size="small"
+                fullWidth
+                disabled={loading}
+                helperText={touched.username ? errors.username : undefined}
+              />
             </div>
             <div>
               <TextField
@@ -135,6 +188,7 @@ const AddUserContainter = (props: IAddUserContainer) => {
                 onChange={(event) => setFieldValue("email", event.target.value)}
                 size="small"
                 fullWidth
+                disabled={loading}
                 helperText={touched.email ? errors.email : undefined}
               />
             </div>
@@ -147,11 +201,15 @@ const AddUserContainter = (props: IAddUserContainer) => {
                 onChange={(event) => setFieldValue("email", event.target.value)}
                 size="small"
                 fullWidth
+                disabled={loading}
                 InputProps={{
                   readOnly: true,
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton className={classes.iconButton} onClick={handleCopyPassword}>
+                      <IconButton
+                        className={classes.iconButton}
+                        onClick={handleCopyPassword}
+                      >
                         <ContentCopy />
                       </IconButton>
                     </InputAdornment>
@@ -161,52 +219,78 @@ const AddUserContainter = (props: IAddUserContainer) => {
               />
             </div>
             <div>
-                <div className="grid grid-cols-2 gap-2">
-                    <div className="col-span-1">
-                        <FormGroup>
-                            <FormControlLabel
-                            control={
-                                <Switch
-                                color="primary"
-                                disabled={false}
-                                checked={values.isActive}
-                                onChange={() => setFieldValue("isActive", !values.isActive)}
-                                />
-                            }
-                            label="Is Active"
-                            />
-                        </FormGroup>
-                    </div>
-                    <div className="col-span-1">
-                        <FormGroup>
-                            <FormControlLabel
-                            control={
-                                <Switch
-                                color="primary"
-                                disabled={false}
-                                checked={values.isAdmin}
-                                onChange={() => setFieldValue("isAdmin", !values.isAdmin)}
-                                />
-                            }
-                            label="Is Admin"
-                            />
-                        </FormGroup>
-                    </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="col-span-1">
+                  <FormGroup>
+                    <FormControlLabel
+                      disabled={loading}
+                      control={
+                        <Switch
+                          color="primary"
+                          disabled={false}
+                          checked={values.isActive}
+                          onChange={() =>
+                            setFieldValue("isActive", !values.isActive)
+                          }
+                          
+                        />
+                      }
+                      label="Is Active"
+                    />
+                  </FormGroup>
                 </div>
+                <div className="col-span-1">
+                  <FormGroup>
+                    <FormControlLabel
+                    disabled={loading}
+                      control={
+                        <Switch
+                          color="primary"
+                          disabled={false}
+                          checked={values.isAdmin}
+                          onChange={() =>
+                            setFieldValue("isAdmin", !values.isAdmin)
+                          }
+                        />
+                      }
+                      label="Is Admin"
+                    />
+                  </FormGroup>
+                </div>
+              </div>
             </div>
             <div>
-                <div className="flex flex-row gap-5 justify-end">
-                    <div>
-                        <Button color="primary" variant="outlined" onClick={props.onClose} >Cancel</Button>
-                    </div>
-                    <div>
-                        <Button disabled={!isValid} color="primary" variant="contained" type="submit">Create</Button>
-                    </div>
+              <div className="flex flex-row gap-5 justify-end">
+                <div>
+                  <Button
+                    color="primary"
+                    variant="outlined"
+                    onClick={props.onClose}
+                    disabled={loading}
+                  >
+                    Cancel
+                  </Button>
                 </div>
+                <div>
+                  {loading && (
+                    <CircularProgress size={20} variant="indeterminate" />
+                  )}
+                  {!loading && (
+                    <Button
+                      disabled={!isValid}
+                      color="primary"
+                      variant="contained"
+                      type="submit"
+                    >
+                      Create
+                    </Button>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </form>
-        <CustomToastify/>
+        <CustomToastify />
       </div>
     </CustomDialog>
   );
