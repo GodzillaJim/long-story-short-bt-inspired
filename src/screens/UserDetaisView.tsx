@@ -1,5 +1,4 @@
 import {
-  Button,
   CircularProgress,
   Divider,
   Paper,
@@ -21,12 +20,16 @@ import {
   demoteAdminAction,
   getUserAction,
   makeAdminAction,
+  updateUserAction,
 } from "../redux/actions/UserActions";
 import { RootState } from "../redux/combineReducers";
 import { string, object, ref } from "yup";
 import { toast } from "react-toastify";
 import CustomToastify from "../components/CustomToastify";
 import { IUser } from "../data/Users";
+import { Home, People, Person } from "@mui/icons-material";
+import TopSection from "../components/TopSection";
+import CustomButton from "../components/CustomButton";
 
 const UserDetaisView = () => {
   const { id } = useParams();
@@ -73,7 +76,9 @@ const UserDetaisView = () => {
       lastName: string().required(message),
       username: string().required(message),
     }),
-    onSubmit: (vals) => {},
+    onSubmit: (vals) => {
+      dispatch(updateUserAction(vals));
+    },
   });
   const { loading, error, user } = useSelector(
     (state: RootState) => state.user
@@ -152,6 +157,19 @@ const UserDetaisView = () => {
       toast.success("User is now active!");
     }
   }, [deActivating, deActivationError, userIsInactive]);
+  const {
+    loading: updatingUser,
+    error: userUpdateError,
+    user: updatedUser,
+  } = useSelector((state: RootState) => state.updateUser);
+  useEffect(() => {
+    if (userUpdateError) {
+      toast.error(userUpdateError);
+    }
+    if (updatedUser) {
+      toast.success("User updated successfully!");
+    }
+  }, [updatingUser, userUpdateError, updatedUser]);
   const handleRetry = () => {
     id && dispatch(getUserAction(id));
   };
@@ -167,17 +185,38 @@ const UserDetaisView = () => {
   const handleDeactivate = () => {
     dispatch(deactivateUserAction(user.id));
   };
+  const handleEdit = () => {
+    user && formik.setValues(user);
+    setIsEditing(!isEditing);
+  };
+  const items = [
+    {
+      name: "Admin",
+      link: "/",
+      isActive: false,
+      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
+    },
+    {
+      name: "Users",
+      link: "/users",
+      isActive: false,
+      icon: <People sx={{ mr: 0.5 }} fontSize="medium" />,
+    },
+    {
+      name: user ? user.firstName : "",
+      link: `/users/${user ? user.id : ""}`,
+      isActive: true,
+      icon: <Person sx={{ mr: 0.5 }} fontSize="medium" />,
+    },
+  ];
   return (
     <div className="m-3">
-      <div className="flex justify-end my-3">
+      <div className="flex flex-row justify-between my-3">
+        <TopSection breadCrumbsOnly items={items} />
         <div>
-          <Button
-            onClick={() => setIsEditing(!isEditing)}
-            variant="outlined"
-            size="small"
-          >
+          <CustomButton onClick={handleEdit} variant="outlined" size="small">
             {isEditing ? "Cancel" : "Edit"}
-          </Button>
+          </CustomButton>
         </div>
       </div>
       <div>
@@ -218,24 +257,52 @@ const UserDetaisView = () => {
                           value={user.firstName}
                         />
                       )}
-                      { isEditing &&  <TextField
-                    name="firstName"
-                    variant="outlined"
-                    label="First Name"
-                    value={formik.values.firstName}
-                    onChange={(event) =>
-                      formik.setFieldValue("firstName", event.target.value)
-                    }
-                    size="small"
-                    fullWidth
-                    helperText={
-                      formik.touched.firstName ? formik.errors.firstName : undefined
-                    }
-                    disabled={loading}
-                  /> }
+                      {isEditing && (
+                        <TextField
+                          name="firstName"
+                          variant="outlined"
+                          label="First Name"
+                          value={formik.values.firstName}
+                          onChange={(event) =>
+                            formik.setFieldValue(
+                              "firstName",
+                              event.target.value
+                            )
+                          }
+                          size="small"
+                          fullWidth
+                          helperText={
+                            formik.touched.firstName
+                              ? formik.errors.firstName
+                              : undefined
+                          }
+                          disabled={updatingUser}
+                        />
+                      )}
                     </div>
                     <div className="col-span-1">
-                      <DefaultText label="Last Name" value={user.lastName} />
+                      {isEditing && (
+                        <TextField
+                          name="lastName"
+                          variant="outlined"
+                          label="Last Name"
+                          value={formik.values.lastName}
+                          onChange={(event) =>
+                            formik.setFieldValue("lastName", event.target.value)
+                          }
+                          size="small"
+                          fullWidth
+                          disabled={updatingUser}
+                          helperText={
+                            formik.touched.lastName
+                              ? formik.errors.lastName
+                              : undefined
+                          }
+                        />
+                      )}
+                      {!isEditing && (
+                        <DefaultText label="Last Name" value={user.lastName} />
+                      )}
                     </div>
                   </div>
                   <Divider />
@@ -244,29 +311,61 @@ const UserDetaisView = () => {
                   </div>
                   <Divider />
                   <div>
-                    <DefaultText label="Username" value={user.username} />
+                    {isEditing && (
+                      <TextField
+                        name="username"
+                        variant="outlined"
+                        label="Username"
+                        value={formik.values.username}
+                        onChange={(event) =>
+                          formik.setFieldValue("username", event.target.value)
+                        }
+                        size="small"
+                        style={{ width: "60%" }}
+                        disabled={updatingUser}
+                        helperText={
+                          formik.touched.username
+                            ? formik.errors.username
+                            : undefined
+                        }
+                      />
+                    )}
+                    {!isEditing && (
+                      <DefaultText label="Username" value={user.username} />
+                    )}
                   </div>
                   <Divider />
                   <div>
-                    <div className="flex flex-row gap-7">
-                      <div>
-                        <CustomCheckbox
-                          color="primary"
-                          checked={user.isActive}
-                          disabled={false}
-                          onChange={() => {}}
-                          label={"Is Active"}
-                        />
+                    <div className="flex flex-row justify-between">
+                      <div className="flex flex-row gap-7">
+                        <div>
+                          <CustomCheckbox
+                            color="primary"
+                            checked={user.isActive}
+                            disabled={false}
+                            onChange={() => {}}
+                            label={"Is Active"}
+                            readOnly
+                          />
+                        </div>
+                        <div>
+                          <CustomCheckbox
+                            color="primary"
+                            checked={user.isAdmin}
+                            disabled={false}
+                            onChange={() => {}}
+                            label={"Is Admin"}
+                            readOnly
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <CustomCheckbox
-                          color="primary"
-                          checked={user.isAdmin}
-                          disabled={false}
-                          onChange={() => {}}
-                          label={"Is Admin"}
-                        />
-                      </div>
+                      {isEditing && (
+                        <div>
+                          <CustomButton onClick={formik.submitForm}>
+                            Save Changes
+                          </CustomButton>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -331,13 +430,13 @@ const UserDetaisView = () => {
                         <CircularProgress variant="indeterminate" size={20} />
                       )}
                       {!changing && (
-                        <Button
+                        <CustomButton
                           onClick={submitForm}
                           size="small"
                           variant="outlined"
                         >
                           Change
-                        </Button>
+                        </CustomButton>
                       )}
                     </div>
                   </div>
@@ -350,7 +449,7 @@ const UserDetaisView = () => {
                         <CircularProgress variant="indeterminate" size={20} />
                       )}
                       {!activating && !deActivating && (
-                        <Button
+                        <CustomButton
                           onClick={() =>
                             user.isActive
                               ? handleDeactivate()
@@ -359,7 +458,7 @@ const UserDetaisView = () => {
                           variant="contained"
                         >
                           {user.isActive ? "Deactivate" : "Activate"}
-                        </Button>
+                        </CustomButton>
                       )}
                     </div>
                     <div className="make-admin-button">
@@ -367,14 +466,14 @@ const UserDetaisView = () => {
                         <CircularProgress variant="indeterminate" size={20} />
                       )}
                       {!making && !demoting && (
-                        <Button
+                        <CustomButton
                           onClick={() =>
                             user.isAdmin ? handleDemote() : handleMakeAdmin()
                           }
                           variant="contained"
                         >
                           {user.isAdmin ? "Demote" : "Make Admin"}
-                        </Button>
+                        </CustomButton>
                       )}
                     </div>
                   </div>

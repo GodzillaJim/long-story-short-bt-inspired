@@ -1,8 +1,4 @@
-import {
-  FormControlLabel,
-  FormGroup,
-  Switch,
-} from "@mui/material";
+import { FormControlLabel, FormGroup, Switch } from "@mui/material";
 import React from "react";
 
 interface ICustomCheckbox {
@@ -18,6 +14,7 @@ interface ICustomCheckbox {
   checked: boolean;
   onChange: () => void;
   label: string;
+  readOnly?: boolean;
 }
 const CustomCheckbox = (props: ICustomCheckbox) => {
   return (

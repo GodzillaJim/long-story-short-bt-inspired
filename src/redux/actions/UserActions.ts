@@ -22,6 +22,9 @@ import {
   DEACTIVATE_USER_REQUEST,
   DEACTIVATE_USER_SUCCESS,
   DEACTIVATE_USER_FAIL,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_FAIL,
 } from "../constants/UserConstants";
 import { getUsers, IUser } from "../../data/Users";
 
@@ -50,7 +53,7 @@ export const createUserAction = (user: IUser) => async (dispatch: Dispatch<any>)
 export const getUserAction = (id: string) => async (dispatch: Dispatch<any>) => {
   try {
     dispatch({ type: FETCH_USER_REQUEST });
-    // TODO: Implement get all users axios
+    // TODO: Implement get one user by ID axios
      dispatch({ type: FETCH_USER_SUCCESS, payload: getUsers()[0] });
   } catch (exception: any) {
     dispatch({
@@ -115,6 +118,20 @@ export const deactivateUserAction = (userId: string) => async (dispatch: Dispatc
   } catch (exception: any) {
     dispatch({
       type: DEACTIVATE_USER_FAIL,
+      payload: exception.message || "Something went wrong",
+    });
+  }
+};
+
+export const updateUserAction = (user: IUser) => async (dispatch: Dispatch<any>) => {
+  try {
+    dispatch({ type: UPDATE_USER_REQUEST });
+    // TODO: Implement GET Activate users admin axios
+     dispatch({ type: UPDATE_USER_SUCCESS, payload: getUsers()[0] });
+     dispatch(getUserAction(user.id))
+  } catch (exception: any) {
+    dispatch({
+      type: UPDATE_USER_FAIL,
       payload: exception.message || "Something went wrong",
     });
   }

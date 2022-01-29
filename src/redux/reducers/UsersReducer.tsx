@@ -15,7 +15,18 @@ import {
   MAKE_ADMIN_REQUEST,
   MAKE_ADMIN_SUCCESS,
   MAKE_ADMIN_FAIL,
-  DEMOTE_ADMIN_REQUEST, DEMOTE_ADMIN_SUCCESS, DEMOTE_ADMIN_FAIL, ACTIVATE_USER_REQUEST, ACTIVATE_USER_SUCCESS, ACTIVATE_USER_FAIL, DEACTIVATE_USER_REQUEST, DEACTIVATE_USER_SUCCESS, DEACTIVATE_USER_FAIL
+  DEMOTE_ADMIN_REQUEST,
+  DEMOTE_ADMIN_SUCCESS,
+  DEMOTE_ADMIN_FAIL,
+  ACTIVATE_USER_REQUEST,
+  ACTIVATE_USER_SUCCESS,
+  ACTIVATE_USER_FAIL,
+  DEACTIVATE_USER_REQUEST,
+  DEACTIVATE_USER_SUCCESS,
+  DEACTIVATE_USER_FAIL,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_FAIL,
 } from "../constants/UserConstants";
 
 interface IDefaultState {
@@ -151,6 +162,22 @@ export const deactivateUserReducer = (
       return { loading: false, error: null, success: true };
     case DEACTIVATE_USER_FAIL:
       return { loading: false, error: action.payload, success: false };
+    default:
+      return state;
+  }
+};
+
+export const updateUserReducer = (
+  state = { loading: false, error: null, user: false },
+  action: IAction
+) => {
+  switch (action.type) {
+    case UPDATE_USER_REQUEST:
+      return { loading: true, error: null, user: false };
+    case UPDATE_USER_SUCCESS:
+      return { loading: false, error: null, user: action.payload };
+    case UPDATE_USER_FAIL:
+      return { loading: false, error: action.payload, user: false };
     default:
       return state;
   }

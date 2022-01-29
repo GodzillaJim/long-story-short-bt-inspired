@@ -53,7 +53,7 @@ const AddUserContainter = (props: IAddUserContainer) => {
       });
     }
   }, [loading, user, error, navigate]);
-  
+
   const classes = useStyles();
   const { values, errors, touched, setFieldValue, handleSubmit, isValid } =
     useFormik<IUser>({
@@ -89,9 +89,9 @@ const AddUserContainter = (props: IAddUserContainer) => {
         toast.error("Copying password failed!");
       });
   };
-  useEffect(()=> {
-    console.log(errors, touched, values)
-  }, [touched, errors, values])
+  useEffect(() => {
+    console.log(errors, touched, values);
+  }, [touched, errors, values]);
   return (
     <CustomDialog
       width="600px"
@@ -167,12 +167,14 @@ const AddUserContainter = (props: IAddUserContainer) => {
               </div>
             </div>
             <div>
-            <TextField
+              <TextField
                 name="username"
                 variant="outlined"
                 label="Username"
                 value={values.username}
-                onChange={(event) => setFieldValue("username", event.target.value)}
+                onChange={(event) =>
+                  setFieldValue("username", event.target.value)
+                }
                 size="small"
                 fullWidth
                 disabled={loading}
@@ -232,7 +234,6 @@ const AddUserContainter = (props: IAddUserContainer) => {
                           onChange={() =>
                             setFieldValue("isActive", !values.isActive)
                           }
-                          
                         />
                       }
                       label="Is Active"
@@ -242,7 +243,7 @@ const AddUserContainter = (props: IAddUserContainer) => {
                 <div className="col-span-1">
                   <FormGroup>
                     <FormControlLabel
-                    disabled={loading}
+                      disabled={loading}
                       control={
                         <Switch
                           color="primary"
