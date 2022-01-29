@@ -10,7 +10,7 @@ import {
   Pagination,
 } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
-import { Person, Home, Edit } from "@mui/icons-material";
+import { Person, Home, Edit, People } from "@mui/icons-material";
 import { SomeContainer } from "./Dashboard";
 import TopSection from "../components/TopSection";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +23,7 @@ import { IUser } from "../data/Users";
 import { v4 } from "uuid";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import AddUserContainter from './AddUserContainter';
+import AddUserContainter from "./AddUserContainter";
 
 const useStyles = makeStyles({
   usersPaper: {
@@ -40,7 +40,7 @@ const UserView = () => {
   const [email, setEmail] = useState<string>("");
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  const [addUser, setAddUser] = useState<boolean>(false)
+  const [addUser, setAddUser] = useState<boolean>(false);
   const classes = useStyles();
   const { loading, error, users } = useSelector(
     (state: RootState) => state.allUsers
@@ -61,12 +61,12 @@ const UserView = () => {
       name: "User",
       link: "/users",
       isActive: true,
-      icon: <Person sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <People sx={{ mr: 0.5 }} fontSize="medium" />,
     },
   ];
 
   const handleAddUser = () => {
-    setAddUser(!addUser)
+    setAddUser(!addUser);
   };
   const handleRetry = () => {
     dispatch(getAllUsersAction());
@@ -208,16 +208,25 @@ const UserView = () => {
                     headers={headers}
                     items={userList}
                   />
-                  { userList.length > 10 && <div className="flex justify-center mx-2">
-                    <Paper>
-                      <Pagination count={userList.length} page={page} onChange={(event, page)=>setPage(page)} />
-                    </Paper>
-                  </div>}
+                  {userList.length > 10 && (
+                    <div className="flex justify-center mx-2">
+                      <Paper>
+                        <Pagination
+                          count={userList.length}
+                          page={page}
+                          onChange={(event, page) => setPage(page)}
+                        />
+                      </Paper>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
           </div>
-          <AddUserContainter open={addUser} onClose={()=> setAddUser(!addUser)}  />
+          <AddUserContainter
+            open={addUser}
+            onClose={() => setAddUser(!addUser)}
+          />
         </div>
       </SomeContainer>
     </div>

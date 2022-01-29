@@ -4,7 +4,7 @@ import {
   ChevronRight,
   Home,
   Notes,
-  Person,
+  People,
   Tag,
 } from "@mui/icons-material";
 import {
@@ -17,7 +17,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { v4 } from "uuid";
 import "./CustomSideBar.css";
@@ -77,7 +76,7 @@ const CustomSideBar = (props: ICustomSideBar) => {
       classes,
       key: `key-${v4()}`,
       text: "Users",
-      icon: <Person />,
+      icon: <People />,
       link: "/users",
     },
     {
@@ -148,13 +147,6 @@ const CustomListItem = (props: IProp) => {
   const isActive = location.pathname.includes(props.link);
   const matches = useMediaQuery("(max-width:600px)");
 
-  useEffect(() => {
-    console.log(
-      location.pathname,
-      props.link,
-      location.pathname === props.link
-    );
-  });
   return (
     <ListItem
       onClick={() => navigate(props.link)}

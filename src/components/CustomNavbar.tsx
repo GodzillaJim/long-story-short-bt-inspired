@@ -15,6 +15,7 @@ import {
   MDBIcon,
 } from "mdbreact";
 import React from "react";
+import useAuth from "../hooks/useAuth";
 
 const useStyles = makeStyles((theme: DefaultTheme) => ({
   navbar: {
@@ -38,6 +39,7 @@ interface ICustomNavbar {
 const CustomNavbar = (props: ICustomNavbar) => {
   const classes = useStyles();
   const matches = useMediaQuery("(max-width:600px)");
+  const { user } = useAuth();
 
   return (
     <div>
@@ -58,6 +60,7 @@ const CustomNavbar = (props: ICustomNavbar) => {
             Long Story Short
           </Typography>
           <div>
+            <Typography variant="caption">{JSON.stringify(user)}</Typography>
             <MDBDropdown>
               <MDBDropdownToggle nav caret>
                 <MDBIcon className={classes.userIcon} icon="user" />
