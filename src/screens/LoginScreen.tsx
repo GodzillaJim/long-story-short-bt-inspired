@@ -20,6 +20,7 @@ import { loginAction } from "../redux/actions/AuthAction";
 import { RootState } from "../redux/combineReducers";
 import { ToastContainer, toast } from "react-toastify";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import CustomButton from "../components/CustomButton";
 import "react-toastify/dist/ReactToastify.css";
 interface ILogin {
   username: string;
@@ -74,7 +75,7 @@ const LoginScreen = () => {
     }),
   });
   return (
-    <Paper>
+    <div>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -194,14 +195,15 @@ const LoginScreen = () => {
                 />
               </Grid>
               <Grid item>
-                <Button
+                <CustomButton
                   disabled={loading}
                   fullWidth
                   type="submit"
                   variant="contained"
+                  color="secondary"
                 >
                   Log In
-                </Button>
+                </CustomButton>
               </Grid>
             </Grid>
           </form>
@@ -210,7 +212,7 @@ const LoginScreen = () => {
           <LoginImageContainer />
         </Grid>
       </Grid>
-    </Paper>
+    </div>
   );
 };
 
@@ -223,11 +225,16 @@ const LoginImageContainer = () => {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
-        height: "98vh",
+        height: "100vh",
         overflow: "hidden",
         borderRadius: "8px",
       }}
-    ></div>
+    >
+      <div
+        style={{ backgroundColor: "rgb(93 65 126 / 40%)" }}
+        className="overlay h-full w-full"
+      ></div>
+    </div>
   );
 };
 export default LoginScreen;
