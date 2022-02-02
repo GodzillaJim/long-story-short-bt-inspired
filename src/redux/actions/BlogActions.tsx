@@ -44,6 +44,15 @@ import {
   DELETE_CATEGORY_REQUEST,
   DELETE_CATEGORY_SUCCESS,
   DELETE_CATEGORY_FAIL,
+  ARCHIVE_CATEGORY_REQUEST,
+  ARCHIVE_CATEGORY_SUCCESS,
+  ARCHIVE_CATEGORY_FAIL,
+  UNARCHIVE_CATEGORY_REQUEST,
+  UNARCHIVE_CATEGORY_SUCCESS,
+  UNARCHIVE_CATEGORY_FAIL,
+  GET_CATEGORY_REQUEST,
+  GET_CATEGORY_SUCCESS,
+  GET_CATEGORY_FAIL,
 } from "../constants/ArticleConstants";
 import {
   getArticles,
@@ -52,6 +61,7 @@ import {
   ICategory,
 } from "../../data/Articles";
 import { useHttp } from "../../hooks/client";
+import { truncateSync } from "fs";
 
 export const createBlogAction =
   (blog: IArticle) => async (dispatch: Dispatch<any>) => {
@@ -188,7 +198,7 @@ export const updateCategoryAction =
       dispatch({ type: UPDATE_CATEGORY_REQUEST });
       await axios.put(`/api/v1/admin/category/${category.id}`, category);
       dispatch({ type: UPDATE_CATEGORY_SUCCESS });
-      dispatch(fetchCategoriesAction());
+      dispatch(getCategoryAction(category.id));
     } catch (exception: any) {
       dispatch({
         type: UPDATE_CATEGORY_FAIL,
@@ -227,5 +237,41 @@ export const deleteCategoryAction =
         type: DELETE_CATEGORY_FAIL,
         payload: exception.message || "Something went wrong",
       });
+    }
+  };
+export const archiveCategoryAction =
+  (categoryId: string | number) => async (dispatch: Dispatch<any>) => {
+    const axios = useHttp();
+    try {
+      dispatch({ type: ARCHIVE_CATEGORY_REQUEST });
+      await axios.get(`/api/v1/admin/category/${categoryId}/archive`);
+      dispatch({ type: ARCHIVE_CATEGORY_SUCCESS });
+      dispatch(getCategoryAction(categoryId));
+    } catch (exception: any) {
+      dispatch({ type: ARCHIVE_CATEGORY_FAIL, payload: exception.message });
+    }
+  };
+export const unArchiveCategoryAction =
+  (categoryId: string | number) => async (dispatch: Dispatch<any>) => {
+    const axios = useHttp();
+    try {
+      dispatch({ type: UNARCHIVE_CATEGORY_REQUEST });
+      await axios.get(`/api/v1/admin/category/${categoryId}/unarchive`);
+      dispatch({ type: UNARCHIVE_CATEGORY_SUCCESS });
+      dispatch(getCategoryAction(categoryId));
+    } catch (exception: any) {
+      dispatch({ type: UNARCHIVE_CATEGORY_FAIL, payload: exception.message });
+    }
+  };
+export const getCategoryAction =
+  (categoryId: string | number) => async (dispatch: Dispatch<any>) => {
+    try {
+      const axios = useHttp();
+      dispatch({ type: GET_CATEGORY_REQUEST });
+      const { data } = await axios.get(`/api/v1/public/category/${categoryId}`);
+      dispatch({ type: GET_CATEGORY_SUCCESS, payload: data });
+      dispatch(getCategoryArticlesAction(categoryId + ""));
+    } catch (exception: any) {
+      dispatch({ type: GET_CATEGORY_FAIL, payload: exception.message });
     }
   };

@@ -9,6 +9,10 @@ import {
   ADD_TAG_FAIL,
   ADD_TAG_REQUEST,
   ADD_TAG_SUCCESS,
+  ARCHIVE_CATEGORY_FAIL,
+  ARCHIVE_CATEGORY_REQUEST,
+  ARCHIVE_CATEGORY_RESET,
+  ARCHIVE_CATEGORY_SUCCESS,
   CREATE_BLOG_FAIL,
   CREATE_BLOG_REQUEST,
   CREATE_BLOG_RESET,
@@ -32,9 +36,16 @@ import {
   GET_ARTICLES_BY_CATEGORIES_FAIL,
   GET_ARTICLES_BY_CATEGORIES_REQUEST,
   GET_ARTICLES_BY_CATEGORIES_SUCCESS,
+  GET_CATEGORY_FAIL,
+  GET_CATEGORY_REQUEST,
+  GET_CATEGORY_SUCCESS,
   PUBLISH_ARTICLE_FAIL,
   PUBLISH_ARTICLE_REQUEST,
   PUBLISH_ARTICLE_SUCCESS,
+  UNARCHIVE_CATEGORY_FAIL,
+  UNARCHIVE_CATEGORY_REQUEST,
+  UNARCHIVE_CATEGORY_RESET,
+  UNARCHIVE_CATEGORY_SUCCESS,
   UNPUBLISH_ARTICLE_FAIL,
   UNPUBLISH_ARTICLE_REQUEST,
   UNPUBLISH_ARTICLE_SUCCESS,
@@ -218,6 +229,21 @@ export const updateArticleReducer = (
   }
 };
 
+export const activeCategoryReducer = (
+  state = { loading: false, error: null, category: null },
+  action: IAction
+) => {
+  switch (action.type) {
+    case GET_CATEGORY_REQUEST:
+      return { loading: true, error: null, category: null };
+    case GET_CATEGORY_SUCCESS:
+      return { loading: false, error: null, category: action.payload };
+    case GET_CATEGORY_FAIL:
+      return { loading: false, error: action.payload, category: null };
+    default:
+      return state;
+  }
+};
 export const updateCategoryReducer = (
   state = { loading: false, error: null, success: false },
   action: IAction
@@ -264,6 +290,41 @@ export const deleteCategoryReducer = (
     case DELETE_CATEGORY_FAIL:
       return { loading: false, error: action.payload, success: false };
     case DELETE_CATEGORY_RESET:
+      return { loading: false, error: null, success: false };
+    default:
+      return state;
+  }
+};
+
+export const archiveCategoryReducer = (
+  state = { loading: false, error: null, success: false },
+  action: IAction
+) => {
+  switch (action.type) {
+    case ARCHIVE_CATEGORY_REQUEST:
+      return { loading: true, error: null, success: false };
+    case ARCHIVE_CATEGORY_SUCCESS:
+      return { loading: false, error: null, success: true };
+    case ARCHIVE_CATEGORY_FAIL:
+      return { loading: false, error: action.payload, success: false };
+    case ARCHIVE_CATEGORY_RESET:
+      return { loading: false, error: null, success: false };
+    default:
+      return state;
+  }
+};
+export const unArchiveCategoryReducer = (
+  state = { loading: false, error: null, success: false },
+  action: IAction
+) => {
+  switch (action.type) {
+    case UNARCHIVE_CATEGORY_REQUEST:
+      return { loading: true, error: null, success: false };
+    case UNARCHIVE_CATEGORY_SUCCESS:
+      return { loading: false, error: null, success: true };
+    case UNARCHIVE_CATEGORY_FAIL:
+      return { loading: false, error: action.payload, success: false };
+    case UNARCHIVE_CATEGORY_RESET:
       return { loading: false, error: null, success: false };
     default:
       return state;

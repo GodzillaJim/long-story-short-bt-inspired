@@ -14,7 +14,7 @@ import {
   tagsReducer,
   unPublishArticleReducer,
   updateArticleReducer,
-  updateCategoryReducer, deleteCategoryReducer
+  updateCategoryReducer, deleteCategoryReducer, archiveCategoryReducer, unArchiveCategoryReducer, activeCategoryReducer
 } from "./reducers/BlogReducers";
 import {
   activateUserReducer,
@@ -52,6 +52,9 @@ export const combinedReducer = combineReducers({
   activateUser: activateUserReducer,
   deactivateUser: deactivateUserReducer,
   updateUser: updateUserReducer,
-  deleteCategory: deleteCategoryReducer
+  deleteCategory: deleteCategoryReducer,
+  archiveCategory: archiveCategoryReducer,
+  unArchiveCategory: unArchiveCategoryReducer,
+  activeCategory: activeCategoryReducer
 });
 export type RootState = ReturnType<typeof combinedReducer>;

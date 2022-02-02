@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { Home, Category, Assignment, Delete } from "@mui/icons-material";
 import {
   TableRow,
@@ -15,7 +15,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { v4 } from "uuid";
-import { format, parse, parseISO } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { useFormik } from "formik";
 import { object, string, date } from "yup";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,14 +23,17 @@ import { useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
 
 import TopSection from "../components/TopSection";
-import { getCategories, IArticle, ICategory } from "../data/Articles";
+import { IArticle, ICategory } from "../data/Articles";
 import DataList from "../components/DataList";
 import { RootState } from "../redux/combineReducers";
 import CustomError from "../components/CustomError";
 import {
+  archiveCategoryAction,
   deleteCategoryAction,
   fetchCategoriesAction,
+  getCategoryAction,
   getCategoryArticlesAction,
+  unArchiveCategoryAction,
   updateCategoryAction,
 } from "../redux/actions/BlogActions";
 
@@ -41,13 +44,17 @@ import CustomSearchBox from "../components/CustomSearchBox";
 import CustomToastify from "../components/CustomToastify";
 
 import AddCategoryContainer from "./AddCategoryContainer";
-import { DELETE_CATEGORY_RESET } from "../redux/constants/ArticleConstants";
+import {
+  ARCHIVE_CATEGORY_RESET,
+  DELETE_CATEGORY_RESET,
+  UNARCHIVE_CATEGORY_RESET,
+} from "../redux/constants/ArticleConstants";
+import CustomSwitch from "../components/CustomSwitch";
 
 const CategoriesView = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<ICategory | null>(null);
-  const [page] = useState<number>(1);
   const [name, setName] = useState<string>("");
   const [addCategory, setAddCategory] = useState<boolean>(false);
   const { id } = useParams();
@@ -61,6 +68,7 @@ const CategoriesView = () => {
         createdOn: new Date(),
         label: "",
         value: "",
+        archived: false,
       },
       validationSchema: object().shape({
         id: string(),
@@ -122,15 +130,16 @@ const CategoriesView = () => {
       toast.error(updatingError);
     }
   }, [updating, updatingError, success]);
-  const handleSetCategory = (category: ICategory) => {
-    setActiveCategory(category);
-    setValues({ ...category });
-    dispatch(getCategoryArticlesAction(category.id));
-  };
+  const handleSetCategory = useCallback(
+    (category: ICategory) => {
+      setActiveCategory(category);
+      setValues({ ...category });
+      dispatch(getCategoryArticlesAction(category.id));
+    },
+    [dispatch, setValues]
+  );
   const headers = ["ID", "Category", "created On", ""];
   const categories = useMemo(() => {
-    const start = page === 1 ? page : page * 10;
-
     let temp = allCategories || [];
     temp = temp.map((c: any) => ({ ...c, createdOn: parseISO(c.createdOn) }));
     if (name && name !== "") {
@@ -139,19 +148,41 @@ const CategoriesView = () => {
       );
     }
     return temp;
-  }, [page, name, allCategories]);
+  }, [name, allCategories]);
   const handleUpdateCategory = () => {
     dispatch(updateCategoryAction(values));
   };
+  const {
+    loading: activeCategoryLoading,
+    error: activeCategoryError,
+    category,
+  } = useSelector((state: RootState) => state.activeCategory);
   useEffect(() => {
     if (id) {
-      setActiveCategory(
-        categories.find(
-          (category: ICategory) => category.id.toLocaleLowerCase() === id
-        ) || null
-      );
+      if (!category && !activeCategoryLoading && !activeCategoryError) {
+        dispatch(getCategoryAction(id));
+      }
+      if (category && id + "" !== category.id + "") {
+        dispatch(getCategoryAction(id));
+      }
     }
-  }, [id, categories]);
+  }, [
+    id,
+    category,
+    activeCategoryLoading,
+    activeCategoryError,
+    dispatch,
+    setValues,
+  ]);
+  useEffect(() => {
+    if (category) {
+      setValues({ ...category, createdOn: parseISO(category.createdOn) });
+      setActiveCategory({
+        ...category,
+        createdOn: parseISO(category.createdOn),
+      });
+    }
+  }, [category, setValues]);
   const handleReFetchCategories = () => {
     dispatch(fetchCategoriesAction());
   };
@@ -175,6 +206,60 @@ const CategoriesView = () => {
   const handleDelete = (category: ICategory) => {
     setActiveCategory(category);
     dispatch(deleteCategoryAction(category.id));
+  };
+  const handleArchive = () => {
+    if (activeCategory) {
+      if (activeCategory.archived) {
+        dispatch(unArchiveCategoryAction(activeCategory.id));
+      } else {
+        dispatch(archiveCategoryAction(activeCategory.id));
+      }
+    }
+  };
+  const {
+    loading: archiving,
+    error: archiveError,
+    success: archived,
+  } = useSelector((state: RootState) => state.archiveCategory);
+  const {
+    loading: unArchiving,
+    error: unArchiveError,
+    success: unArchived,
+  } = useSelector((state: RootState) => state.unArchiveCategory);
+  useEffect(() => {
+    if (archived) {
+      toast.success("Category Archived", {
+        onClose: () => {
+          dispatch({ type: ARCHIVE_CATEGORY_RESET });
+        },
+      });
+    }
+    if (archiveError) {
+      toast.error(archiveError, {
+        onClose: () => {
+          dispatch({ type: ARCHIVE_CATEGORY_RESET });
+        },
+      });
+    }
+  }, [archiveError, archived, dispatch, navigate]);
+  useEffect(() => {
+    if (unArchived) {
+      toast.success("Unarchived successfully", {
+        onClose: () => dispatch({ type: UNARCHIVE_CATEGORY_RESET }),
+      });
+    }
+    if (unArchiveError) {
+      toast.error(unArchiveError, {
+        onClose: () => {
+          dispatch({ type: UNARCHIVE_CATEGORY_RESET });
+        },
+      });
+    }
+  }, [unArchived, unArchiveError, dispatch]);
+  const handleRefreshActiveCategory = () => {
+    if (id) {
+      dispatch(getCategoryAction(id));
+    }
   };
   return (
     <div>
@@ -220,7 +305,7 @@ const CategoriesView = () => {
                       onRenderRow={(item: ICategory) => (
                         <TableRow
                           sx={{ height: "fit-content" }}
-                          onClick={() => handleSetCategory(item)}
+                          onClick={() => navigate(`/categories/${item.id}`)}
                           selected={
                             activeCategory
                               ? activeCategory.id === item.id
@@ -229,12 +314,14 @@ const CategoriesView = () => {
                           hover
                           key={`key-${v4()}`}
                         >
-                          <TableCell>{item.id}</TableCell>
-                          <TableCell>{item.name}</TableCell>
-                          <TableCell>
+                          <TableCell className="px-2 py-1">{item.id}</TableCell>
+                          <TableCell className="px-2 py-1">
+                            {item.name}
+                          </TableCell>
+                          <TableCell className="px-2 py-1">
                             {format(item.createdOn, "dd/MM/yyyy")}
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="px-2 py-1">
                             {deleting &&
                               activeCategory &&
                               activeCategory.id === item.id && (
@@ -266,120 +353,144 @@ const CategoriesView = () => {
                   </Typography>
                 )}
                 {activeCategory && (
-                  <Paper style={{ height: "100%" }}>
-                    <div className="flex flex-col p-3 gap-5 h-100">
-                      <div>
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <TextField
-                              label="ID"
-                              size="small"
-                              variant="outlined"
-                              aria-readonly
-                              disabled
-                              value={values.id}
-                            />
-                          </div>
-                          <div>
-                            <TextField
-                              label="Created On"
-                              size="small"
-                              variant="outlined"
-                              disabled
-                              value={format(values.createdOn, "dd/MM/yyyy")}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <Divider />
-                      <div>
-                        <div className="grid grid-cols-5 gap-1">
-                          <div className="col-span-4">
-                            <TextField
-                              fullWidth
-                              label="Category Name"
-                              size="small"
-                              variant="outlined"
-                              value={values.name}
-                              onChange={(event) =>
-                                setFieldValue("name", event.target.value)
-                              }
-                              helperText={
-                                touched.name ? errors.name : undefined
-                              }
-                            />
-                          </div>
-                          <div
-                            className={
-                              updating
-                                ? "col-span-1 text-center mt-1"
-                                : "text-center"
-                            }
-                          >
-                            {updating && (
-                              <CircularProgress
-                                variant="indeterminate"
-                                size={20}
-                              />
-                            )}
-                            {!updating && (
-                              <Button
-                                className="custom-button"
-                                disabled={values.name === activeCategory.name}
+                  <Paper
+                    className="text-center pt-2"
+                    style={{ height: "100%" }}
+                  >
+                    {activeCategoryError && (
+                      <CustomError
+                        message={activeCategoryError}
+                        onClick={handleRefreshActiveCategory}
+                      />
+                    )}
+                    {activeCategoryLoading && (
+                      <CircularProgress size={20} variant="indeterminate" />
+                    )}
+                    {category && (
+                      <div className="flex flex-col p-3 gap-5 h-100">
+                        <div>
+                          <div className="grid grid-cols-3 gap-3">
+                            <div>
+                              <TextField
+                                label="ID"
+                                size="small"
                                 variant="outlined"
-                                onClick={handleUpdateCategory}
-                              >
-                                UPDATE
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <Divider />
-                      <div className="article-list h-100 overflow-auto">
-                        <div className="flex flex-col gap-2">
-                          <div>
-                            <Typography variant="h6" fontWeight="bold">
-                              Articles
-                            </Typography>
-                          </div>
-                          <div className="text-center">
-                            {loading && (
-                              <CircularProgress variant="indeterminate" />
-                            )}
-                            {error && (
-                              <CustomError
-                                onClick={() =>
-                                  handleSetCategory(activeCategory)
-                                }
-                                message={error}
+                                aria-readonly
+                                disabled
+                                value={values.id}
                               />
-                            )}
-                            {articles && (
-                              <List key={`key-${v4()}`}>
-                                {articles.map(
-                                  (article: IArticle, index: number) => (
-                                    <ListItem
-                                      style={{ cursor: "pointer" }}
-                                      onClick={() =>
-                                        navigate(`/articles/${article.id}`)
-                                      }
-                                      key={`key-${v4()}`}
-                                    >
-                                      <ListItemText
-                                        primary={`${index + 1}. ${
-                                          article.title
-                                        }`}
-                                      />
-                                    </ListItem>
-                                  )
-                                )}
-                              </List>
-                            )}
+                            </div>
+                            <div>
+                              <TextField
+                                label="Created On"
+                                size="small"
+                                variant="outlined"
+                                disabled
+                                value={format(values.createdOn, "dd/MM/yyyy")}
+                              />
+                            </div>
+                            <div>
+                              <CustomSwitch
+                                value={
+                                  activeCategory && activeCategory.archived
+                                }
+                                loading={archiving || unArchiving}
+                                onChange={handleArchive}
+                                label={"Archived"}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <Divider />
+                        <div>
+                          <div className="grid grid-cols-5 gap-1">
+                            <div className="col-span-4">
+                              <TextField
+                                fullWidth
+                                label="Category Name"
+                                size="small"
+                                variant="outlined"
+                                value={values.name}
+                                onChange={(event) =>
+                                  setFieldValue("name", event.target.value)
+                                }
+                                helperText={
+                                  touched.name ? errors.name : undefined
+                                }
+                              />
+                            </div>
+                            <div
+                              className={
+                                updating
+                                  ? "col-span-1 text-center mt-1"
+                                  : "text-center"
+                              }
+                            >
+                              {updating && (
+                                <CircularProgress
+                                  variant="indeterminate"
+                                  size={20}
+                                />
+                              )}
+                              {!updating && (
+                                <Button
+                                  className="custom-button"
+                                  disabled={values.name === activeCategory.name}
+                                  variant="outlined"
+                                  onClick={handleUpdateCategory}
+                                >
+                                  UPDATE
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <Divider />
+                        <div className="article-list h-100 overflow-auto">
+                          <div className="flex flex-col gap-2">
+                            <div>
+                              <Typography variant="h6" fontWeight="bold">
+                                Articles
+                              </Typography>
+                            </div>
+                            <div className="text-center">
+                              {loading && (
+                                <CircularProgress variant="indeterminate" />
+                              )}
+                              {error && (
+                                <CustomError
+                                  onClick={() =>
+                                    handleSetCategory(activeCategory)
+                                  }
+                                  message={error}
+                                />
+                              )}
+                              {articles && (
+                                <List key={`key-${v4()}`}>
+                                  {articles.map(
+                                    (article: IArticle, index: number) => (
+                                      <ListItem
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() =>
+                                          navigate(`/articles/${article.id}`)
+                                        }
+                                        key={`key-${v4()}`}
+                                      >
+                                        <ListItemText
+                                          primary={`${index + 1}. ${
+                                            article.title
+                                          }`}
+                                        />
+                                      </ListItem>
+                                    )
+                                  )}
+                                </List>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                   </Paper>
                 )}
               </div>

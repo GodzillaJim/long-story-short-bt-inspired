@@ -1,3 +1,4 @@
+import { boolean } from "@sigodenjs/fake";
 import { LoremIpsum } from "lorem-ipsum";
 import { v4 } from "uuid";
 
@@ -83,6 +84,7 @@ export interface ICategory {
   id: string;
   label: string;
   value: string;
+  archived: boolean;
 }
 export const getCategories = () => {
   const temp = [];
@@ -93,6 +95,7 @@ export const getCategories = () => {
       id: v4(),
       label: lorem.generateWords(1),
       value: lorem.generateWords(1),
+      archived: false,
     } as ICategory);
   }
   return temp;
