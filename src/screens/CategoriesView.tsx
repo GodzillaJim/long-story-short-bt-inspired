@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { Home, Category, Assignment } from "@mui/icons-material";
+import { Home, Category, Assignment, Delete } from "@mui/icons-material";
 import {
   TableRow,
   TableCell,
@@ -12,9 +12,10 @@ import {
   ListItem,
   Button,
   ListItemText,
+  IconButton,
 } from "@mui/material";
 import { v4 } from "uuid";
-import { format } from "date-fns";
+import { format, parse, parseISO } from "date-fns";
 import { useFormik } from "formik";
 import { object, string, date } from "yup";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,6 +28,8 @@ import DataList from "../components/DataList";
 import { RootState } from "../redux/combineReducers";
 import CustomError from "../components/CustomError";
 import {
+  deleteCategoryAction,
+  fetchCategoriesAction,
   getCategoryArticlesAction,
   updateCategoryAction,
 } from "../redux/actions/BlogActions";
@@ -38,6 +41,7 @@ import CustomSearchBox from "../components/CustomSearchBox";
 import CustomToastify from "../components/CustomToastify";
 
 import AddCategoryContainer from "./AddCategoryContainer";
+import { DELETE_CATEGORY_RESET } from "../redux/constants/ArticleConstants";
 
 const CategoriesView = () => {
   const dispatch = useDispatch();
@@ -54,7 +58,7 @@ const CategoriesView = () => {
       initialValues: {
         id: "",
         name: "",
-        createdAt: new Date(),
+        createdOn: new Date(),
         label: "",
         value: "",
       },
@@ -77,7 +81,7 @@ const CategoriesView = () => {
       icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
     },
     {
-      name: "Tags",
+      name: "Categories",
       link: "/categories",
       isActive: false,
       icon: <Category sx={{ mr: 0.5 }} fontSize="medium" />,
@@ -97,6 +101,16 @@ const CategoriesView = () => {
     error: updatingError,
     success,
   } = useSelector((state: RootState) => state.updateCategory);
+  const {
+    blog: allCategories,
+    loading: loadingCategories,
+    error: categoriesError,
+  } = useSelector((state: RootState) => state.categories);
+  useEffect(() => {
+    if (!allCategories && !loadingCategories && !categoriesError) {
+      dispatch(fetchCategoriesAction());
+    }
+  }, [allCategories, loadingCategories, categoriesError, dispatch]);
   const handleAddCategory = () => {
     setAddCategory(!addCategory);
   };
@@ -113,17 +127,19 @@ const CategoriesView = () => {
     setValues({ ...category });
     dispatch(getCategoryArticlesAction(category.id));
   };
-  const headers = ["ID", "Category", "created On"];
+  const headers = ["ID", "Category", "created On", ""];
   const categories = useMemo(() => {
     const start = page === 1 ? page : page * 10;
-    let temp = getCategories().slice(start, start + 10);
+
+    let temp = allCategories || [];
+    temp = temp.map((c: any) => ({ ...c, createdOn: parseISO(c.createdOn) }));
     if (name && name !== "") {
       temp = temp.filter((cat: ICategory) =>
         cat.name.toLocaleLowerCase().includes(name.toLocaleLowerCase())
       );
     }
     return temp;
-  }, [page, name]);
+  }, [page, name, allCategories]);
   const handleUpdateCategory = () => {
     dispatch(updateCategoryAction(values));
   };
@@ -136,6 +152,30 @@ const CategoriesView = () => {
       );
     }
   }, [id, categories]);
+  const handleReFetchCategories = () => {
+    dispatch(fetchCategoriesAction());
+  };
+  const {
+    loading: deleting,
+    success: deleted,
+    error: deleteError,
+  } = useSelector((state: RootState) => state.deleteCategory);
+  useEffect(() => {
+    if (deleted) {
+      toast.success("Category deleted successfully!", {
+        onClose: () => dispatch({ type: DELETE_CATEGORY_RESET }),
+      });
+    }
+    if (deleteError) {
+      toast.error("Deletion failed", {
+        onClose: () => dispatch({ type: DELETE_CATEGORY_RESET }),
+      });
+    }
+  }, [deleting, deleted, deleteError, dispatch]);
+  const handleDelete = (category: ICategory) => {
+    setActiveCategory(category);
+    dispatch(deleteCategoryAction(category.id));
+  };
   return (
     <div>
       <SomeContainer>
@@ -165,29 +205,58 @@ const CategoriesView = () => {
           <div className="category-table">
             <div className="grid grid-cols-2 gap-3 table-container">
               <div className="col-span-1">
-                <Paper style={{ height: "100%" }}>
-                  <DataList
-                    onRenderRow={(item: ICategory) => (
-                      <TableRow
-                        onClick={() => handleSetCategory(item)}
-                        selected={
-                          activeCategory
-                            ? activeCategory.id === item.id
-                            : undefined
-                        }
-                        hover
-                        key={`key-${v4()}`}
-                      >
-                        <TableCell>{item.id}</TableCell>
-                        <TableCell>{item.name}</TableCell>
-                        <TableCell>
-                          {format(item.createdAt, "dd/MM/yyyy")}
-                        </TableCell>
-                      </TableRow>
-                    )}
-                    headers={headers}
-                    items={categories}
-                  />
+                <Paper className="text-center pt-2" style={{ height: "100%" }}>
+                  {categoriesError && (
+                    <CustomError
+                      message={categoriesError}
+                      onClick={handleReFetchCategories}
+                    />
+                  )}
+                  {loadingCategories && (
+                    <CircularProgress size={20} variant="indeterminate" />
+                  )}
+                  {allCategories && (
+                    <DataList
+                      onRenderRow={(item: ICategory) => (
+                        <TableRow
+                          sx={{ height: "fit-content" }}
+                          onClick={() => handleSetCategory(item)}
+                          selected={
+                            activeCategory
+                              ? activeCategory.id === item.id
+                              : undefined
+                          }
+                          hover
+                          key={`key-${v4()}`}
+                        >
+                          <TableCell>{item.id}</TableCell>
+                          <TableCell>{item.name}</TableCell>
+                          <TableCell>
+                            {format(item.createdOn, "dd/MM/yyyy")}
+                          </TableCell>
+                          <TableCell>
+                            {deleting &&
+                              activeCategory &&
+                              activeCategory.id === item.id && (
+                                <CircularProgress
+                                  size={20}
+                                  variant="indeterminate"
+                                />
+                              )}
+                            {(!deleting ||
+                              (activeCategory &&
+                                activeCategory.id !== item.id)) && (
+                              <IconButton onClick={() => handleDelete(item)}>
+                                <Delete />
+                              </IconButton>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      )}
+                      headers={headers}
+                      items={categories}
+                    />
+                  )}
                 </Paper>
               </div>
               <div className="col-span-1">
@@ -217,7 +286,7 @@ const CategoriesView = () => {
                               size="small"
                               variant="outlined"
                               disabled
-                              value={format(values.createdAt, "dd/MM/yyyy")}
+                              value={format(values.createdOn, "dd/MM/yyyy")}
                             />
                           </div>
                         </div>

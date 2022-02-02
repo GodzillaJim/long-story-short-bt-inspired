@@ -14,7 +14,7 @@ import {
   tagsReducer,
   unPublishArticleReducer,
   updateArticleReducer,
-  updateCategoryReducer,
+  updateCategoryReducer, deleteCategoryReducer
 } from "./reducers/BlogReducers";
 import {
   activateUserReducer,
@@ -25,7 +25,7 @@ import {
   demoteAdminReducer,
   makeAdminReducer,
   updateUserReducer,
-  userReducer,
+  userReducer, 
 } from "./reducers/UsersReducer";
 
 export const combinedReducer = combineReducers({
@@ -52,5 +52,6 @@ export const combinedReducer = combineReducers({
   activateUser: activateUserReducer,
   deactivateUser: deactivateUserReducer,
   updateUser: updateUserReducer,
+  deleteCategory: deleteCategoryReducer
 });
 export type RootState = ReturnType<typeof combinedReducer>;

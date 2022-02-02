@@ -1,5 +1,7 @@
 import {
+  ADD_CATEGORY_FAIL,
   ADD_CATEGORY_REQUEST,
+  ADD_CATEGORY_RESET,
   ADD_CATEGORY_SUCCESS,
   ADD_TAGS_BULK_FAIL,
   ADD_TAGS_BULK_REQUEST,
@@ -11,6 +13,10 @@ import {
   CREATE_BLOG_REQUEST,
   CREATE_BLOG_RESET,
   CREATE_BLOG_SUCCESS,
+  DELETE_CATEGORY_FAIL,
+  DELETE_CATEGORY_REQUEST,
+  DELETE_CATEGORY_RESET,
+  DELETE_CATEGORY_SUCCESS,
   FETCH_ALL_ARTICLES_FAIL,
   FETCH_ALL_ARTICLES_REQUEST,
   FETCH_ALL_ARTICLES_SUCCESS,
@@ -237,8 +243,28 @@ export const addCategoryReducer = (
       return { loading: true, error: null, success: false };
     case ADD_CATEGORY_SUCCESS:
       return { loading: false, error: null, success: true };
-    case ADD_TAGS_BULK_FAIL:
+    case ADD_CATEGORY_FAIL:
       return { loading: false, error: action.payload, success: false };
+    case ADD_CATEGORY_RESET:
+      return { loading: false, error: null, success: false };
+    default:
+      return state;
+  }
+};
+
+export const deleteCategoryReducer = (
+  state = { loading: false, error: null, success: false },
+  action: IAction
+) => {
+  switch (action.type) {
+    case DELETE_CATEGORY_REQUEST:
+      return { loading: true, error: null, success: false };
+    case DELETE_CATEGORY_SUCCESS:
+      return { loading: false, error: null, success: true };
+    case DELETE_CATEGORY_FAIL:
+      return { loading: false, error: action.payload, success: false };
+    case DELETE_CATEGORY_RESET:
+      return { loading: false, error: null, success: false };
     default:
       return state;
   }

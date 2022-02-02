@@ -41,6 +41,9 @@ import {
   ADD_CATEGORY_REQUEST,
   ADD_CATEGORY_SUCCESS,
   ADD_CATEGORY_FAIL,
+  DELETE_CATEGORY_REQUEST,
+  DELETE_CATEGORY_SUCCESS,
+  DELETE_CATEGORY_FAIL,
 } from "../constants/ArticleConstants";
 import {
   getArticles,
@@ -48,6 +51,7 @@ import {
   getTags,
   ICategory,
 } from "../../data/Articles";
+import { useHttp } from "../../hooks/client";
 
 export const createBlogAction =
   (blog: IArticle) => async (dispatch: Dispatch<any>) => {
@@ -150,11 +154,13 @@ export const addTagsBulkAction =
     }
   };
 export const fetchCategoriesAction = () => async (dispatch: Dispatch<any>) => {
+  const axios = useHttp();
   try {
     dispatch({ type: FETCH_CATEGORIES_REQUEST });
-    // TODO: Implement axios get categories
-    dispatch({ type: FETCH_CATEGORIES_SUCCESS, payload: getCategories() });
+    const { data } = await axios.get("/api/v1/public/category");
+    dispatch({ type: FETCH_CATEGORIES_SUCCESS, payload: data });
   } catch (exception: any) {
+    console.log(JSON.stringify(exception));
     dispatch({ type: FETCH_CATEGORIES_FAIL, payload: exception.message });
   }
 };
@@ -177,10 +183,12 @@ export const getCategoryArticlesAction =
 
 export const updateCategoryAction =
   (category: ICategory) => async (dispatch: Dispatch<any>) => {
+    const axios = useHttp();
     try {
       dispatch({ type: UPDATE_CATEGORY_REQUEST });
-      // TODO: Implement axios post update category
+      await axios.put(`/api/v1/admin/category/${category.id}`, category);
       dispatch({ type: UPDATE_CATEGORY_SUCCESS });
+      dispatch(fetchCategoriesAction());
     } catch (exception: any) {
       dispatch({
         type: UPDATE_CATEGORY_FAIL,
@@ -191,13 +199,32 @@ export const updateCategoryAction =
 
 export const addCategoryAction =
   (categories: string[]) => async (dispatch: Dispatch<any>) => {
+    const axios = useHttp();
+    const data = categories.map((c: string) => ({ name: c }));
     try {
       dispatch({ type: ADD_CATEGORY_REQUEST });
-      // TODO: Implement axios post create category
+      await axios.post("/api/v1/admin/category/bulk", data);
       dispatch({ type: ADD_CATEGORY_SUCCESS });
+      dispatch(fetchCategoriesAction());
     } catch (exception: any) {
       dispatch({
         type: ADD_CATEGORY_FAIL,
+        payload: exception.message || "Something went wrong",
+      });
+    }
+  };
+
+export const deleteCategoryAction =
+  (categoryId: string | number) => async (dispatch: Dispatch<any>) => {
+    const axios = useHttp();
+    try {
+      dispatch({ type: DELETE_CATEGORY_REQUEST });
+      await axios.delete(`/api/v1/admin/category/${categoryId}`);
+      dispatch({ type: DELETE_CATEGORY_SUCCESS });
+      dispatch(fetchCategoriesAction());
+    } catch (exception: any) {
+      dispatch({
+        type: DELETE_CATEGORY_FAIL,
         payload: exception.message || "Something went wrong",
       });
     }

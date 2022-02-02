@@ -1,9 +1,15 @@
+import { Dispatch } from "redux";
 import { useHttp } from "../../hooks/client";
 import {
   AUTH_LOGIN_FAIL,
   AUTH_LOGIN_REQUEST,
   AUTH_LOGIN_SUCESS,
+  AUTH_LOGOUT_REQUEST,
 } from "../constants/ArticleConstants";
+export const logoutAction = () => async (dispatch: Dispatch<any>) => {
+  dispatch({ type: AUTH_LOGOUT_REQUEST });
+  sessionStorage.removeItem("data");
+};
 export const loginAction =
   (loginRequest: { username: string; password: string }) =>
   async (dispatch: any) => {

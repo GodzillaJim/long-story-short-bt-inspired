@@ -15,7 +15,12 @@ import {
   MDBIcon,
 } from "mdbreact";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 import useAuth from "../hooks/useAuth";
+import { logoutAction } from "../redux/actions/AuthAction";
+import CustomToastify from "./CustomToastify";
 
 const useStyles = makeStyles((theme: DefaultTheme) => ({
   navbar: {
@@ -40,9 +45,18 @@ const CustomNavbar = (props: ICustomNavbar) => {
   const classes = useStyles();
   const matches = useMediaQuery("(max-width:600px)");
   const { user } = useAuth();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logout = () => {
+    dispatch(logoutAction());
+    toast.success("Logout successful. Redirecting to login page", {
+      onClose: () => navigate("/login"),
+    });
+  };
 
   return (
     <div>
+      <CustomToastify />
       <AppBar className={classes.navbar} elevation={1}>
         <Toolbar>
           {matches && (
@@ -67,7 +81,7 @@ const CustomNavbar = (props: ICustomNavbar) => {
               </MDBDropdownToggle>
               <MDBDropdownMenu className="dropdown-default">
                 <MDBDropdownItem href="#!">Account</MDBDropdownItem>
-                <MDBDropdownItem href="#!">Logout</MDBDropdownItem>
+                <MDBDropdownItem onClick={logout}>Logout</MDBDropdownItem>
               </MDBDropdownMenu>
             </MDBDropdown>
           </div>

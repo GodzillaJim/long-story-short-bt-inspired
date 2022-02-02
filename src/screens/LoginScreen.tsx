@@ -116,11 +116,11 @@ const LoginScreen = () => {
                     direction="column"
                   >
                     <Grid style={{ margin: "auto" }} item>
-                      <CircularProgress />
+                      <CircularProgress color="secondary" />
                     </Grid>
                     <Grid item>
                       <Typography
-                        color="primary"
+                        color="secondary"
                         className={classes.headerText}
                       >
                         Logging you in
@@ -135,7 +135,7 @@ const LoginScreen = () => {
                   textAlign={"center"}
                   variant="h5"
                 >
-                  Welcom Back
+                  Welcome Back
                 </Typography>
               </Grid>
               {error && (

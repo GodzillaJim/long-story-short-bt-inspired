@@ -43,6 +43,7 @@ export const authReducer = (
         error: null,
         user: null,
         isAdmin: false,
+        authToken: null,
       };
     default:
       return state;

@@ -8,6 +8,7 @@ import CustomDialog from "../components/CustomDialog";
 import CustomToastify from "../components/CustomToastify";
 import { addCategoryAction } from "../redux/actions/BlogActions";
 import { RootState } from "../redux/combineReducers";
+import { ADD_CATEGORY_RESET } from "../redux/constants/ArticleConstants";
 
 interface IAddCategoryContainer {
   open: boolean;
@@ -31,13 +32,17 @@ const AddCategoryContainer = (props: IAddCategoryContainer) => {
   });
   React.useEffect(() => {
     if (error) {
-      toast.error(error);
+      toast.error(error, {
+        onClose: () => dispatch({ type: ADD_CATEGORY_RESET }),
+      });
     }
     if (success) {
-      toast.success("Category(ies) created successfully!");
+      toast.success("Category(ies) created successfully!", {
+        onClose: () => dispatch({ type: ADD_CATEGORY_RESET }),
+      });
       setFieldValue("categories", "");
     }
-  }, [loading, error, success, setFieldValue]);
+  }, [loading, error, success, setFieldValue, dispatch]);
   const handleCreateCategories = () => {
     submitForm();
   };
