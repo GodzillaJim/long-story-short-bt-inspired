@@ -6,11 +6,12 @@
 }
 .search-bar-title {
   border: 1px solid rgb(204, 200, 200);
-  height: 36px;
+  height: 24px;
   border-radius: 4px;
   width: 100%;
   padding-left: 12px;
   background-color: #e9ddf8;
+  font-size: 12px;
 }
 .search-bar-title:hover {
   border: 1px solid #000;

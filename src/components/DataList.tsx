@@ -22,6 +22,7 @@ const useStyles = makeStyles({
     fontFamily: "Source Sans Pro !important",
     fontWeight: "bold !important",
     width: "calc((100% - 48px) / 6)",
+    fontSize: "12px !important",
   },
 });
 const DataList = (props: IDataList) => {

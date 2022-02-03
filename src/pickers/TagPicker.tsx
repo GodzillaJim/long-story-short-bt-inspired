@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/combineReducers";
 import { fetchTagsAction } from "../redux/actions/BlogActions";
 import { v4 } from "uuid";
-import { ITags } from "../data/Articles";
+import { ITag } from "../types";
 
 interface ITagPicker {
   values: any[];
@@ -41,17 +41,17 @@ const TagPicker = (props: ITagPicker) => {
   const filterTags = React.useMemo(() => {
     let temp = tags || [];
     if (search !== "") {
-      return temp.filter((tag: ITags) =>
-        tag.name.toLowerCase().includes(search.toLowerCase())
+      return temp.filter((tag: ITag) =>
+        tag.tag.toLowerCase().includes(search.toLowerCase())
       );
     }
     temp = temp.filter(
-      (tag: ITags) => !props.values.includes(tag.name.toLowerCase())
+      (tag: ITag) => !props.values.includes(tag.tag.toLowerCase())
     );
     return temp;
   }, [search, tags, props.values]);
-  const handleTagAdd = (tag: ITags) => {
-    props.setFieldValue([...props.values, tag.name]);
+  const handleTagAdd = (tag: ITag) => {
+    props.setFieldValue([...props.values, tag.tag]);
   };
   const handleTagRemove = (tag: string) => {
     props.setFieldValue(
@@ -110,16 +110,18 @@ const TagPicker = (props: ITagPicker) => {
                         <Chip
                           color="primary"
                           key={`key-${v4()}`}
-                          label={tag.name}
+                          label={tag.tag}
                           onClick={() => handleTagAdd(tag)}
                         />
                       </Grid>
                     )
                 )}
-                {filterTags.length === 0 && (
+                {filterTags.length === 0 && search !== "" && (
                   <Grid item key={`key-${v4()}`}>
                     <Button
-                      onClick={() => handleTagAdd({ name: search } as ITags)}
+                      onClick={() =>
+                        handleTagAdd({ tag: search, id: 1 } as ITag)
+                      }
                       color="primary"
                       variant="text"
                     >

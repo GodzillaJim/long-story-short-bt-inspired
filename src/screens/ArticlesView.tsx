@@ -30,6 +30,10 @@ import { CREATE_BLOG_RESET } from "../redux/constants/ArticleConstants";
 
 import "./ArticlesView.css";
 import { SomeContainer } from "./Dashboard";
+import { useStyles as customStyles } from "../styles/styles";
+import { toast } from "react-toastify";
+import CustomToastify from "../components/CustomToastify";
+import { ICategory } from "../types";
 
 const ArticlesView = () => {
   const [page] = useState<number>(1);
@@ -38,6 +42,7 @@ const ArticlesView = () => {
   const [category, setCategory] = useState<any>();
   const [published, setPublished] = useState<boolean>(false);
   const [archived, setArchived] = useState<boolean>(false);
+  const customClasses = customStyles();
   const {
     loading,
     error,
@@ -57,21 +62,33 @@ const ArticlesView = () => {
     if (!loading && !categories && !error) {
       dispatch(fetchCategoriesAction());
     }
+    if (error) {
+      toast.error(error);
+    }
   }, [categories, loading, error, dispatch]);
   const items = [
     {
       name: "Admin",
       link: "/",
       isActive: false,
-      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Home className={customClasses.icon} />,
     },
     {
       name: "Articles",
       link: "/articles",
       isActive: true,
-      icon: <Notes sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Notes className={customClasses.icon} />,
     },
   ];
+  const categoryList = useMemo(() => {
+    let temp = categories || [];
+    temp = temp.map((cat: ICategory) => ({
+      ...cat,
+      label: cat.name,
+      value: cat.name,
+    }));
+    return temp;
+  }, [categories]);
   const articleList = useMemo(() => {
     let temp = articles || [];
     if (category) {
@@ -90,6 +107,11 @@ const ArticlesView = () => {
   const cellStyle = {
     fontFamily: "Sans Serif",
     width: "calc((100% - 48px) / 6)",
+    paddingTop: "4px",
+    paddingBottom: "4px",
+    paddingRight: "8px",
+    paddingLeft: "8px",
+    fontSize: "12px",
   };
 
   return (
@@ -97,6 +119,7 @@ const ArticlesView = () => {
       <SomeContainer>
         <div className="flex flex-col mb-4 h-100 gap-5">
           <div className="articles-top-section">
+            <CustomToastify />
             <TopSection
               items={items}
               onClick={() => {
@@ -107,7 +130,7 @@ const ArticlesView = () => {
             />
           </div>
           <div className="search-bar">
-            <div className="grid grid-cols-3 px-3 py-3 gap-4">
+            <div className="grid grid-cols-3 px-3 py-2 gap-3">
               <div className="col-span-1">
                 <input
                   className="search-bar-title"
@@ -119,13 +142,16 @@ const ArticlesView = () => {
                 />
               </div>
               <div className="col-span-1">
-                {categories && (
+                {loading && (
+                  <CircularProgress variant="indeterminate" size={20} />
+                )}
+                {(categories || error) && (
                   <CustomSelect
                     isLoading={loading}
                     isSearchable={true}
                     isClearable
                     isDisabled={loadingAllArticles}
-                    options={categories}
+                    options={categoryList}
                     handleChange={setCategory}
                     placeholder="Select category"
                   />
@@ -139,11 +165,13 @@ const ArticlesView = () => {
                         control={
                           <Switch
                             color="secondary"
+                            size="small"
                             disabled={loadingAllArticles}
                             checked={published}
                             onChange={() => setPublished(!published)}
                           />
                         }
+                        componentsProps={{ typography: { fontSize: "12px" } }}
                         label="Published"
                       />
                     </FormGroup>
@@ -154,11 +182,13 @@ const ArticlesView = () => {
                         control={
                           <Switch
                             color="secondary"
+                            size="small"
                             disabled={loadingAllArticles}
                             checked={archived}
                             onChange={() => setArchived(!published)}
                           />
                         }
+                        componentsProps={{ typography: { fontSize: "12px" } }}
                         label="Archived"
                       />
                     </FormGroup>
@@ -179,7 +209,7 @@ const ArticlesView = () => {
               <DataList
                 onRenderRow={(item: IArticle) => (
                   <TableRow key={`key-${v4()}`}>
-                    <TableCell sx={{}}>{item.id}</TableCell>
+                    <TableCell sx={cellStyle}>{item.id}</TableCell>
                     <TableCell sx={cellStyle}>{item.title}</TableCell>
                     <TableCell sx={cellStyle}>{item.category}</TableCell>
                     <TableCell sx={cellStyle}>
@@ -188,11 +218,11 @@ const ArticlesView = () => {
                     <TableCell sx={cellStyle}>
                       {format(item.createdOn, "dd/MM/yyyy")}
                     </TableCell>
-                    <TableCell sx={{ width: "48px" }}>
+                    <TableCell sx={{ width: "48px", padding: 0 }}>
                       <IconButton
                         onClick={() => navigate(`/articles/${item.id}`)}
                       >
-                        <Edit sx={{ color: "#1d0a33" }} />
+                        <Edit fontSize="small" />
                       </IconButton>
                     </TableCell>
                   </TableRow>

@@ -24,15 +24,17 @@ import {
   addTagsBulkAction,
 } from "../redux/actions/BlogActions";
 import CustomSearchBox from "../components/CustomSearchBox";
-import { ITags } from "../data/Articles";
 import "./TagsView.css";
 import CustomToastify from "../components/CustomToastify";
 
 import { SomeContainer } from "./Dashboard";
+import { useStyles as customStyles } from "../styles/styles";
+import { ITag } from "../types";
 
 const useStyles = makeStyles({
   container: {
-    height: "calc(100vh - 150px)",
+    height: "100%",
+    paddingBottom: "8px",
   },
   addManyTags: {
     backgroundColor: "#e9ddf8",
@@ -46,6 +48,7 @@ const useStyles = makeStyles({
 });
 const TagsView = () => {
   const classes = useStyles();
+  const customClasses = customStyles();
   const dispatch = useDispatch();
   const [search, setSearch] = useState<string>("");
   const [newTags, setNewTags] = useState<string>("");
@@ -90,23 +93,24 @@ const TagsView = () => {
       name: "Admin",
       link: "/",
       isActive: false,
-      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Home className={customClasses.icon} />,
     },
     {
       name: "Tags",
       link: "/tags",
       isActive: true,
-      icon: <Tag sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Tag className={customClasses.icon} />,
     },
   ];
+
   const handleRetry = () => {
     dispatch(fetchTagsAction());
   };
   const filterTags = useMemo(() => {
     let temp = tags || [];
     if (search !== "") {
-      temp = tags.filter((tag: ITags) =>
-        tag.name.toLowerCase().includes(search.toLowerCase())
+      temp = tags.filter((tag: ITag) =>
+        tag.tag.toLowerCase().includes(search.toLowerCase())
       );
     }
     return temp;
@@ -132,7 +136,7 @@ const TagsView = () => {
         <CustomToastify />
         <div>
           <Paper className={classes.container}>
-            <div className="flex pt-5 flex-col">
+            <div className="flex pt-3 flex-col">
               {(loading || error) && (
                 <div className="text-center mt-40">
                   {loading && <CircularProgress variant="indeterminate" />}
@@ -156,9 +160,9 @@ const TagsView = () => {
                     <div className="px-3">
                       <Grid container spacing={1}>
                         {tags &&
-                          filterTags.map((tag: ITags) => (
+                          filterTags.map((tag: ITag) => (
                             <Grid item key={`key-${v4()}`}>
-                              <Chip color="primary" label={tag.name} />
+                              <Chip size="small" label={tag.tag} />
                             </Grid>
                           ))}
                         {filterTags.length === 0 && (
@@ -175,6 +179,7 @@ const TagsView = () => {
                                 onClick={handleAddTag}
                                 color="primary"
                                 variant="text"
+                                size="small"
                               >
                                 Add Tag
                               </Button>
@@ -187,7 +192,7 @@ const TagsView = () => {
                     <div>
                       <div className="flex flex-col mx-3 gap-2">
                         <div>
-                          <Typography variant="h6" fontWeight={"bold"}>
+                          <Typography variant="caption" fontWeight={"bold"}>
                             Add Many Tags
                           </Typography>
                         </div>
@@ -199,6 +204,7 @@ const TagsView = () => {
                             onChange={(event) => setNewTags(event.target.value)}
                             minRows={5}
                             placeholder={"tag1, tag2, tag3, etc"}
+                            style={{ fontSize: "12px" }}
                           />
                         </div>
                         <div>
@@ -214,6 +220,8 @@ const TagsView = () => {
                               color="secondary"
                               onClick={addManyTags}
                               disabled={newTags === ""}
+                              size="small"
+                              sx={{ fontSize: "small" }}
                             >
                               Add Tags
                             </Button>

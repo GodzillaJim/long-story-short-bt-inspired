@@ -15,6 +15,7 @@ import {
   ListItemIcon,
   ListItemText,
   useMediaQuery,
+  Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useLocation, useNavigate } from "react-router";
@@ -37,15 +38,21 @@ const useStyles = makeStyles((theme: any) => ({
     overflow: "hidden",
     width: "100%",
     fontFamily: "Source Sans Pro",
+    paddingLeft: "8px",
   },
   listItemActive: {
     backgroundColor: "#e9ddf8 !important",
     overflow: "hidden",
     width: "100%",
     fontFamily: "Source Sans Pro",
+    paddingLeft: "8px",
   },
   itemMargin: {
     marginRight: "12px",
+  },
+  icon: {
+    fontSize: "16px !important",
+    fontWeight: "500 !important",
   },
 }));
 interface ICustomSideBar {
@@ -56,7 +63,7 @@ interface ICustomSideBar {
 }
 const CustomSideBar = (props: ICustomSideBar) => {
   const rtl: boolean = false;
-  const classes = useStyles({ width: "60px" });
+  const classes = useStyles({ width: "40px" });
   const matches = useMediaQuery("(max-width:600px)");
   const handleMouseEnter = () => {
     props.setMouseOver();
@@ -69,29 +76,35 @@ const CustomSideBar = (props: ICustomSideBar) => {
       classes,
       key: `key-${v4()}`,
       text: "Home",
-      icon: <Home />,
+      icon: <Home className={classes.icon} />,
       link: "/home",
     },
     {
       classes,
       key: `key-${v4()}`,
       text: "Users",
-      icon: <People />,
+      icon: <People className={classes.icon} />,
       link: "/users",
     },
     {
       classes,
       key: `key-${v4()}`,
       text: "Articles",
-      icon: <Notes />,
+      icon: <Notes className={classes.icon} />,
       link: "/articles",
     },
-    { classes, key: `key-${v4()}`, text: "Tags", icon: <Tag />, link: "/tags" },
+    {
+      classes,
+      key: `key-${v4()}`,
+      text: "Tags",
+      icon: <Tag className={classes.icon} />,
+      link: "/tags",
+    },
     {
       classes,
       key: `key-${v4()}`,
       text: "Category",
-      icon: <Category />,
+      icon: <Category className={classes.icon} />,
       link: "/categories",
     },
   ];
@@ -153,11 +166,18 @@ const CustomListItem = (props: IProp) => {
       className={!isActive ? classes.listItem : classes.listItemActive}
       button
       color={isActive ? "secondary" : "primary"}
+      sx={{ paddingLeft: "8px" }}
     >
-      <ListItemIcon className={matches ? classes.itemMargin : ""}>
+      <ListItemIcon
+        sx={{ minWidth: "36px" }}
+        className={matches ? classes.itemMargin : ""}
+      >
         {props.icon}
       </ListItemIcon>
-      <ListItemText primary={props.text} />
+      <ListItemText
+        disableTypography
+        children={<Typography variant="subtitle2">{props.text}</Typography>}
+      />
     </ListItem>
   );
 };

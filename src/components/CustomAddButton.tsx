@@ -15,6 +15,8 @@ const CustomAddButton = (props: ICustomAddButton) => {
         onClick={props.onClick}
         variant="outlined"
         startIcon={<Add />}
+        size="small"
+        sx={{ fontSize: "11px" }}
       >
         {props.text}
       </Button>

@@ -14,6 +14,7 @@ import { useMemo, useState } from "react";
 import { v4 } from "uuid";
 import { getTags, ITags } from "../data/Articles";
 import { getNoneStopWords } from "../helpers/Language";
+import { ITag } from "../types";
 
 interface IProps {
   values: any;
@@ -34,30 +35,30 @@ const MoreDetailsScreen = (props: IProps) => {
     let temp = getTags();
     const title: string = values.title;
     if (title !== "") {
-      const nonStopTags: ITags[] = getNoneStopWords(title).map(
-        (word: string) => ({ name: word } as ITags)
+      const nonStopTags: ITag[] = getNoneStopWords(title).map(
+        (word: string) => ({ tag: word, id: 1 } as ITag)
       );
       temp = [...temp, ...nonStopTags];
     }
     if (search !== "") {
-      temp = temp.filter((tag: ITags) =>
-        tag.name.toLowerCase().includes(search.toLowerCase())
+      temp = temp.filter((tag: ITag) =>
+        tag.tag.toLowerCase().includes(search.toLowerCase())
       );
     }
-    temp = temp.filter((t: ITags) =>
-      values.tags.map((tag: ITags) => t.name !== tag.name)
+    temp = temp.filter((t: ITag) =>
+      values.tags.map((tag: ITag) => t.tag !== tag.tag)
     );
     return temp;
   }, [search, values.title, values.tags]);
   const classes = useStyles();
-  const handleRemoveTag = (tag: ITags) => {
+  const handleRemoveTag = (tag: ITag) => {
     setFieldValue(
       "tags",
-      values.tags.filter((t: ITags) => t.name !== tag.name)
+      values.tags.filter((t: ITags) => t.tag !== tag.tag)
     );
   };
   const handleSelectTag = (tag: ITags) => {
-    const newTags = values.tags.filter((t: ITags) => t.name !== tag.name);
+    const newTags = values.tags.filter((t: ITags) => t.tag !== tag.tag);
     setFieldValue("tags", [...newTags, tag]);
   };
   return (
@@ -123,7 +124,7 @@ const MoreDetailsScreen = (props: IProps) => {
                       color="primary"
                       onDelete={() => handleRemoveTag(tag)}
                       key={`key-${v4()}`}
-                      label={tag.name}
+                      label={tag.tag}
                       disabled={props.loading}
                     />
                   </Grid>
@@ -139,7 +140,7 @@ const MoreDetailsScreen = (props: IProps) => {
                       <Chip
                         onClick={() => handleSelectTag(tag)}
                         key={`key-${v4()}`}
-                        label={tag.name}
+                        label={tag.tag}
                         disabled={props.loading}
                       />
                     </Grid>

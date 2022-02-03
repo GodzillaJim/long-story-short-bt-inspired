@@ -49,7 +49,7 @@ export const customStyles = {
       state.isFocused || state.isHovered || state.menuIsOpen
         ? "1px solid #667ff"
         : "1px solid rgba(0, 0, 0, 0.23)",
-    minHeight: "36px",
+    minHeight: "24px",
     "&:hover": { border: "1px solid  #000" },
     "&:focus": { border: "1px solid  #1976d2" },
     "&:active": { border: "1px solid  #1976d2" },
@@ -60,24 +60,23 @@ export const customStyles = {
 
   valueContainer: (provided: any, state: any) => ({
     ...provided,
-    height: "31px",
+    height: "24px",
     marginTop: "-2px",
     padding: "0 6px",
     "#custom-select__placeholder": {
       fontWeight: "normal",
-      fontSize: "14px",
+      fontSize: "12px",
       display: state.isFocused ? "none" : "flex",
     },
     div: {
-      fontSize: "14px",
-      fontWeight: 600,
+      fontSize: "11px",
     },
   }),
 
   input: (provided: any, state: any) => ({
     ...provided,
     margin: "0px",
-    paddingTop: "8px",
+    paddingTop: "2px",
     fontFamily: "san serif",
     marginBottom: "8px",
   }),
@@ -86,7 +85,7 @@ export const customStyles = {
   }),
   indicatorsContainer: (provided: any, state: any) => ({
     ...provided,
-    height: "31px",
+    height: "24px",
   }),
   option: (provided: any, state: any) => ({
     ...provided,

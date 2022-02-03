@@ -44,16 +44,19 @@ import CustomSearchBox from "../components/CustomSearchBox";
 import CustomToastify from "../components/CustomToastify";
 
 import AddCategoryContainer from "./AddCategoryContainer";
+import { useStyles as customStyles } from "../styles/styles";
 import {
   ARCHIVE_CATEGORY_RESET,
   DELETE_CATEGORY_RESET,
   UNARCHIVE_CATEGORY_RESET,
+  UPDATE_ARTICLE_RESET,
 } from "../redux/constants/ArticleConstants";
 import CustomSwitch from "../components/CustomSwitch";
 
 const CategoriesView = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const customClasses = customStyles();
   const [activeCategory, setActiveCategory] = useState<ICategory | null>(null);
   const [name, setName] = useState<string>("");
   const [addCategory, setAddCategory] = useState<boolean>(false);
@@ -86,19 +89,19 @@ const CategoriesView = () => {
       name: "Admin",
       link: "/",
       isActive: false,
-      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Home className={customClasses.icon} />,
     },
     {
       name: "Categories",
       link: "/categories",
       isActive: false,
-      icon: <Category sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Category className={customClasses.icon} />,
     },
     {
       name: activeCategory ? activeCategory.name : "All",
       link: `/categories/${activeCategory?.id}`,
       isActive: true,
-      icon: <Assignment sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Assignment className={customClasses.icon} />,
     },
   ];
   const { loading, error, articles } = useSelector(
@@ -124,12 +127,16 @@ const CategoriesView = () => {
   };
   useEffect(() => {
     if (success) {
-      toast.success("Update successful");
+      toast.success("Update successful", {
+        onClose: () => dispatch({ type: UPDATE_ARTICLE_RESET }),
+      });
     }
     if (updatingError) {
-      toast.error(updatingError);
+      toast.error(updatingError, {
+        onClose: () => dispatch({ type: UPDATE_ARTICLE_RESET }),
+      });
     }
-  }, [updating, updatingError, success]);
+  }, [updating, updatingError, success, dispatch]);
   const handleSetCategory = useCallback(
     (category: ICategory) => {
       setActiveCategory(category);

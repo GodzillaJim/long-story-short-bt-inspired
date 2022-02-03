@@ -10,7 +10,7 @@ import {
   Pagination,
 } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
-import { Person, Home, Edit, People } from "@mui/icons-material";
+import { Home, Edit, People } from "@mui/icons-material";
 import { SomeContainer } from "./Dashboard";
 import TopSection from "../components/TopSection";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,12 +24,22 @@ import { v4 } from "uuid";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import AddUserContainter from "./AddUserContainter";
+import {
+  useStyles as customStyles,
+  tableStyles,
+  cellStyle,
+} from "../styles/styles";
+import "./UserView.css";
 
-const useStyles = makeStyles({
+export const useStyles = makeStyles({
   usersPaper: {
     height: "calc(100vh - 100px)",
     textAlign: "center",
     paddingTop: "16px",
+  },
+  icon: {
+    fontSize: "12px !important",
+    marginRight: "4px !important",
   },
 });
 const UserView = () => {
@@ -42,6 +52,8 @@ const UserView = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [addUser, setAddUser] = useState<boolean>(false);
   const classes = useStyles();
+  const customClasses = customStyles();
+  const tableClasses = tableStyles();
   const { loading, error, users } = useSelector(
     (state: RootState) => state.allUsers
   );
@@ -55,13 +67,13 @@ const UserView = () => {
       name: "Admin",
       link: "/",
       isActive: false,
-      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Home className={customClasses.icon} />,
     },
     {
       name: "User",
       link: "/users",
       isActive: true,
-      icon: <People sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <People className={customClasses.icon} />,
     },
   ];
 
@@ -98,11 +110,7 @@ const UserView = () => {
     navigate(`/users/${user.id}`);
   };
   const headers = ["", "ID", "Username", "Name", "Email", "Created On", ""];
-  const cellStyle = {
-    fontFamily: "Sans Serif",
-    width: "calc((100% - 96px) / 5)",
-    padding: 0,
-  };
+
   return (
     <div>
       <SomeContainer>
@@ -115,7 +123,7 @@ const UserView = () => {
           />
           <div className="table-search">
             <Paper>
-              <div className="grid grid-cols-3 px-5 py-3 gap-5">
+              <div className="grid grid-cols-3 px-3 py-2 gap-3">
                 <div className="col-span-1">
                   <input
                     className="search-bar-title"
@@ -137,18 +145,23 @@ const UserView = () => {
                   />
                 </div>
                 <div className="col-span-1">
-                  <div className="flex flex-row gap-5">
+                  <div className="flex flex-row justify-around">
                     <div>
                       <FormGroup>
                         <FormControlLabel
+                          sx={{ fontSize: "12px" }}
                           control={
                             <Switch
+                              size="small"
                               color="secondary"
                               disabled={loading}
                               checked={isActive}
                               onChange={() => setIsActive(!isActive)}
                             />
                           }
+                          componentsProps={{
+                            typography: { fontSize: "12px", fontWeight: 600 },
+                          }}
                           label="Is Active"
                         />
                       </FormGroup>
@@ -159,11 +172,15 @@ const UserView = () => {
                           control={
                             <Switch
                               color="secondary"
+                              size="small"
                               disabled={loading}
                               checked={isAdmin}
                               onChange={() => setIsAdmin(!isAdmin)}
                             />
                           }
+                          componentsProps={{
+                            typography: { fontSize: "12px", fontWeight: 600 },
+                          }}
                           label="Is Admin"
                         />
                       </FormGroup>
@@ -186,7 +203,14 @@ const UserView = () => {
                   <DataList
                     onRenderRow={(user: IUser, index: number) => (
                       <TableRow key={`key-${v4()}`}>
-                        <TableCell className="px-2" sx={{ width: "48px" }}>
+                        <TableCell
+                          className="px-2"
+                          sx={{
+                            width: "48px",
+                            paddingTop: "0",
+                            paddingBottom: "0",
+                          }}
+                        >
                           {index + 1}
                         </TableCell>
                         <TableCell sx={cellStyle}>{user.id}</TableCell>
@@ -198,9 +222,15 @@ const UserView = () => {
                         <TableCell sx={cellStyle}>
                           {format(user.createdOn, "dd/MM/yyyy")}
                         </TableCell>
-                        <TableCell sx={{ width: "48px" }}>
+                        <TableCell
+                          sx={{
+                            width: "48px",
+                            paddingTop: "0",
+                            paddingBottom: "0",
+                          }}
+                        >
                           <IconButton onClick={() => handleEdit(user)}>
-                            <Edit />
+                            <Edit fontSize="small" />
                           </IconButton>
                         </TableCell>
                       </TableRow>

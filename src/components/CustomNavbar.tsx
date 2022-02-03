@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme: DefaultTheme) => ({
   navbar: {
     background: "#fff !important",
     borderBottom: "1px solid #e6e6f9",
+    height: "48px",
   },
   brandText: {
     fontStyle: "italic",
@@ -35,6 +36,9 @@ const useStyles = makeStyles((theme: DefaultTheme) => ({
   },
   userIcon: {
     color: "#9c27b0",
+  },
+  toolbar: {
+    minHeight: "48px !important",
   },
 }));
 interface ICustomNavbar {
@@ -58,7 +62,7 @@ const CustomNavbar = (props: ICustomNavbar) => {
     <div>
       <CustomToastify />
       <AppBar className={classes.navbar} elevation={1}>
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           {matches && (
             <IconButton onClick={() => props.openDrawer(!props.open)}>
               <MenuIcon />
@@ -74,16 +78,24 @@ const CustomNavbar = (props: ICustomNavbar) => {
             Long Story Short
           </Typography>
           <div>
-            <Typography variant="caption">{JSON.stringify(user)}</Typography>
-            <MDBDropdown>
-              <MDBDropdownToggle nav caret>
-                <MDBIcon className={classes.userIcon} icon="user" />
-              </MDBDropdownToggle>
-              <MDBDropdownMenu className="dropdown-default">
-                <MDBDropdownItem href="#!">Account</MDBDropdownItem>
-                <MDBDropdownItem onClick={logout}>Logout</MDBDropdownItem>
-              </MDBDropdownMenu>
-            </MDBDropdown>
+            <div className="flex flex-row">
+              <div className="pt-2">
+                <Typography color="secondary" variant="caption">
+                  {user}
+                </Typography>
+              </div>
+              <div>
+                <MDBDropdown>
+                  <MDBDropdownToggle nav caret>
+                    <MDBIcon className={classes.userIcon} icon="user" />
+                  </MDBDropdownToggle>
+                  <MDBDropdownMenu className="dropdown-default">
+                    <MDBDropdownItem href="#!">Account</MDBDropdownItem>
+                    <MDBDropdownItem onClick={logout}>Logout</MDBDropdownItem>
+                  </MDBDropdownMenu>
+                </MDBDropdown>
+              </div>
+            </div>
           </div>
         </Toolbar>
       </AppBar>

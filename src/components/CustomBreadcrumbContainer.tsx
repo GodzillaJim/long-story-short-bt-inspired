@@ -21,6 +21,11 @@ const useStyles = makeStyles({
     textTransform: "capitalize",
     fontSize: "14px",
   },
+  text: {
+    marginTop: "4px",
+    fontSize: "11px",
+    marginLeft: "4px",
+  },
 });
 const CustomBreadcrumbContainer = (props: IContainer) => {
   const classes = useStyles();
@@ -44,7 +49,7 @@ const CustomBreadcrumbContainer = (props: IContainer) => {
         >
           <div className="flex flex-row">
             <div>{item.icon}</div>
-            <div className="mt-1">{item.name}</div>
+            <div className={classes.text}>{item.name}</div>
           </div>
         </Link>
       ))}

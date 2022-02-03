@@ -1,4 +1,3 @@
-import { boolean } from "@sigodenjs/fake";
 import { LoremIpsum } from "lorem-ipsum";
 import { v4 } from "uuid";
 
@@ -102,12 +101,13 @@ export const getCategories = () => {
 };
 
 export interface ITags {
-  name: string;
+  tag: string;
+  id: number | string;
 }
 export const getTags = () => {
   const temp = [];
   for (let numOfTags = 0; numOfTags < 100; numOfTags++) {
-    temp.push({ name: lorem.generateWords(1) } as ITags);
+    temp.push({ tag: lorem.generateWords(1), id: numOfTags + 1 } as ITags);
   }
   return temp;
 };

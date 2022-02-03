@@ -6,12 +6,14 @@ import { useLocation, useNavigate } from "react-router";
 import TopSection from "../components/TopSection";
 import { RootState } from "../redux/combineReducers";
 import { CREATE_BLOG_RESET } from "../redux/constants/ArticleConstants";
+import { useStyles } from "./UserView";
 
 const Dashboard = () => {
   const { authToken } = useSelector((state: RootState) => state.auth);
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const classes = useStyles();
   useEffect(() => {
     if (authToken === "") {
       const data = sessionStorage.getItem("data");
@@ -31,7 +33,7 @@ const Dashboard = () => {
       name: "Admin",
       link: "/home",
       isActive: false,
-      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Home className={classes.icon} />,
     },
   ];
   return (
@@ -60,7 +62,7 @@ export const SomeContainer = (props: { children: JSX.Element }) => {
   return (
     <div
       className={
-        matches ? "flex flex-col gap-5 my-3" : "flex flex-col gap-5 my-3 mx-3"
+        matches ? "flex flex-col gap-5 my-3" : "flex flex-col gap-5 my-2 mx-2"
       }
     >
       {props.children}

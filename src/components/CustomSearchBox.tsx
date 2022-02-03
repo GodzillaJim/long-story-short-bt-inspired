@@ -20,7 +20,7 @@ const CustomSearchBox = (props: ICustomSearchBox) => {
         maxWidth={props.maxWidth || "100%"}
       >
         <SearchIconWrapper>
-          <SearchIcon color={props.color || "secondary"} />
+          <SearchIcon color={props.color || "secondary"} fontSize="small" />
         </SearchIconWrapper>
         <StyledInputBase
           placeholder={props.placeholder || "Search…"}
@@ -40,19 +40,21 @@ const StyledInputBase = styled(InputBase)(
   ({ theme, maxWidth }: { theme: Theme; maxWidth: string }) => ({
     color: "inherit",
     "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
+      padding: theme.spacing(0.5, 1, 0.5, 0),
       // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+      paddingLeft: `calc(1em + ${theme.spacing(2)})`,
       transition: theme.transitions.create("width"),
       width: `calc(0.86 * ${maxWidth})` || "100%",
       [theme.breakpoints.down("md")]: {
         width: "20ch",
       },
+      height: "24px",
+      fontSize: "12px",
     },
   })
 );
 const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
+  padding: theme.spacing(0, 1),
   height: "100%",
   position: "absolute",
   pointerEvents: "none",

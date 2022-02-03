@@ -14,13 +14,13 @@ interface ITopSection {
   actionText?: string;
   onClick?: () => void;
   breadCrumbsOnly?: boolean;
-  loading?:boolean
+  loading?: boolean;
 }
 const TopSection = (props: ITopSection) => {
   const matches = useMediaQuery("(max-width:600px)");
   return (
     <div>
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-row mt-2 justify-between">
         {!matches && (
           <div className="mt-1.5">
             <CustomBreadcrumbContainer items={props.items} />
@@ -28,10 +28,14 @@ const TopSection = (props: ITopSection) => {
         )}
         {!props.breadCrumbsOnly && (
           <div>
-            {props.loading ? <CircularProgress size={20} variant="indeterminate"/> : <CustomAddButton
-              onClick={() => props.onClick && props.onClick()}
-              text={props.actionText || ""}
-            />}
+            {props.loading ? (
+              <CircularProgress size={20} variant="indeterminate" />
+            ) : (
+              <CustomAddButton
+                onClick={() => props.onClick && props.onClick()}
+                text={props.actionText || ""}
+              />
+            )}
           </div>
         )}
       </div>

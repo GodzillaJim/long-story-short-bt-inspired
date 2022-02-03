@@ -55,6 +55,7 @@ import {
   UPDATE_ARTICLE_SUCCESS,
   UPDATE_CATEGORY_FAIL,
   UPDATE_CATEGORY_REQUEST,
+  UPDATE_CATEGORY_RESET,
   UPDATE_CATEGORY_SUCCESS,
 } from "../constants/ArticleConstants";
 
@@ -253,6 +254,8 @@ export const updateCategoryReducer = (
       return { loading: true, error: null, success: false };
     case UPDATE_CATEGORY_SUCCESS:
       return { loading: false, error: null, success: true };
+    case UPDATE_CATEGORY_RESET:
+      return { loading: false, error: null, success: false };
     case UPDATE_CATEGORY_FAIL:
       return { loading: false, error: action.payload, success: false };
     default:

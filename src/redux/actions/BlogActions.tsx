@@ -54,14 +54,8 @@ import {
   GET_CATEGORY_SUCCESS,
   GET_CATEGORY_FAIL,
 } from "../constants/ArticleConstants";
-import {
-  getArticles,
-  getCategories,
-  getTags,
-  ICategory,
-} from "../../data/Articles";
+import { getArticles, ICategory } from "../../data/Articles";
 import { useHttp } from "../../hooks/client";
-import { truncateSync } from "fs";
 
 export const createBlogAction =
   (blog: IArticle) => async (dispatch: Dispatch<any>) => {
@@ -134,9 +128,11 @@ export const updateArticleAction =
 
 export const fetchTagsAction = () => async (dispatch: Dispatch<any>) => {
   try {
+    const axios = useHttp();
     dispatch({ type: FETCH_TAGS_REQUEST });
     // TODO: Implement axios get categories
-    dispatch({ type: FETCH_TAGS_SUCCESS, payload: getTags() });
+    const { data } = await axios.get("/api/v1/public/tag");
+    dispatch({ type: FETCH_TAGS_SUCCESS, payload: data });
   } catch (exception: any) {
     dispatch({ type: FETCH_TAGS_FAIL, payload: exception.message });
   }

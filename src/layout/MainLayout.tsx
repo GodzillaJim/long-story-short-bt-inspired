@@ -14,23 +14,23 @@ const useStyles = makeStyles((theme) => ({
     width: props.matches
       ? "100%"
       : props.open
-      ? "calc(100% - 240px)"
-      : "calc(100% - 60px)",
+      ? "calc(100% - 120px)"
+      : "calc(100% - 40px)",
     height: "100%",
     transition: "margin-left .5s",
-    marginLeft: !props.matches ? (props.mouseOver ? "190px" : "0px") : "0px",
+    marginLeft: !props.matches ? (props.mouseOver ? "80px" : "0px") : "0px",
   }),
   topBar: {
     marginBottom: "0px",
   },
   sidebar: (props: { matches: boolean; open: boolean }) => ({
-    width: props.open ? "240px" : "60px",
+    width: props.open ? "120px" : "40px",
     minWidth: "fit-content",
     transition: "0.5s",
     display: props.matches ? "none" : "flex",
   }),
   containerRow: {
-    marginTop: "45px",
+    marginTop: "20px",
   },
 }));
 const MainLayout = () => {

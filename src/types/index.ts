@@ -4,3 +4,8 @@ export interface ICategory{
     createdOn: string | Date;
     archived: boolean
 }
+
+export interface ITag{
+    tag: string;
+    id: string | number
+}
