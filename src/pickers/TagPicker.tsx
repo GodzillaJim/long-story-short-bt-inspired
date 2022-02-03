@@ -124,6 +124,7 @@ const TagPicker = (props: ITagPicker) => {
                       }
                       color="primary"
                       variant="text"
+                      disabled={search === ""}
                     >
                       Add New Tag
                     </Button>

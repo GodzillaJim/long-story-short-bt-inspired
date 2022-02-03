@@ -5,7 +5,6 @@ import {
   Divider,
   Grid,
   Chip,
-  Button,
   Typography,
   TextareaAutosize,
 } from "@mui/material";
@@ -24,6 +23,7 @@ import {
   addTagsBulkAction,
 } from "../redux/actions/BlogActions";
 import CustomSearchBox from "../components/CustomSearchBox";
+import CustomButton from "../components/CustomButton";
 import "./TagsView.css";
 import CustomToastify from "../components/CustomToastify";
 
@@ -109,7 +109,7 @@ const TagsView = () => {
   const filterTags = useMemo(() => {
     let temp = tags || [];
     if (search !== "") {
-      temp = tags.filter((tag: ITag) =>
+      temp = temp.filter((tag: ITag) =>
         tag.tag.toLowerCase().includes(search.toLowerCase())
       );
     }
@@ -138,7 +138,7 @@ const TagsView = () => {
           <Paper className={classes.container}>
             <div className="flex pt-3 flex-col">
               {(loading || error) && (
-                <div className="text-center mt-40">
+                <div className="text-center mt-4">
                   {loading && <CircularProgress variant="indeterminate" />}
                   {error && (
                     <CustomError message={error} onClick={handleRetry} />
@@ -174,15 +174,15 @@ const TagsView = () => {
                                 variant="indeterminate"
                               />
                             )}
-                            {!adding && (
-                              <Button
+                            {!adding && search !== "" && (
+                              <CustomButton
                                 onClick={handleAddTag}
                                 color="primary"
                                 variant="text"
                                 size="small"
                               >
                                 Add Tag
-                              </Button>
+                              </CustomButton>
                             )}
                           </Grid>
                         )}
@@ -214,8 +214,8 @@ const TagsView = () => {
                               variant="indeterminate"
                             />
                           )}
-                          {!addingBulk && (
-                            <Button
+                          {!addingBulk && search !== "" && (
+                            <CustomButton
                               variant="outlined"
                               color="secondary"
                               onClick={addManyTags}
@@ -224,7 +224,7 @@ const TagsView = () => {
                               sx={{ fontSize: "small" }}
                             >
                               Add Tags
-                            </Button>
+                            </CustomButton>
                           )}
                         </div>
                       </div>

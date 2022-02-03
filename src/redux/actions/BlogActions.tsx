@@ -141,9 +141,12 @@ export const fetchTagsAction = () => async (dispatch: Dispatch<any>) => {
 export const addTagAction =
   (tag: string) => async (dispatch: Dispatch<any>) => {
     try {
+      const axios = useHttp();
       dispatch({ type: ADD_TAG_REQUEST });
+      await axios.post("/api/v1/admin/tag", { tag: tag, id: 0 });
       // TODO: Implement axios add tag
       dispatch({ type: ADD_TAG_SUCCESS });
+      dispatch(fetchTagsAction());
     } catch (exception: any) {
       dispatch({ type: ADD_TAG_FAIL, payload: exception.message });
     }

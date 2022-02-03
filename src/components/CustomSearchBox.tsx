@@ -17,7 +17,7 @@ const CustomSearchBox = (props: ICustomSearchBox) => {
       <Search
         className="mx-auto"
         theme={theme}
-        maxWidth={props.maxWidth || "100%"}
+        style={{ maxWidth: props.maxWidth || "100%" }}
       >
         <SearchIconWrapper>
           <SearchIcon color={props.color || "secondary"} fontSize="small" />
@@ -28,7 +28,6 @@ const CustomSearchBox = (props: ICustomSearchBox) => {
           value={props.value}
           onChange={(e) => props.onChange(e.target.value || "")}
           disabled={props.disabled}
-          maxWidth={props.maxWidth || "100%"}
           theme={theme}
         />
       </Search>
@@ -37,14 +36,14 @@ const CustomSearchBox = (props: ICustomSearchBox) => {
 };
 
 const StyledInputBase = styled(InputBase)(
-  ({ theme, maxWidth }: { theme: Theme; maxWidth: string }) => ({
+  ({ theme, maxWidth }: { theme: Theme; maxWidth?: string }) => ({
     color: "inherit",
     "& .MuiInputBase-input": {
       padding: theme.spacing(0.5, 1, 0.5, 0),
       // vertical padding + font size from searchIcon
       paddingLeft: `calc(1em + ${theme.spacing(2)})`,
       transition: theme.transitions.create("width"),
-      width: `calc(0.86 * ${maxWidth})` || "100%",
+      width: maxWidth ? `calc(0.86 * ${maxWidth})` : "100%",
       [theme.breakpoints.down("md")]: {
         width: "20ch",
       },
@@ -69,7 +68,7 @@ const Search = styled("div")(
     className,
   }: {
     theme: Theme;
-    maxWidth: string;
+    maxWidth?: string;
     className: string;
   }) => ({
     margin: "auto",
@@ -84,7 +83,6 @@ const Search = styled("div")(
     },
     marginLeft: 0,
     width: "100%",
-    maxWidth: maxWidth || "100%",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(3),
       width: "auto",
