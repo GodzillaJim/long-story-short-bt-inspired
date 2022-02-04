@@ -214,7 +214,7 @@ const TagsView = () => {
                               variant="indeterminate"
                             />
                           )}
-                          {!addingBulk && search !== "" && (
+                          {!addingBulk && (
                             <CustomButton
                               variant="outlined"
                               color="secondary"

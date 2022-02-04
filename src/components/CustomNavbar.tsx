@@ -89,7 +89,7 @@ const CustomNavbar = (props: ICustomNavbar) => {
                   <MDBDropdownToggle nav caret>
                     <MDBIcon className={classes.userIcon} icon="user" />
                   </MDBDropdownToggle>
-                  <MDBDropdownMenu className="dropdown-default">
+                  <MDBDropdownMenu right className="dropdown-default">
                     <MDBDropdownItem href="#!">Account</MDBDropdownItem>
                     <MDBDropdownItem onClick={logout}>Logout</MDBDropdownItem>
                   </MDBDropdownMenu>

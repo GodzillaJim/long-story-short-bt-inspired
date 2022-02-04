@@ -27,12 +27,15 @@ import {
   UPDATE_USER_FAIL,
 } from "../constants/UserConstants";
 import { getUsers, IUser } from "../../data/Users";
+import { useHttp } from "../../hooks/client";
 
 export const getAllUsersAction = () => async (dispatch: Dispatch<any>) => {
   try {
+    const axios = useHttp()
     dispatch({ type: FETCH_USERS_REQUEST });
     // TODO: Implement get all users axios
-    dispatch({ type: FETCH_USERS_SUCCESS, payload: getUsers() });
+    const { data } = await axios.get("/api/v1/admin/users/all")
+    dispatch({ type: FETCH_USERS_SUCCESS, payload: data });
   } catch (exception: any) {
     dispatch({
       type: FETCH_USERS_FAIL,

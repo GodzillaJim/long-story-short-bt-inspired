@@ -10,7 +10,7 @@ import {
   TableCell,
   TableRow,
 } from "@mui/material";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
@@ -20,7 +20,6 @@ import CustomError from "../components/CustomError";
 import CustomSelect from "../components/CustomSelect";
 import DataList from "../components/DataList";
 import TopSection from "../components/TopSection";
-import { IArticle } from "../data/Articles";
 import {
   fetchAllArticlesAction,
   fetchCategoriesAction,
@@ -33,7 +32,7 @@ import { SomeContainer } from "./Dashboard";
 import { useStyles as customStyles } from "../styles/styles";
 import { toast } from "react-toastify";
 import CustomToastify from "../components/CustomToastify";
-import { ICategory } from "../types";
+import { ICategory, IArticle } from "../types";
 
 const ArticlesView = () => {
   const [page] = useState<number>(1);
@@ -99,9 +98,8 @@ const ArticlesView = () => {
         article.title.toLowerCase().includes(title.toLowerCase())
       );
     }
-    temp = temp.filter((article: IArticle) => article.archived === archived);
     return temp.filter((article: IArticle) => article.published === published);
-  }, [title, category, published, archived, articles]);
+  }, [title, category, published, articles]);
   const headers = ["ID", "Title", "Category", "Content", "Created On", ""];
   const navigate = useNavigate();
   const cellStyle = {
@@ -216,7 +214,7 @@ const ArticlesView = () => {
                       {`${item.content.substring(0, 100)}...`}
                     </TableCell>
                     <TableCell sx={cellStyle}>
-                      {format(item.createdOn, "dd/MM/yyyy")}
+                      {format(parseISO(item.createdOn), "dd/MM/yyyy")}
                     </TableCell>
                     <TableCell sx={{ width: "48px", padding: 0 }}>
                       <IconButton

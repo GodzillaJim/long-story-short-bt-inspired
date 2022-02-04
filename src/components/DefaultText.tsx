@@ -10,11 +10,11 @@ const DefaultText = (props: IDefaultText) => {
     <div>
       <div className="flex flex-col gap-1">
         <div>
-          <Typography variant="body2">{label}</Typography>
+          <Typography variant="caption">{label}</Typography>
         </div>
         <div>
           {typeof value === "string" && (
-            <Typography variant="h6">{value}</Typography>
+            <Typography variant="body1">{value}</Typography>
           )}
           {typeof value !== "string" && value}
         </div>

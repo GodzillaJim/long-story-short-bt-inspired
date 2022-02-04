@@ -19,17 +19,13 @@ import { getAllUsersAction } from "../redux/actions/UserActions";
 import { makeStyles } from "@mui/styles";
 import CustomError from "../components/CustomError";
 import DataList from "../components/DataList";
-import { IUser } from "../data/Users";
 import { v4 } from "uuid";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import AddUserContainter from "./AddUserContainter";
-import {
-  useStyles as customStyles,
-  tableStyles,
-  cellStyle,
-} from "../styles/styles";
+import { useStyles as customStyles, cellStyle } from "../styles/styles";
 import "./UserView.css";
+import { IRole, IUser } from "../types";
 
 export const useStyles = makeStyles({
   usersPaper: {
@@ -53,7 +49,6 @@ const UserView = () => {
   const [addUser, setAddUser] = useState<boolean>(false);
   const classes = useStyles();
   const customClasses = customStyles();
-  const tableClasses = tableStyles();
   const { loading, error, users } = useSelector(
     (state: RootState) => state.allUsers
   );
@@ -85,8 +80,6 @@ const UserView = () => {
   };
   const userList = useMemo(() => {
     let temp = users || [];
-    const start = page * 10 - 10;
-    temp = temp.slice(start, start + 10);
     if (name !== "") {
       temp = temp.filter(
         (user: IUser) =>
@@ -101,15 +94,28 @@ const UserView = () => {
         user.email.toLowerCase().includes(email.toLocaleLowerCase())
       );
     }
-    temp = temp.filter((user: IUser) => user.isAdmin === isAdmin);
-    temp = temp.filter((user: IUser) => user.isActive === isActive);
+    if (isAdmin) {
+      temp = temp.filter((user: IUser) =>
+        user.roles.find((role: IRole) => role.roleName === "ROLE_ADMIN")
+      );
+    } else {
+      temp = temp.filter(
+        (user: IUser) =>
+          !user.roles.find((role: IRole) => role.roleName === "ROLE_ADMIN")
+      );
+    }
+    if (isActive) {
+      temp = temp.filter((user: IUser) => user.active);
+    } else {
+      temp = temp.filter((user: IUser) => !user.active);
+    }
     return temp;
-  }, [users, page, name, email, isActive, isAdmin]);
+  }, [users, name, email, isActive, isAdmin]);
 
   const handleEdit = (user: IUser) => {
     navigate(`/users/${user.id}`);
   };
-  const headers = ["", "ID", "Username", "Name", "Email", "Created On", ""];
+  const headers = ["ID", "Username", "Name", "Email", "Created On", ""];
 
   return (
     <div>
@@ -203,16 +209,6 @@ const UserView = () => {
                   <DataList
                     onRenderRow={(user: IUser, index: number) => (
                       <TableRow key={`key-${v4()}`}>
-                        <TableCell
-                          className="px-2"
-                          sx={{
-                            width: "48px",
-                            paddingTop: "0",
-                            paddingBottom: "0",
-                          }}
-                        >
-                          {index + 1}
-                        </TableCell>
                         <TableCell sx={cellStyle}>{user.id}</TableCell>
                         <TableCell sx={cellStyle}>{user.username}</TableCell>
                         <TableCell
@@ -220,7 +216,7 @@ const UserView = () => {
                         >{`${user.firstName} ${user.lastName}`}</TableCell>
                         <TableCell sx={cellStyle}>{user.email}</TableCell>
                         <TableCell sx={cellStyle}>
-                          {format(user.createdOn, "dd/MM/yyyy")}
+                          {format(parseISO(user.createdDate), "dd/MM/yyyy")}
                         </TableCell>
                         <TableCell
                           sx={{

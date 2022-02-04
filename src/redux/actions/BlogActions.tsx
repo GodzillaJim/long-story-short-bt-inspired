@@ -70,9 +70,10 @@ export const createBlogAction =
   };
 export const fetchAllArticlesAction = () => async (dispatch: Dispatch<any>) => {
   try {
+    const axios = useHttp();
     dispatch({ type: FETCH_ALL_ARTICLES_REQUEST });
-    // TODO: Implement axios get all articles
-    dispatch({ type: FETCH_ALL_ARTICLES_SUCCESS, payload: getArticles() });
+    const { data } = await axios.get("/api/v1/public/blog");
+    dispatch({ type: FETCH_ALL_ARTICLES_SUCCESS, payload: data });
   } catch (exception: any) {
     dispatch({
       type: FETCH_ALL_ARTICLES_FAIL,
@@ -83,9 +84,9 @@ export const fetchAllArticlesAction = () => async (dispatch: Dispatch<any>) => {
 export const fetchBlogDetailsAction =
   (id: number) => async (dispatch: Dispatch<any>) => {
     try {
+      const axios = useHttp();
       dispatch({ type: FETCH_BLOG_REQUEST });
-      // TODO: IMplement axios fetch blog details
-      const data = getArticles()[0];
+      const { data } = await axios.get(`/api/v1/public/blog/${id}`);
       dispatch({ type: FETCH_BLOG_SUCCESS, payload: data });
     } catch (exception: any) {
       dispatch({ type: FETCH_BLOG_FAIL, error: exception });
@@ -94,9 +95,11 @@ export const fetchBlogDetailsAction =
 export const publishArticleAction =
   (id: number) => async (dispatch: Dispatch<any>) => {
     try {
+      const axios = useHttp();
       dispatch({ type: PUBLISH_ARTICLE_REQUEST });
-      // TODO: Implement axios publish article
+      await axios.get(`/api/v1/admin/blog/${id}/publish`);
       dispatch({ type: PUBLISH_ARTICLE_SUCCESS });
+      dispatch(fetchBlogDetailsAction(id));
     } catch (exception: any) {
       dispatch({ type: PUBLISH_ARTICLE_FAIL });
     }
@@ -104,9 +107,11 @@ export const publishArticleAction =
 export const unPublishArticleAction =
   (id: number) => async (dispatch: Dispatch<any>) => {
     try {
+      const axios = useHttp();
       dispatch({ type: UNPUBLISH_ARTICLE_REQUEST });
-      // TODO: Implement axios unpublish article
+      await axios.get(`/api/v1/admin/blog/${id}/unpublish`);
       dispatch({ type: UNPUBLISH_ARTICLE_SUCCESS });
+      dispatch(fetchBlogDetailsAction(id));
     } catch (exception: any) {
       dispatch({ type: UNPUBLISH_ARTICLE_FAIL });
     }

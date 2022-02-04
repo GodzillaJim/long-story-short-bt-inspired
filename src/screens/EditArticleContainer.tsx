@@ -37,7 +37,12 @@ import {
   updateArticleAction,
 } from "../redux/actions/BlogActions";
 import { RootState } from "../redux/combineReducers";
-import { UPDATE_ARTICLE_RESET } from "../redux/constants/ArticleConstants";
+import CustomButton from "../components/CustomButton";
+import {
+  PUBLISH_ARTICLE_RESET,
+  UNPUBLISH_ARTICLE_RESET,
+  UPDATE_ARTICLE_RESET,
+} from "../redux/constants/ArticleConstants";
 
 import { IArticle } from "./CreateArticleContainer";
 import { SomeContainer } from "./Dashboard";
@@ -134,23 +139,31 @@ const EditArticleContainer = () => {
   useEffect(() => {
     if (!unPublishing) {
       if (unPublishingError) {
-        toast.error(unPublishingError);
+        toast.error(unPublishingError, {
+          onClose: () => dispatch({ type: UNPUBLISH_ARTICLE_RESET }),
+        });
       }
       if (unPublished) {
-        toast.success("Article Unpublished successfully");
+        toast.success("Article Unpublished successfully", {
+          onClose: () => dispatch({ type: UNPUBLISH_ARTICLE_RESET }),
+        });
       }
     }
-  }, [unPublishing, unPublished, unPublishingError]);
+  }, [unPublishing, unPublished, unPublishingError, dispatch]);
   useEffect(() => {
     if (!publishing) {
       if (publishingError) {
-        toast.error(publishingError);
+        toast.error(publishingError, {
+          onClose: () => dispatch({ type: PUBLISH_ARTICLE_RESET }),
+        });
       }
       if (published) {
-        toast.success("Published successfully");
+        toast.success("Published successfully", {
+          onClose: () => dispatch({ type: PUBLISH_ARTICLE_RESET }),
+        });
       }
     }
-  }, [publishing, publishingError, published]);
+  }, [publishing, publishingError, published, dispatch]);
   useEffect(() => {
     if (!loading && !error && !blog) {
       if (id) {
@@ -231,8 +244,8 @@ const EditArticleContainer = () => {
           </div>
           {loading && (
             <Paper className={classes.rootLoading}>
-              <div>
-                <CircularProgress variant="indeterminate" />
+              <div className="text-center">
+                <CircularProgress size={20} variant="indeterminate" />
               </div>
             </Paper>
           )}
@@ -242,14 +255,14 @@ const EditArticleContainer = () => {
                 <Typography textAlign={"center"} variant="h6" color="red">
                   {error}
                 </Typography>
-                <Button
+                <CustomButton
                   className={classes.retryButton}
                   color="primary"
                   onClick={handleRetry}
                   variant="text"
                 >
                   Retry
-                </Button>
+                </CustomButton>
               </div>
             </Paper>
           )}
@@ -299,7 +312,7 @@ const EditArticleContainer = () => {
                               <>
                                 {categoryLoading && (
                                   <CircularProgress
-                                    size="20px"
+                                    size={20}
                                     variant="indeterminate"
                                   />
                                 )}
@@ -416,7 +429,7 @@ const EditArticleContainer = () => {
                                     key={`key-${v4()}`}
                                     fullName={`${comment.firstName} ${comment.lastName}`}
                                     content={comment.content}
-                                    date={comment.date}
+                                    date={new Date()}
                                   />
                                 ))}
                             </div>
@@ -430,11 +443,14 @@ const EditArticleContainer = () => {
                       <div className="flex flex-row justify-center text-center">
                         {(publishing || unPublishing) && (
                           <div style={{ width: "fit-content" }}>
-                            <CircularProgress variant="indeterminate" />
+                            <CircularProgress
+                              size={20}
+                              variant="indeterminate"
+                            />
                           </div>
                         )}
                         {!publishing && !unPublishing && (
-                          <Button
+                          <CustomButton
                             className="m-auto"
                             disabled={updating}
                             color={!blog.published ? "primary" : "secondary"}
@@ -446,7 +462,7 @@ const EditArticleContainer = () => {
                             variant="contained"
                           >
                             {!blog.published ? "Publish" : "Unpublish"}
-                          </Button>
+                          </CustomButton>
                         )}
                       </div>
                       <Divider />
@@ -575,7 +591,7 @@ const EditArticleContainer = () => {
                                         <Chip
                                           color="primary"
                                           key={`key-${v4()}`}
-                                          label={tag}
+                                          label={tag.tag.slice(0, 8)}
                                         />
                                       </Grid>
                                     ))}
@@ -590,24 +606,24 @@ const EditArticleContainer = () => {
                         {isEditing && (
                           <div className="flex flex-row gap-3 justify-end">
                             <div>
-                              <Button
+                              <CustomButton
                                 onClick={() => setEditing(!isEditing)}
                                 color="secondary"
                                 disabled={updating}
                                 variant="outlined"
                               >
                                 Cancel
-                              </Button>
+                              </CustomButton>
                             </div>
                             <div>
-                              <Button
+                              <CustomButton
                                 disabled={!isValid || updating}
                                 onClick={() => submitForm()}
                                 color="secondary"
                                 variant="contained"
                               >
                                 Save
-                              </Button>
+                              </CustomButton>
                             </div>
                           </div>
                         )}

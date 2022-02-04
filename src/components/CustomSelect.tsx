@@ -90,6 +90,7 @@ export const customStyles = {
   option: (provided: any, state: any) => ({
     ...provided,
     fontFamily: "san serif",
+    fontSize: "12px",
   }),
 };
 export default CustomSelect;

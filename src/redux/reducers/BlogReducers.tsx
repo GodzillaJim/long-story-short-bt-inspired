@@ -41,6 +41,7 @@ import {
   GET_CATEGORY_SUCCESS,
   PUBLISH_ARTICLE_FAIL,
   PUBLISH_ARTICLE_REQUEST,
+  PUBLISH_ARTICLE_RESET,
   PUBLISH_ARTICLE_SUCCESS,
   UNARCHIVE_CATEGORY_FAIL,
   UNARCHIVE_CATEGORY_REQUEST,
@@ -48,6 +49,7 @@ import {
   UNARCHIVE_CATEGORY_SUCCESS,
   UNPUBLISH_ARTICLE_FAIL,
   UNPUBLISH_ARTICLE_REQUEST,
+  UNPUBLISH_ARTICLE_RESET,
   UNPUBLISH_ARTICLE_SUCCESS,
   UPDATE_ARTICLE_FAIL,
   UPDATE_ARTICLE_REQUEST,
@@ -123,6 +125,8 @@ export const publishArticleReducer = (
       return { loading: false, error: null, blog: true };
     case PUBLISH_ARTICLE_FAIL:
       return { loading: false, error: action.payload, blog: false };
+    case PUBLISH_ARTICLE_RESET:
+      return { ...DefaultState };
     default:
       return state;
   }
@@ -138,6 +142,8 @@ export const unPublishArticleReducer = (
       return { loading: false, error: null, blog: true };
     case UNPUBLISH_ARTICLE_FAIL:
       return { loading: false, error: action.payload, blog: false };
+    case UNPUBLISH_ARTICLE_RESET:
+      return { ...DefaultState };
     default:
       return state;
   }

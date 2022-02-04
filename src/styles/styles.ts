@@ -14,8 +14,9 @@ export const tableStyles = makeStyles((theme) => ({
 
 export const cellStyle = {
   fontFamily: "Sans Serif",
-  width: "calc((100% - 96px) / 5)",
+  width: "calc((100% - 48px) / 5)",
   padding: 0,
   fontSize: "12px",
   overflow: "hidden",
+  paddingLeft:"8px"
 };
