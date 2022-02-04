@@ -1,6 +1,5 @@
 import { Dispatch } from "react";
 
-import { IArticle } from "../../screens/CreateArticleContainer";
 import {
   ADD_TAGS_BULK_FAIL,
   ADD_TAGS_BULK_REQUEST,
@@ -56,6 +55,7 @@ import {
 } from "../constants/ArticleConstants";
 import { getArticles, ICategory } from "../../data/Articles";
 import { useHttp } from "../../hooks/client";
+import { IArticle } from "../../types";
 
 export const createBlogAction =
   (blog: IArticle) => async (dispatch: Dispatch<any>) => {
@@ -116,14 +116,14 @@ export const unPublishArticleAction =
       dispatch({ type: UNPUBLISH_ARTICLE_FAIL });
     }
   };
-interface IIDAarticle extends IArticle {
-  id: number;
-}
+
 export const updateArticleAction =
-  (article: IIDAarticle) => async (dispatch: Dispatch<any>) => {
+  (article: IArticle) => async (dispatch: Dispatch<any>) => {
     try {
+      const axios = useHttp();
       dispatch({ type: UPDATE_ARTICLE_REQUEST });
-      // TODO: Implement axios update article
+      console.log(article);
+      await axios.put(`/api/v1/admin/blog/${article.id}`, article);
       dispatch({ type: UPDATE_ARTICLE_SUCCESS });
       dispatch(fetchBlogDetailsAction(article.id));
     } catch (exception: any) {

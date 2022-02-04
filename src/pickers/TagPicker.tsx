@@ -46,17 +46,15 @@ const TagPicker = (props: ITagPicker) => {
       );
     }
     temp = temp.filter(
-      (tag: ITag) => !props.values.includes(tag.tag.toLowerCase())
+      (tag: ITag) => !props.values.find((val: ITag) => val.id === tag.id)
     );
     return temp;
   }, [search, tags, props.values]);
   const handleTagAdd = (tag: ITag) => {
-    props.setFieldValue([...props.values, tag.tag]);
+    props.setFieldValue([...props.values, tag]);
   };
-  const handleTagRemove = (tag: string) => {
-    props.setFieldValue(
-      props.values.filter((t: string) => t.toLowerCase() !== tag)
-    );
+  const handleTagRemove = (tag: ITag) => {
+    props.setFieldValue(props.values.filter((t: ITag) => t.id !== tag.id));
   };
   return (
     <div>
@@ -78,7 +76,10 @@ const TagPicker = (props: ITagPicker) => {
                 </SearchIconWrapper>
                 <StyledInputBase
                   placeholder="Search…"
-                  inputProps={{ "aria-label": "search" }}
+                  inputProps={{
+                    "aria-label": "search",
+                    sx: { fontSize: "12px" },
+                  }}
                   value={search}
                   onChange={(e) => handleChange(e.target.value || "")}
                   disabled={props.disabled}
@@ -88,12 +89,13 @@ const TagPicker = (props: ITagPicker) => {
             <Divider />
             <div>
               <Grid container spacing={1}>
-                {props.values.map((tag: string) => (
+                {props.values.map((tag: ITag) => (
                   <Grid key={`key-${v4()}`} item>
                     <Chip
                       color="secondary"
                       key={`key-${v4()}`}
-                      label={tag}
+                      size="small"
+                      label={tag.tag.slice(0, 8)}
                       onDelete={() => handleTagRemove(tag)}
                     />
                   </Grid>

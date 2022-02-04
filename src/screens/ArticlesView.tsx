@@ -196,7 +196,9 @@ const ArticlesView = () => {
             </div>
           </div>
           <div className="articles-table text-center">
-            {loadingAllArticles && <CircularProgress variant="indeterminate" />}
+            {loadingAllArticles && (
+              <CircularProgress size={20} variant="indeterminate" />
+            )}
             {allArticleError && (
               <CustomError
                 message={allArticleError}

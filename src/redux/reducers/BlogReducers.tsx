@@ -230,7 +230,7 @@ export const updateArticleReducer = (
     case UPDATE_ARTICLE_FAIL:
       return { loading: false, error: action.payload, success: false };
     case UPDATE_ARTICLE_RESET:
-      return { loading: true, error: null, success: false };
+      return { loading: false, error: null, success: false };
     default:
       return state;
   }

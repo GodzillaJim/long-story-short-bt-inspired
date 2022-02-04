@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { toast } from "react-toastify";
@@ -44,8 +44,9 @@ import {
   UPDATE_ARTICLE_RESET,
 } from "../redux/constants/ArticleConstants";
 
-import { IArticle } from "./CreateArticleContainer";
 import { SomeContainer } from "./Dashboard";
+import { ICategory, ITag, IArticle } from "../types";
+import { useStyles as customStyles } from "../styles/styles";
 
 const useStyles = makeStyles({
   rootLoading: {
@@ -60,14 +61,24 @@ const useStyles = makeStyles({
     width: "fit-content",
     margin: "auto !important",
   },
+  textArea: {
+    "&:focus": {
+      border: "1px solid rgba(0,0,0, 0.6) !important",
+      outline: "none !important",
+    },
+  },
 });
 
 const EditArticleContainer = () => {
   const { id } = useParams();
   const classes = useStyles();
+  const customClasses = customStyles();
   const dispatch = useDispatch();
   const [isEditing, setEditing] = useState<boolean>(false);
   const message = "This field is required";
+  const { loading, error, blog } = useSelector(
+    (state: RootState) => state.blogDetails
+  );
   const {
     values,
     touched,
@@ -85,6 +96,12 @@ const EditArticleContainer = () => {
       content: "Sample content",
       tags: [],
       category: "",
+      createdOn: new Date().toISOString(),
+      lastModified: new Date().toISOString(),
+      archived: false,
+      published: false,
+      comments: [],
+      id: 0,
     },
     validationSchema: object().shape({
       title: string().required(message),
@@ -95,15 +112,12 @@ const EditArticleContainer = () => {
       category: string().required(message),
     }),
     onSubmit: (values: IArticle) => {
-      console.log(values);
+      const tags = values.tags.map((tag: ITag) => ({ tag: tag.tag }));
       const article = { ...values, id: id ? parseInt(id) : 1 };
-      dispatch(updateArticleAction(article));
+      dispatch(updateArticleAction({ ...blog, ...article, tags }));
     },
   });
 
-  const { loading, error, blog } = useSelector(
-    (state: RootState) => state.blogDetails
-  );
   const {
     loading: publishing,
     error: publishingError,
@@ -182,19 +196,19 @@ const EditArticleContainer = () => {
       name: "Admin",
       link: "/",
       isActive: false,
-      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Home className={customClasses.icon} />,
     },
     {
       name: "Articles",
       link: "/articles",
       isActive: false,
-      icon: <Notes sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Notes className={customClasses.icon} />,
     },
     {
       name: id || "article",
       link: `/articles/${id}`,
       isActive: true,
-      icon: <Edit sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Edit className={customClasses.icon} />,
     },
   ];
   const handlePublishArticle = () => {
@@ -211,12 +225,30 @@ const EditArticleContainer = () => {
     setFieldValue("title", e.target.value || "");
   };
   // TODO: Implement fetch categories from backend
-  const getCategoriesList = () => {
-    return categories || [];
-  };
+  const categoriesList = useMemo(() => {
+    let temp = categories || [];
+    temp = temp.map((category: ICategory) => ({
+      ...category,
+      label: category.name,
+      value: category.name,
+    }));
+    return temp;
+  }, [categories]);
   const handleEdit = () => {
     if (blog) {
-      const { title, summary, content, category, prompt, tags } = blog;
+      const {
+        title,
+        summary,
+        content,
+        category,
+        prompt,
+        tags,
+        published,
+        id,
+        lastModified,
+        createdOn,
+        comments,
+      } = blog;
       setValues({
         title,
         summary,
@@ -224,6 +256,12 @@ const EditArticleContainer = () => {
         category,
         prompt,
         tags,
+        id,
+        published,
+        lastModified,
+        createdOn,
+        comments,
+        archived: false,
       });
       setEditing(!isEditing);
       dispatch(fetchCategoriesAction());
@@ -298,6 +336,7 @@ const EditArticleContainer = () => {
                                 }
                                 fullWidth
                                 disabled={loading || updating}
+                                InputProps={{ sx: { fontSize: "12px" } }}
                               />
                             )}
                           </div>
@@ -317,7 +356,7 @@ const EditArticleContainer = () => {
                                   />
                                 )}
                                 {!categoryLoading && (
-                                  <FormControl fullWidth size="small">
+                                  <FormControl size="small">
                                     <InputLabel
                                       margin="dense"
                                       id="demo-simple-select-label"
@@ -337,11 +376,13 @@ const EditArticleContainer = () => {
                                           e.target.value
                                         )
                                       }
+                                      sx={{ fontSize: "12px" }}
                                     >
-                                      {getCategoriesList().map((cat: any) => (
+                                      {categoriesList.map((cat: any) => (
                                         <MenuItem
                                           key={`key-${v4()}`}
                                           value={cat.value}
+                                          sx={{ fontSize: "12px" }}
                                         >
                                           {cat.label}
                                         </MenuItem>
@@ -380,11 +421,13 @@ const EditArticleContainer = () => {
                                   onChange={(e) =>
                                     setFieldValue("summary", e.target.value)
                                   }
+                                  className={classes.textArea}
                                   minRows={6}
                                   style={{
                                     width: "100%",
                                     textAlign: "justify",
-                                    padding: "4px",
+                                    padding: "8px",
+                                    fontSize: "12px",
                                   }}
                                 />
                               </div>
@@ -416,7 +459,7 @@ const EditArticleContainer = () => {
                       <div className="comments">
                         <div className="flex flex-col gap-3">
                           <div>
-                            <Typography fontWeight={"bold"} variant="body1">
+                            <Typography fontWeight={"bold"} variant="caption">
                               Comments
                             </Typography>
                           </div>
@@ -460,6 +503,7 @@ const EditArticleContainer = () => {
                                 : handlePublishArticle
                             }
                             variant="contained"
+                            size="small"
                           >
                             {!blog.published ? "Publish" : "Unpublish"}
                           </CustomButton>
@@ -488,6 +532,7 @@ const EditArticleContainer = () => {
                                   style={{
                                     width: "100%",
                                     textAlign: "justify",
+                                    fontSize: "12px",
                                   }}
                                 />
                               </div>
@@ -537,6 +582,7 @@ const EditArticleContainer = () => {
                                   style={{
                                     width: "100%",
                                     textAlign: "justify",
+                                    fontSize: "12px",
                                   }}
                                 />
                               </div>
@@ -568,7 +614,7 @@ const EditArticleContainer = () => {
                         <div className="contents overflow-auto">
                           <div className="flex flex-col gap-1">
                             <div>
-                              <Typography fontWeight={"bold"} variant="body1">
+                              <Typography fontWeight={"bold"} variant="caption">
                                 Tags
                               </Typography>
                             </div>
@@ -592,6 +638,7 @@ const EditArticleContainer = () => {
                                           color="primary"
                                           key={`key-${v4()}`}
                                           label={tag.tag.slice(0, 8)}
+                                          size="small"
                                         />
                                       </Grid>
                                     ))}
@@ -611,6 +658,7 @@ const EditArticleContainer = () => {
                                 color="secondary"
                                 disabled={updating}
                                 variant="outlined"
+                                size="small"
                               >
                                 Cancel
                               </CustomButton>
@@ -621,6 +669,7 @@ const EditArticleContainer = () => {
                                 onClick={() => submitForm()}
                                 color="secondary"
                                 variant="contained"
+                                size="small"
                               >
                                 Save
                               </CustomButton>

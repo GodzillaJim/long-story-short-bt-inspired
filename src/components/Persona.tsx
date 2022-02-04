@@ -1,7 +1,20 @@
 import { Person } from "@mui/icons-material";
 import { Avatar, Typography } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { getTimeCreated } from "../helpers/Time";
 
+const useStyles = makeStyles({
+  avatar: {
+    width: "30px !important",
+    height: "30px !important",
+  },
+  name: {
+    fontSize: "12px !important",
+  },
+  comment: {
+    fontSize: "12px !important",
+  },
+});
 export interface IPersona {
   fullName: string;
   content: string;
@@ -9,11 +22,12 @@ export interface IPersona {
 }
 const Persona = (props: IPersona) => {
   const { fullName, content, date } = props;
+  const classes = useStyles();
   return (
     <div>
       <div className="flex flex-row gap-2 w-full">
         <div>
-          <Avatar>
+          <Avatar className={classes.avatar}>
             <Person color="secondary" />
           </Avatar>
         </div>
@@ -22,7 +36,7 @@ const Persona = (props: IPersona) => {
             <div className="w-full">
               <div className="flex flex-row w-full justify-between">
                 <div>
-                  <Typography fontWeight="bold" variant="subtitle1">
+                  <Typography className={classes.name} fontWeight="bold">
                     {fullName}
                   </Typography>
                 </div>
@@ -34,7 +48,7 @@ const Persona = (props: IPersona) => {
               </div>
             </div>
             <div>
-              <Typography variant="body1">{content}</Typography>
+              <Typography className={classes.comment}>{content}</Typography>
             </div>
           </div>
         </div>

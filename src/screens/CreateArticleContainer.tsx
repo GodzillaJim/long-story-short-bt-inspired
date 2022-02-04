@@ -14,7 +14,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { v4 } from "uuid";
 import { array, object, string } from "yup";
@@ -26,18 +26,18 @@ import { ToastContainer, toast } from "react-toastify";
 import MoreDetailsScreen from "./MoreDetailsScreen";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/combineReducers";
-import { createBlogAction } from "../redux/actions/BlogActions";
+import {
+  createBlogAction,
+  fetchCategoriesAction,
+} from "../redux/actions/BlogActions";
+import { useStyles as customStyles } from "../styles/styles";
+import CustomButton from "../components/CustomButton";
+import CustomSelect from "../components/CustomSelect";
+import { ICategory, IArticle } from "../types";
 
-export interface IArticle {
-  title: string;
-  prompt: string;
-  summary: string;
-  category: any;
-  content: string;
-  tags: any[];
-}
 const CreateArticleContainer = () => {
   const message = "This field is required";
+  const customClasses = customStyles();
   const [activeTab, setActiveTab] = useState<number>(0);
   const { loading, error, blog } = useSelector(
     (state: RootState) => state.createBlog
@@ -52,6 +52,12 @@ const CreateArticleContainer = () => {
       content: "Sample content",
       tags: [],
       category: "",
+      id: 0,
+      createdOn: new Date().toISOString(),
+      lastModified: new Date().toISOString(),
+      published: false,
+      archived: false,
+      comments: [],
     },
     validationSchema: object().shape({
       title: string().required(message),
@@ -63,7 +69,7 @@ const CreateArticleContainer = () => {
     }),
     onSubmit: (values: IArticle) => {
       console.log(values);
-      dispatch(createBlogAction(values));
+      // dispatch(createBlogAction(values));
     },
   });
   const navigate = useNavigate();
@@ -85,22 +91,23 @@ const CreateArticleContainer = () => {
       name: "Admin",
       link: "/",
       isActive: false,
-      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Home className={customClasses.icon} />,
     },
     {
       name: "Articles",
       link: "/articles",
       isActive: false,
-      icon: <Notes sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Notes className={customClasses.icon} />,
     },
     {
       name: "Write",
       link: "/articles/create",
       isActive: true,
-      icon: <Edit sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Edit className={customClasses.icon} />,
     },
   ];
   //TODO: Fetch all categories
+
   useEffect(() => {
     console.log(formik.values);
   }, [formik.values]);
@@ -129,10 +136,18 @@ const CreateArticleContainer = () => {
                   value={activeTab}
                   onChange={(e: any, newValue: any) => setActiveTab(newValue)}
                   className="ml-3"
-                  aria-label="basic tabs example"
+                  aria-label="create article container"
                 >
-                  <Tab label={"Basic Details"} {...a11yProps(0)} />
-                  <Tab label={"More Details"} {...a11yProps(1)} />
+                  <Tab
+                    sx={{ fontSize: "12px" }}
+                    label={"Basic Details"}
+                    {...a11yProps(0)}
+                  />
+                  <Tab
+                    sx={{ fontSize: "12px" }}
+                    label={"More Details"}
+                    {...a11yProps(1)}
+                  />
                 </Tabs>
               </Box>
               <TabPanel index={0} value={activeTab}>
@@ -147,7 +162,7 @@ const CreateArticleContainer = () => {
               {!loading && (
                 <div className="flex flex-row gap-5 justify-end">
                   <div>
-                    <Button
+                    <CustomButton
                       type={"button"}
                       disabled={loading}
                       onClick={() =>
@@ -159,7 +174,7 @@ const CreateArticleContainer = () => {
                       variant="outlined"
                     >
                       {activeTab === 0 ? "Cancel" : "Previous"}
-                    </Button>
+                    </CustomButton>
                   </div>
                   <div>
                     <Button
@@ -197,13 +212,34 @@ const BasicDetails = (props: {
   const getCategoriesList = () => {
     return getCategories();
   };
+  const dispatch = useDispatch();
   const handleTitleChange = (e: any) => {
     setFieldValue("title", e.target.value);
   };
+  const {
+    blog: categories,
+    loading: categoryLoading,
+    error: categoryError,
+  } = useSelector((state: RootState) => state.categories);
+  useEffect(() => {
+    if (!categoryLoading && !categoryError && !categories) {
+      dispatch(fetchCategoriesAction());
+    }
+  }, [categories, categoryLoading, categoryError, dispatch]);
+
+  const categoryList = useMemo(() => {
+    let temp = categories || [];
+    temp = temp.map((category: ICategory) => ({
+      ...category,
+      label: category.name,
+      value: category.name,
+    }));
+    return temp;
+  }, [categories]);
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-2 gap-5">
-        <div className="col-span-1">
+        <div className="col-span-1 pr-4">
           <TextField
             key={`article-title`}
             id="title"
@@ -215,11 +251,17 @@ const BasicDetails = (props: {
             helperText={touched.title ? errors.title : undefined}
             fullWidth
             disabled={loading}
+            InputProps={{ sx: { fontSize: "12px" } }}
+            InputLabelProps={{ sx: { fontSize: "12px" } }}
           />
         </div>
-        <div className="col-span-1">
+        <div className="col-span-1 pr-4">
           <FormControl fullWidth size="small">
-            <InputLabel margin="dense" id="demo-simple-select-label">
+            <InputLabel
+              sx={{ fontSize: "12px" }}
+              margin="dense"
+              id="demo-simple-select-label"
+            >
               Category
             </InputLabel>
             <Select
@@ -229,9 +271,22 @@ const BasicDetails = (props: {
               label="Category"
               placeholder="Select article category"
               onChange={(e: any) => setFieldValue("category", e.target.value)}
+              inputProps={{ sx: { fontSize: "12px" } }}
+              sx={{
+                sx: {
+                  fontSize: "12px",
+                  paddingBottom: "10px",
+                  paddingTop: "6px",
+                  height:"18px"
+                },
+              }}
             >
-              {getCategoriesList().map((cat: any) => (
-                <MenuItem key={`key-${v4()}`} value={cat.value}>
+              {categoryList.map((cat: any) => (
+                <MenuItem
+                  sx={{ fontSize: "12px" }}
+                  key={`key-${v4()}`}
+                  value={cat.value}
+                >
                   {cat.label}
                 </MenuItem>
               ))}
