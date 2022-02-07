@@ -52,6 +52,12 @@ import {
   GET_CATEGORY_REQUEST,
   GET_CATEGORY_SUCCESS,
   GET_CATEGORY_FAIL,
+  ARCHIVE_ARTICLE_FAIL,
+  ARCHIVE_ARTICLE_REQUEST,
+  ARCHIVE_ARTICLE_SUCCESS,
+  UNARCHIVE_ARTICLE_REQUEST,
+  UNARCHIVE_ARTICLE_SUCCESS,
+  UNARCHIVE_ARTICLE_FAIL,
 } from "../constants/ArticleConstants";
 import { getArticles, ICategory } from "../../data/Articles";
 import { useHttp } from "../../hooks/client";
@@ -60,9 +66,9 @@ import { IArticle } from "../../types";
 export const createBlogAction =
   (blog: IArticle) => async (dispatch: Dispatch<any>) => {
     try {
+      const axios = useHttp();
       dispatch({ type: CREATE_BLOG_REQUEST });
-      const data = { ...blog, id: 1 };
-      // TODO: Implement axios post create blog
+      const { data } = await axios.post("/api/v1/admin/blog", blog);
       dispatch({ type: CREATE_BLOG_SUCCESS, payload: data });
     } catch (exception: any) {
       dispatch({ type: CREATE_BLOG_FAIL, payload: exception.message });
@@ -277,5 +283,29 @@ export const getCategoryAction =
       dispatch(getCategoryArticlesAction(categoryId + ""));
     } catch (exception: any) {
       dispatch({ type: GET_CATEGORY_FAIL, payload: exception.message });
+    }
+  };
+export const archiveArticleAction =
+  (articleId: number) => async (dispatch: Dispatch<any>) => {
+    try {
+      const axios = useHttp();
+      dispatch({ type: ARCHIVE_ARTICLE_REQUEST });
+      await axios.get(`/api/v1/admin/blog/${articleId}/archive`);
+      dispatch(fetchBlogDetailsAction(articleId));
+      dispatch({ type: ARCHIVE_ARTICLE_SUCCESS });
+    } catch (exception: any) {
+      dispatch({ type: ARCHIVE_ARTICLE_FAIL });
+    }
+  };
+export const unArchiveArticleAction =
+  (articleId: number) => async (dispatch: Dispatch<any>) => {
+    try {
+      const axios = useHttp();
+      dispatch({ type: UNARCHIVE_ARTICLE_REQUEST });
+      await axios.get(`/api/v1/admin/blog/${articleId}/unarchive`);
+      dispatch(fetchBlogDetailsAction(articleId));
+      dispatch({ type: UNARCHIVE_ARTICLE_SUCCESS });
+    } catch (exception: any) {
+      dispatch({ type: UNARCHIVE_ARTICLE_FAIL });
     }
   };

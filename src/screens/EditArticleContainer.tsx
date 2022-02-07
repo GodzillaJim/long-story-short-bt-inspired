@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useFormik } from "formik";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { Dispatch, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { toast } from "react-toastify";
@@ -30,23 +30,28 @@ import Persona from "../components/Persona";
 import TopSection from "../components/TopSection";
 import TagPicker from "../pickers/TagPicker";
 import {
+  archiveArticleAction,
   fetchBlogDetailsAction,
   fetchCategoriesAction,
   publishArticleAction,
+  unArchiveArticleAction,
   unPublishArticleAction,
   updateArticleAction,
 } from "../redux/actions/BlogActions";
 import { RootState } from "../redux/combineReducers";
 import CustomButton from "../components/CustomButton";
 import {
+  ARCHIVE_ARTICLE_RESET,
   PUBLISH_ARTICLE_RESET,
+  UNARCHIVE_ARTICLE_RESET,
   UNPUBLISH_ARTICLE_RESET,
   UPDATE_ARTICLE_RESET,
 } from "../redux/constants/ArticleConstants";
 
 import { SomeContainer } from "./Dashboard";
-import { ICategory, ITag, IArticle } from "../types";
+import { ICategory, ITag, IArticle, IComment } from "../types";
 import { useStyles as customStyles } from "../styles/styles";
+import { parseISO } from "date-fns";
 
 const useStyles = makeStyles({
   rootLoading: {
@@ -65,6 +70,7 @@ const useStyles = makeStyles({
     "&:focus": {
       border: "1px solid rgba(0,0,0, 0.6) !important",
       outline: "none !important",
+      fontSize: "12px !important",
     },
   },
 });
@@ -185,12 +191,45 @@ const EditArticleContainer = () => {
       }
     }
   }, [loading, error, blog, id, dispatch]);
-  // TODO Fetch article by id
   const handleRetry = () => {
     if (id) {
       dispatch(fetchBlogDetailsAction(parseInt(id)));
     }
   };
+  const {
+    loading: archiving,
+    error: archiveError,
+    success: archived,
+  } = useSelector((state: RootState) => state.archiveArticle);
+  const {
+    loading: unArchiving,
+    error: unArchiveError,
+    success: unArchived,
+  } = useSelector((state: RootState) => state.unArchiveArticle);
+  useEffect(() => {
+    if (unArchived) {
+      toast.success("Article unarchived", {
+        onClose: () => dispatch({ type: UNARCHIVE_ARTICLE_RESET }),
+      });
+    }
+    if (unArchiveError) {
+      toast.error(unArchiveError, {
+        onClose: () => dispatch({ type: UNARCHIVE_ARTICLE_RESET }),
+      });
+    }
+  }, [unArchiveError, unArchived, unArchiving, dispatch]);
+  useEffect(() => {
+    if (archived) {
+      toast.success("Article Archived", {
+        onClose: () => dispatch({ type: ARCHIVE_ARTICLE_RESET }),
+      });
+    }
+    if (archiveError) {
+      toast.error(archiveError, {
+        onClose: () => dispatch({ type: ARCHIVE_ARTICLE_RESET }),
+      });
+    }
+  }, [archiving, archiveError, archived, dispatch]);
   const items = [
     {
       name: "Admin",
@@ -219,6 +258,16 @@ const EditArticleContainer = () => {
   const handleUnPublishArticle = () => {
     if (id) {
       dispatch(unPublishArticleAction(parseInt(id)));
+    }
+  };
+  const handleArchiveArticle = () => {
+    if (blog) {
+      dispatch(archiveArticleAction(blog.id));
+    }
+  };
+  const handleUnArchiveArticle = () => {
+    if (blog) {
+      dispatch(unArchiveArticleAction(blog.id));
     }
   };
   const handleTitleChange = (e: any) => {
@@ -467,12 +516,12 @@ const EditArticleContainer = () => {
                             <div className="flex flex-col gap-4">
                               {blog &&
                                 blog.comments &&
-                                blog.comments.map((comment: any) => (
+                                blog.comments.map((comment: IComment) => (
                                   <Persona
                                     key={`key-${v4()}`}
                                     fullName={`${comment.firstName} ${comment.lastName}`}
                                     content={comment.content}
-                                    date={new Date()}
+                                    date={parseISO(comment.createdOn)}
                                   />
                                 ))}
                             </div>
@@ -483,31 +532,59 @@ const EditArticleContainer = () => {
                   </div>
                   <div className="col-span-3 ml-2">
                     <div className="flex flex-col p-3 justify-center gap-3">
-                      <div className="flex flex-row justify-center text-center">
-                        {(publishing || unPublishing) && (
-                          <div style={{ width: "fit-content" }}>
-                            <CircularProgress
-                              size={20}
-                              variant="indeterminate"
-                            />
-                          </div>
-                        )}
-                        {!publishing && !unPublishing && (
-                          <CustomButton
-                            className="m-auto"
-                            disabled={updating}
-                            color={!blog.published ? "primary" : "secondary"}
-                            onClick={
-                              blog.published
-                                ? handleUnPublishArticle
-                                : handlePublishArticle
-                            }
-                            variant="contained"
-                            size="small"
-                          >
-                            {!blog.published ? "Publish" : "Unpublish"}
-                          </CustomButton>
-                        )}
+                      <div className="flex flex-row justify-center gap-5 text-center">
+                        <div>
+                          {(publishing || unPublishing) && (
+                            <div style={{ width: "fit-content" }}>
+                              <CircularProgress
+                                size={20}
+                                variant="indeterminate"
+                              />
+                            </div>
+                          )}
+                          {!publishing && !unPublishing && (
+                            <CustomButton
+                              className="m-auto"
+                              disabled={updating}
+                              color={!blog.published ? "primary" : "secondary"}
+                              onClick={
+                                blog.published
+                                  ? handleUnPublishArticle
+                                  : handlePublishArticle
+                              }
+                              variant="contained"
+                              size="small"
+                            >
+                              {!blog.published ? "Publish" : "Unpublish"}
+                            </CustomButton>
+                          )}
+                        </div>
+                        <div>
+                          {(archiving || unArchiving) && (
+                            <div style={{ width: "fit-content" }}>
+                              <CircularProgress
+                                size={20}
+                                variant="indeterminate"
+                              />
+                            </div>
+                          )}
+                          {!archiving && !unArchiving && (
+                            <CustomButton
+                              className="m-auto"
+                              disabled={updating}
+                              color={!blog.archived ? "primary" : "secondary"}
+                              onClick={
+                                blog.archived
+                                  ? handleUnArchiveArticle
+                                  : handleArchiveArticle
+                              }
+                              variant="contained"
+                              size="small"
+                            >
+                              {!blog.archived ? "Archive" : "UnArchive"}
+                            </CustomButton>
+                          )}
+                        </div>
                       </div>
                       <Divider />
                       <div>
@@ -533,6 +610,7 @@ const EditArticleContainer = () => {
                                     width: "100%",
                                     textAlign: "justify",
                                     fontSize: "12px",
+                                    padding: "8px",
                                   }}
                                 />
                               </div>
@@ -583,6 +661,7 @@ const EditArticleContainer = () => {
                                     width: "100%",
                                     textAlign: "justify",
                                     fontSize: "12px",
+                                    padding: "8px",
                                   }}
                                 />
                               </div>
@@ -659,6 +738,7 @@ const EditArticleContainer = () => {
                                 disabled={updating}
                                 variant="outlined"
                                 size="small"
+                                sx={{ fontSize: "12px" }}
                               >
                                 Cancel
                               </CustomButton>
@@ -670,6 +750,7 @@ const EditArticleContainer = () => {
                                 color="secondary"
                                 variant="contained"
                                 size="small"
+                                sx={{ fontSize: "12px" }}
                               >
                                 Save
                               </CustomButton>

@@ -59,6 +59,14 @@ import {
   UPDATE_CATEGORY_REQUEST,
   UPDATE_CATEGORY_RESET,
   UPDATE_CATEGORY_SUCCESS,
+  ARCHIVE_ARTICLE_FAIL,
+  ARCHIVE_ARTICLE_REQUEST,
+  ARCHIVE_ARTICLE_SUCCESS,
+  ARCHIVE_ARTICLE_RESET,
+  UNARCHIVE_ARTICLE_REQUEST,
+  UNARCHIVE_ARTICLE_RESET,
+  UNARCHIVE_ARTICLE_FAIL,
+  UNARCHIVE_ARTICLE_SUCCESS,
 } from "../constants/ArticleConstants";
 
 export interface IDefaultState {
@@ -334,6 +342,40 @@ export const unArchiveCategoryReducer = (
     case UNARCHIVE_CATEGORY_FAIL:
       return { loading: false, error: action.payload, success: false };
     case UNARCHIVE_CATEGORY_RESET:
+      return { loading: false, error: null, success: false };
+    default:
+      return state;
+  }
+};
+export const archiveArticleReducer = (
+  state = { loading: false, error: null, success: false },
+  action: IAction
+) => {
+  switch (action.type) {
+    case ARCHIVE_ARTICLE_REQUEST:
+      return { loading: true, error: null, success: false };
+    case ARCHIVE_ARTICLE_SUCCESS:
+      return { loading: false, error: null, success: true };
+    case ARCHIVE_ARTICLE_FAIL:
+      return { loading: false, error: action.payload, success: false };
+    case ARCHIVE_ARTICLE_RESET:
+      return { loading: false, error: null, success: false };
+    default:
+      return state;
+  }
+};
+export const unArchiveArticleReducer = (
+  state = { loading: false, error: null, success: false },
+  action: IAction
+) => {
+  switch (action.type) {
+    case UNARCHIVE_ARTICLE_REQUEST:
+      return { loading: true, error: null, success: false };
+    case UNARCHIVE_ARTICLE_SUCCESS:
+      return { loading: false, error: null, success: true };
+    case UNARCHIVE_ARTICLE_FAIL:
+      return { loading: false, error: action.payload, success: false };
+    case UNARCHIVE_ARTICLE_RESET:
       return { loading: false, error: null, success: false };
     default:
       return state;

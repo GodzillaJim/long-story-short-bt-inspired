@@ -32,3 +32,6 @@
 .is-open {
   border: none;
 }
+#react-select-2-listbox{
+  z-index: 1000000;
+}

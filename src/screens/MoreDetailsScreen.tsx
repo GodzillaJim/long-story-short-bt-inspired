@@ -8,13 +8,18 @@ import {
   styled,
   TextField,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { v4 } from "uuid";
-import { getTags, ITags } from "../data/Articles";
+import { ITags } from "../data/Articles";
 import { getNoneStopWords } from "../helpers/Language";
 import { ITag } from "../types";
+import { RootState } from "../redux/combineReducers";
+import CustomError from "../components/CustomError";
+import { fetchTagsAction } from "../redux/actions/BlogActions";
 
 interface IProps {
   values: any;
@@ -31,8 +36,39 @@ const useStyles = makeStyles({
 const MoreDetailsScreen = (props: IProps) => {
   const { values, setFieldValue } = props;
   const [search, setSearch] = useState<string>("");
+  const dispatch = useDispatch();
+
+  const classes = useStyles();
+  const {
+    loading,
+    error,
+    blog: allTags,
+  } = useSelector((state: RootState) => state.tags);
+  const handleRemoveTag = (tag: ITag) => {
+    const newTags = values.tags.filter(
+      (t: ITag) => t.tag.toLowerCase() !== tag.tag.toLowerCase()
+    );
+    setFieldValue("tags", newTags);
+  };
+  useEffect(() => {
+    if (!loading && !error && !allTags) {
+      dispatch(fetchTagsAction());
+    }
+  }, [loading, error, allTags, dispatch]);
+  const handleSelectTag = (tag: ITags) => {
+    const newTags = values.tags.filter(
+      (t: ITags) => t.tag.toLowerCase() !== tag.tag.toLowerCase()
+    );
+    setFieldValue("tags", [...newTags, tag]);
+  };
+  const handleReloadTags = () => {
+    dispatch(fetchTagsAction());
+  };
   const tags = useMemo(() => {
-    let temp = getTags();
+    if (!allTags) {
+      return [];
+    }
+    let temp = allTags;
     const title: string = values.title;
     if (title !== "") {
       const nonStopTags: ITag[] = getNoneStopWords(title).map(
@@ -45,22 +81,14 @@ const MoreDetailsScreen = (props: IProps) => {
         tag.tag.toLowerCase().includes(search.toLowerCase())
       );
     }
-    temp = temp.filter((t: ITag) =>
-      values.tags.map((tag: ITag) => t.tag !== tag.tag)
-    );
+
+    values.tags.forEach((tag: ITag) => {
+      temp = temp.filter(
+        (t: ITag) => tag.tag.toLowerCase() !== t.tag.toLowerCase()
+      );
+    });
     return temp;
-  }, [search, values.title, values.tags]);
-  const classes = useStyles();
-  const handleRemoveTag = (tag: ITag) => {
-    setFieldValue(
-      "tags",
-      values.tags.filter((t: ITags) => t.tag !== tag.tag)
-    );
-  };
-  const handleSelectTag = (tag: ITags) => {
-    const newTags = values.tags.filter((t: ITags) => t.tag !== tag.tag);
-    setFieldValue("tags", [...newTags, tag]);
-  };
+  }, [search, values.title, values.tags, allTags]);
   return (
     <div>
       <div className="flex flex-col w-full">
@@ -73,9 +101,11 @@ const MoreDetailsScreen = (props: IProps) => {
             label="Prompt"
             placeholder="Prompt"
             multiline
-            rows={3}
+            rows={5}
             fullWidth
             disabled={props.loading}
+            InputProps={{ sx: { fontSize: "12px" } }}
+            InputLabelProps={{ sx: { fontSize: "12px" } }}
           />
         </div>
         <Divider />
@@ -111,21 +141,23 @@ const MoreDetailsScreen = (props: IProps) => {
             </div>
           </div>
           <Divider />
-          <div>
+          <div className="text-center">
+            {loading && <CircularProgress variant="indeterminate" size={20} />}
+            {error && (
+              <CustomError message={error} onClick={handleReloadTags} />
+            )}
             <Grid container spacing={1}>
               {values &&
                 values.tags &&
-                values.tags.map((tag: ITags) => (
+                values.tags.map((tag: ITag) => (
                   <Grid key={`key-${v4()}`} item>
                     <Chip
-                      onClick={() =>
-                        setFieldValue("tags", [...values.tags, tag])
-                      }
                       color="primary"
                       onDelete={() => handleRemoveTag(tag)}
+                      onClick={() => handleRemoveTag(tag)}
                       key={`key-${v4()}`}
                       label={tag.tag}
-                      disabled={props.loading}
+                      size="small"
                     />
                   </Grid>
                 ))}
@@ -134,7 +166,7 @@ const MoreDetailsScreen = (props: IProps) => {
           <div className={`p-3 ${classes.tagsContainer}`}>
             <Grid container spacing={2}>
               {tags.map(
-                (tag: ITags, index: number) =>
+                (tag: ITag, index: number) =>
                   index < 20 && (
                     <Grid key={`key-${v4()}`} item>
                       <Chip
@@ -142,6 +174,7 @@ const MoreDetailsScreen = (props: IProps) => {
                         key={`key-${v4()}`}
                         label={tag.tag}
                         disabled={props.loading}
+                        size="small"
                       />
                     </Grid>
                   )
@@ -177,6 +210,7 @@ const Search = styled("div")(({ theme }: any) => ({
   [theme.breakpoints.down("sm")]: {
     width: "auto",
   },
+  height: "32px",
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -203,6 +237,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     [theme.breakpoints.down("sm")]: {
       width: "auto",
     },
+    fontSize: "12px",
   },
 }));
 export default MoreDetailsScreen;

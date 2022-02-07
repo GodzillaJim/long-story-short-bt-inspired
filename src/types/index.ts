@@ -52,4 +52,5 @@ export interface IComment{
     firstName: string;
     lastName: string;
     content: string;
+    createdOn: string;
 }

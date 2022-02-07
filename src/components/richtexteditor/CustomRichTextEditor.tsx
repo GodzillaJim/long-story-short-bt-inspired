@@ -13,7 +13,7 @@ const CustomRichTextEditor = (props: IProps) => {
     <Editor
       apiKey="emuxgxkadilqqthyqj7hactojqo01jx5zp7jwyuujq0t2d1v"
       disabled={props.loading}
-      initialValue="<p>Initial content</p>"
+      initialValue={props.value}
       init={{
         height: 500,
         plugins:

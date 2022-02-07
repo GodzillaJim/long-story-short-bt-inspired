@@ -1,14 +1,9 @@
 import { Edit, Home, Notes } from "@mui/icons-material";
 import {
   Box,
-  Button,
   CircularProgress,
   Divider,
-  FormControl,
-  InputLabel,
-  MenuItem,
   Paper,
-  Select,
   Tab,
   Tabs,
   TextField,
@@ -16,12 +11,10 @@ import {
 import { useFormik } from "formik";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-import { v4 } from "uuid";
 import { array, object, string } from "yup";
 import { a11yProps, TabPanel } from "../components/CustomTabs";
 import CustomRichTextEditor from "../components/richtexteditor/CustomRichTextEditor";
 import TopSection from "../components/TopSection";
-import { getCategories } from "../data/Articles";
 import { ToastContainer, toast } from "react-toastify";
 import MoreDetailsScreen from "./MoreDetailsScreen";
 import { useDispatch, useSelector } from "react-redux";
@@ -69,21 +62,21 @@ const CreateArticleContainer = () => {
     }),
     onSubmit: (values: IArticle) => {
       console.log(values);
-      // dispatch(createBlogAction(values));
+      dispatch(createBlogAction(values));
     },
   });
   const navigate = useNavigate();
   useEffect(() => {
+    console.log(formik.errors);
+  }, [formik.values, formik.errors]);
+  useEffect(() => {
     if (blog) {
       toast.success("Blog created successfully. Redirecting to details page", {
-        onOpen: () => {},
-        onClose: () => {
-          navigate(`/articles/${blog.id}`);
-        },
+        onClose: () => navigate(`/articles/${blog.id}`),
       });
     }
     if (error) {
-      toast.error("Blog creation failed");
+      toast.error(error);
     }
   }, [loading, blog, error, navigate]);
   const items = [
@@ -106,11 +99,7 @@ const CreateArticleContainer = () => {
       icon: <Edit className={customClasses.icon} />,
     },
   ];
-  //TODO: Fetch all categories
 
-  useEffect(() => {
-    console.log(formik.values);
-  }, [formik.values]);
   return (
     <div className="flex flex-col gap-3 m-3">
       <div className="my-2">
@@ -158,38 +147,56 @@ const CreateArticleContainer = () => {
               </TabPanel>
             </Box>
             <div className="save-buttons text-right pr-4 pb-3">
-              {loading && <CircularProgress variant="indeterminate" />}
+              {loading && (
+                <CircularProgress size={20} variant="indeterminate" />
+              )}
               {!loading && (
                 <div className="flex flex-row gap-5 justify-end">
                   <div>
-                    <CustomButton
-                      type={"button"}
-                      disabled={loading}
-                      onClick={() =>
-                        activeTab === 0
-                          ? navigate("/articles")
-                          : setActiveTab(0)
-                      }
-                      color="primary"
-                      variant="outlined"
-                    >
-                      {activeTab === 0 ? "Cancel" : "Previous"}
-                    </CustomButton>
+                    {activeTab === 0 && (
+                      <CustomButton
+                        type={"button"}
+                        disabled={loading}
+                        onClick={() => navigate("/articles")}
+                        color="primary"
+                        variant="outlined"
+                      >
+                        {"Cancel"}
+                      </CustomButton>
+                    )}
+                    {activeTab === 1 && (
+                      <CustomButton
+                        type={"button"}
+                        disabled={loading}
+                        onClick={() => setActiveTab(0)}
+                        color="primary"
+                        variant="outlined"
+                      >
+                        {"Previous"}
+                      </CustomButton>
+                    )}
                   </div>
                   <div>
-                    <Button
-                      type={"button"}
-                      onClick={() =>
-                        activeTab === 0 ? setActiveTab(1) : formik.submitForm()
-                      }
-                      color="primary"
-                      disabled={
-                        activeTab === 1 && formik.values.tags.length < 5
-                      }
-                      variant="contained"
-                    >
-                      {activeTab === 0 ? "Next" : "Save"}
-                    </Button>
+                    {activeTab === 0 && (
+                      <CustomButton
+                        type={"button"}
+                        onClick={() => setActiveTab(1)}
+                        color="primary"
+                        variant="contained"
+                      >
+                        {"Next"}
+                      </CustomButton>
+                    )}
+                    {activeTab === 1 && (
+                      <CustomButton
+                        type={"submit"}
+                        color="primary"
+                        disabled={formik.values.tags.length < 3}
+                        variant="contained"
+                      >
+                        {"Save"}
+                      </CustomButton>
+                    )}
                   </div>
                 </div>
               )}
@@ -209,9 +216,7 @@ const BasicDetails = (props: {
   loading: boolean;
 }) => {
   const { setFieldValue, errors, values, touched, loading } = props;
-  const getCategoriesList = () => {
-    return getCategories();
-  };
+
   const dispatch = useDispatch();
   const handleTitleChange = (e: any) => {
     setFieldValue("title", e.target.value);
@@ -251,47 +256,29 @@ const BasicDetails = (props: {
             helperText={touched.title ? errors.title : undefined}
             fullWidth
             disabled={loading}
-            InputProps={{ sx: { fontSize: "12px" } }}
+            InputProps={{
+              sx: {
+                fontSize: "12px",
+                backgroundColor: "#e9ddf8",
+                height: "26px",
+              },
+            }}
             InputLabelProps={{ sx: { fontSize: "12px" } }}
           />
         </div>
         <div className="col-span-1 pr-4">
-          <FormControl fullWidth size="small">
-            <InputLabel
-              sx={{ fontSize: "12px" }}
-              margin="dense"
-              id="demo-simple-select-label"
-            >
-              Category
-            </InputLabel>
-            <Select
-              labelId="category-select-label"
-              id="category-select"
-              value={values.category}
-              label="Category"
-              placeholder="Select article category"
-              onChange={(e: any) => setFieldValue("category", e.target.value)}
-              inputProps={{ sx: { fontSize: "12px" } }}
-              sx={{
-                sx: {
-                  fontSize: "12px",
-                  paddingBottom: "10px",
-                  paddingTop: "6px",
-                  height:"18px"
-                },
-              }}
-            >
-              {categoryList.map((cat: any) => (
-                <MenuItem
-                  sx={{ fontSize: "12px" }}
-                  key={`key-${v4()}`}
-                  value={cat.value}
-                >
-                  {cat.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <CustomSelect
+            placeholder="Category"
+            options={categoryList}
+            handleChange={(newVal: ICategory) =>
+              setFieldValue("category", newVal.name)
+            }
+            isClearable
+            isDisabled={categoryLoading}
+            isLoading={categoryLoading}
+            isSearchable
+            value={values.category}
+          />
         </div>
       </div>
       <Divider />
@@ -320,6 +307,8 @@ const BasicDetails = (props: {
               multiline
               rows={3}
               helperText={touched.summary ? errors.summary : undefined}
+              InputProps={{ sx: { fontSize: "12px" } }}
+              InputLabelProps={{ sx: { fontSize: "12px" } }}
             />
           </div>
         </div>

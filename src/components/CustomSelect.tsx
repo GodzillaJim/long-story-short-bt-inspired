@@ -35,7 +35,6 @@ const CustomSelect = (props: ICustomSelect) => {
         isLoading={isLoading}
         isSearchable={isSearchable}
         isDisabled={isDisabled}
-        value={props.value}
       />
     </div>
   );
@@ -91,6 +90,7 @@ export const customStyles = {
     ...provided,
     fontFamily: "san serif",
     fontSize: "12px",
+    zIndex: 100000,
   }),
 };
 export default CustomSelect;

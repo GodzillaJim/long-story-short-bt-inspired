@@ -3,12 +3,12 @@ import {
   CircularProgress,
   FormControlLabel,
   FormGroup,
-  IconButton,
   Pagination,
   Paper,
   Switch,
   TableCell,
   TableRow,
+  Button,
 } from "@mui/material";
 import { format, parseISO } from "date-fns";
 import React, { useEffect, useMemo, useState } from "react";
@@ -33,6 +33,7 @@ import { useStyles as customStyles } from "../styles/styles";
 import { toast } from "react-toastify";
 import CustomToastify from "../components/CustomToastify";
 import { ICategory, IArticle } from "../types";
+import CustomButton from "../components/CustomButton";
 
 const ArticlesView = () => {
   const [page] = useState<number>(1);
@@ -219,11 +220,12 @@ const ArticlesView = () => {
                       {format(parseISO(item.createdOn), "dd/MM/yyyy")}
                     </TableCell>
                     <TableCell sx={{ width: "48px", padding: 0 }}>
-                      <IconButton
+                      <CustomButton
+                        variant="text"
                         onClick={() => navigate(`/articles/${item.id}`)}
                       >
                         <Edit fontSize="small" />
-                      </IconButton>
+                      </CustomButton>
                     </TableCell>
                   </TableRow>
                 )}
