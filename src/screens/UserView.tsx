@@ -3,7 +3,6 @@ import {
   Paper,
   TableRow,
   TableCell,
-  IconButton,
   FormGroup,
   FormControlLabel,
   Switch,
@@ -26,6 +25,7 @@ import AddUserContainter from "./AddUserContainter";
 import { useStyles as customStyles, cellStyle } from "../styles/styles";
 import "./UserView.css";
 import { IRole, IUser } from "../types";
+import CustomButton from "../components/CustomButton";
 
 export const useStyles = makeStyles({
   usersPaper: {
@@ -225,9 +225,13 @@ const UserView = () => {
                             paddingBottom: "0",
                           }}
                         >
-                          <IconButton onClick={() => handleEdit(user)}>
+                          <CustomButton
+                            size="small"
+                            variant="text"
+                            onClick={() => handleEdit(user)}
+                          >
                             <Edit fontSize="small" />
-                          </IconButton>
+                          </CustomButton>
                         </TableCell>
                       </TableRow>
                     )}
@@ -249,10 +253,7 @@ const UserView = () => {
               </div>
             )}
           </div>
-          <AddUserContainter
-            open={addUser}
-            onClose={() => setAddUser(!addUser)}
-          />
+          <AddUserContainter open={addUser} onClose={handleAddUser} />
         </div>
       </SomeContainer>
     </div>

@@ -141,7 +141,7 @@ const CategoriesView = () => {
     (category: ICategory) => {
       setActiveCategory(category);
       setValues({ ...category });
-      dispatch(getCategoryArticlesAction(category.id));
+      dispatch(getCategoryArticlesAction(category.name));
     },
     [dispatch, setValues]
   );
@@ -462,7 +462,10 @@ const CategoriesView = () => {
                             </div>
                             <div className="text-center">
                               {loading && (
-                                <CircularProgress variant="indeterminate" />
+                                <CircularProgress
+                                  size={20}
+                                  variant="indeterminate"
+                                />
                               )}
                               {error && (
                                 <CustomError

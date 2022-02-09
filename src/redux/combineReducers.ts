@@ -18,6 +18,7 @@ import {
 } from "./reducers/BlogReducers";
 import {
   activateUserReducer,
+  adminChangePasswordReducer,
   allUsersReducer,
   changePasswordReducer,
   createUserReducer,
@@ -57,6 +58,7 @@ export const combinedReducer = combineReducers({
   unArchiveCategory: unArchiveCategoryReducer,
   activeCategory: activeCategoryReducer,
   archiveArticle: archiveArticleReducer,
-  unArchiveArticle: unArchiveArticleReducer
+  unArchiveArticle: unArchiveArticleReducer,
+  adminChangePassword: adminChangePasswordReducer
 });
 export type RootState = ReturnType<typeof combinedReducer>;

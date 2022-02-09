@@ -187,11 +187,14 @@ export const fetchCategoriesAction = () => async (dispatch: Dispatch<any>) => {
 export const getCategoryArticlesAction =
   (categoryId: string) => async (dispatch: Dispatch<any>) => {
     try {
+      const axios = useHttp();
       dispatch({ type: GET_ARTICLES_BY_CATEGORIES_REQUEST });
-      // TODO: Implement axios get articles by category
+      const { data } = await axios.get(
+        `/api/v1/public/blog/category/${categoryId}`
+      );
       dispatch({
         type: GET_ARTICLES_BY_CATEGORIES_SUCCESS,
-        payload: getArticles().slice(1, 5),
+        payload: data,
       });
     } catch (exception: any) {
       dispatch({
@@ -280,7 +283,7 @@ export const getCategoryAction =
       dispatch({ type: GET_CATEGORY_REQUEST });
       const { data } = await axios.get(`/api/v1/public/category/${categoryId}`);
       dispatch({ type: GET_CATEGORY_SUCCESS, payload: data });
-      dispatch(getCategoryArticlesAction(categoryId + ""));
+      dispatch(getCategoryArticlesAction(data.name));
     } catch (exception: any) {
       dispatch({ type: GET_CATEGORY_FAIL, payload: exception.message });
     }

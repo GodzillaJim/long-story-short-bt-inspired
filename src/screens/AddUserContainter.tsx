@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import { IUser } from "../data/Users";
 import { string, object } from "yup";
-import CustomDialog from "../components/CustomDialog";
+import { ExtendedDialog } from "../components/CustomDialog";
 import {
   IconButton,
   InputAdornment,
@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createUserAction } from "../redux/actions/UserActions";
 import { RootState } from "../redux/combineReducers";
 import { useNavigate } from "react-router";
+import { CREATE_USER_RESET } from "../redux/constants/UserConstants";
 
 interface IAddUserContainer {
   open: boolean;
@@ -38,47 +39,65 @@ const AddUserContainter = (props: IAddUserContainer) => {
   const message = "This is required";
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const classes = useStyles();
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue,
+    handleSubmit,
+    isValid,
+    resetForm,
+  } = useFormik<IUser>({
+    initialValues: {
+      id: "1",
+      username: "",
+      email: "",
+      password: "password12345",
+      firstName: "",
+      lastName: "",
+      isActive: false,
+      isAdmin: false,
+      createdOn: new Date(),
+    },
+    validationSchema: object().shape({
+      username: string().required(message),
+      email: string().required(message),
+      firstName: string().required(message),
+      lastName: string().required(message),
+    }),
+    onSubmit: (vals: IUser) => {
+      const { username, email, password, firstName, lastName } = vals;
+      const user = {
+        username,
+        email,
+        password,
+        firstName,
+        lastName,
+        role: ["ROLE_USER"],
+      };
+      dispatch(createUserAction(user));
+    },
+  });
   const { loading, user, error } = useSelector(
     (state: RootState) => state.createUser
   );
   useEffect(() => {
     if (error) {
-      toast.error(error);
+      toast.error(error, {
+        onClose: () => dispatch({ type: CREATE_USER_RESET }),
+      });
     }
     if (user) {
       toast.success("User created successfully!", {
         onClose: () => {
-          navigate(`/users/${user.id}`);
+          dispatch({ type: CREATE_USER_RESET });
+          resetForm();
         },
       });
     }
-  }, [loading, user, error, navigate]);
-
-  const classes = useStyles();
-  const { values, errors, touched, setFieldValue, handleSubmit, isValid } =
-    useFormik<IUser>({
-      initialValues: {
-        id: "1",
-        username: "",
-        email: "",
-        password: "password12345",
-        firstName: "",
-        lastName: "",
-        isActive: false,
-        isAdmin: false,
-        createdOn: new Date(),
-      },
-      validationSchema: object().shape({
-        username: string().required(message),
-        email: string().required(message),
-        firstName: string().required(message),
-        lastName: string().required(message),
-      }),
-      onSubmit: (vals: IUser) => {
-        //TODO: Implement create user
-        dispatch(createUserAction(vals));
-      },
-    });
+  }, [loading, user, error, navigate, dispatch, resetForm]);
   const handleCopyPassword = async () => {
     await navigator.clipboard
       .writeText(values.password)
@@ -89,17 +108,14 @@ const AddUserContainter = (props: IAddUserContainer) => {
         toast.error("Copying password failed!");
       });
   };
-  useEffect(() => {
-    console.log(errors, touched, values);
-  }, [touched, errors, values]);
   return (
-    <CustomDialog
+    <ExtendedDialog
       width="600px"
       title="Create User"
       onClose={props.onClose}
       open={props.open}
     >
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <form noValidate onSubmit={handleSubmit}>
           <div className="flex flex-col gap-7">
             <div>
@@ -293,7 +309,7 @@ const AddUserContainter = (props: IAddUserContainer) => {
         </form>
         <CustomToastify />
       </div>
-    </CustomDialog>
+    </ExtendedDialog>
   );
 };
 

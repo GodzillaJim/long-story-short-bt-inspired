@@ -27,6 +27,16 @@ import {
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_FAIL,
+  CHANGE_PASSWORD_RESET,
+  MAKE_ADMIN_RESET,
+  DEMOTE_ADMIN_RESET,
+  ACTIVATE_USER_RESET,
+  DEACTIVATE_USER_RESET,
+  ADMIN_CHANGE_PASSWORD_REQUEST,
+  ADMIN_CHANGE_PASSWORD_SUCCESS,
+  ADMIN_CHANGE_PASSWORD_FAIL,
+  ADMIN_CHANGE_PASSWORD_RESET,
+  CREATE_USER_RESET,
 } from "../constants/UserConstants";
 
 interface IDefaultState {
@@ -70,6 +80,8 @@ export const createUserReducer = (
       return { loading: false, error: null, user: action.payload };
     case CREATE_USER_FAIL:
       return { loading: false, error: action.payload, user: null };
+    case CREATE_USER_RESET:
+      return { loading: false, error: null, user: null };
     default:
       return state;
   }
@@ -100,6 +112,25 @@ export const changePasswordReducer = (
       return { loading: false, error: null, success: true };
     case CHANGE_PASSWORD_FAIL:
       return { loading: false, error: action.payload, success: false };
+    case CHANGE_PASSWORD_RESET:
+      return { loading: false, error: null, success: false };
+    default:
+      return state;
+  }
+};
+export const adminChangePasswordReducer = (
+  state = { loading: false, error: null, success: false },
+  action: IAction
+) => {
+  switch (action.type) {
+    case ADMIN_CHANGE_PASSWORD_REQUEST:
+      return { loading: true, error: null, success: false };
+    case ADMIN_CHANGE_PASSWORD_SUCCESS:
+      return { loading: false, error: null, success: true };
+    case ADMIN_CHANGE_PASSWORD_FAIL:
+      return { loading: false, error: action.payload, success: false };
+    case ADMIN_CHANGE_PASSWORD_RESET:
+      return { loading: false, error: null, success: false };
     default:
       return state;
   }
@@ -115,6 +146,8 @@ export const makeAdminReducer = (
       return { loading: false, error: null, success: true };
     case MAKE_ADMIN_FAIL:
       return { loading: false, error: action.payload, success: false };
+    case MAKE_ADMIN_RESET:
+      return { loading: false, error: null, success: false };
     default:
       return state;
   }
@@ -130,6 +163,8 @@ export const demoteAdminReducer = (
       return { loading: false, error: null, success: true };
     case DEMOTE_ADMIN_FAIL:
       return { loading: false, error: action.payload, success: false };
+    case DEMOTE_ADMIN_RESET:
+      return { loading: false, error: null, success: false };
     default:
       return state;
   }
@@ -146,6 +181,8 @@ export const activateUserReducer = (
       return { loading: false, error: null, success: true };
     case ACTIVATE_USER_FAIL:
       return { loading: false, error: action.payload, success: false };
+    case ACTIVATE_USER_RESET:
+      return { loading: false, error: null, success: false };
     default:
       return state;
   }
@@ -162,6 +199,8 @@ export const deactivateUserReducer = (
       return { loading: false, error: null, success: true };
     case DEACTIVATE_USER_FAIL:
       return { loading: false, error: action.payload, success: false };
+    case DEACTIVATE_USER_RESET:
+      return { loading: false, error: null, success: false };
     default:
       return state;
   }

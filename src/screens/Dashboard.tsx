@@ -50,7 +50,7 @@ const Dashboard = () => {
           />
         </div>
         <div className="dashboard-search-container">
-          <Paper>Hello world</Paper>
+          {/* TODO: Dashboard content */}
         </div>
       </div>
     </SomeContainer>

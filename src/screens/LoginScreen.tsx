@@ -1,10 +1,8 @@
 import {
-  Paper,
   Grid,
   TextField,
   InputAdornment,
   IconButton,
-  Button,
   Typography,
   CircularProgress,
 } from "@mui/material";
@@ -40,9 +38,9 @@ const LoginScreen = () => {
     (state: RootState) => state.auth
   );
   useEffect(() => {
-    if (authToken !== "") {
+    const notLoggedIn = authToken === "" || authToken === null;
+    if (!notLoggedIn) {
       toast.success("Logged in successful. Redirecting now!", {
-        onOpen: () => "",
         onClose: () => {
           const redirect = searchParams.get("redirect");
           if (redirect) {
@@ -159,6 +157,7 @@ const LoginScreen = () => {
                   value={values.username}
                   label={"Username"}
                   name="username"
+                  color="secondary"
                   onChange={(e) =>
                     setFieldValue("username", e.target.value || "")
                   }
@@ -172,6 +171,7 @@ const LoginScreen = () => {
                   variant="outlined"
                   value={values.password}
                   label="Password"
+                  color="secondary"
                   type={showPassword ? "text" : "password"}
                   onChange={(e) =>
                     setFieldValue("password", e.target.value || "")

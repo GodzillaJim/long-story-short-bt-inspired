@@ -5,9 +5,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import CustomCheckbox from "../components/CustomCheckbox";
@@ -15,6 +15,7 @@ import CustomError from "../components/CustomError";
 import DefaultText from "../components/DefaultText";
 import {
   activateUserAction,
+  adminChangePasswordAction,
   changePasswordAction,
   deactivateUserAction,
   demoteAdminAction,
@@ -30,35 +31,25 @@ import { IUser } from "../data/Users";
 import { Home, People, Person } from "@mui/icons-material";
 import TopSection from "../components/TopSection";
 import CustomButton from "../components/CustomButton";
+import useAuth from "../hooks/useAuth";
+import {
+  ACTIVATE_USER_RESET,
+  DEACTIVATE_USER_RESET,
+  DEMOTE_ADMIN_RESET,
+  MAKE_ADMIN_RESET,
+  CHANGE_PASSWORD_RESET,
+} from "../redux/constants/UserConstants";
+import { IRole } from "../types";
+import { useStyles } from "../styles/styles";
 
 const UserDetaisView = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const customClasses = useStyles();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const message = "This is required";
-  const { values, errors, touched, setFieldValue, submitForm } = useFormik<{
-    password: string;
-    newPassword: string;
-    confirmPassword: string;
-  }>({
-    initialValues: {
-      password: "",
-      newPassword: "",
-      confirmPassword: "",
-    },
-    onSubmit: (vals) => {
-      const { password, newPassword } = vals;
-      dispatch(changePasswordAction({ password, newPassword }));
-    },
-    validationSchema: object().shape({
-      password: string().required(message),
-      newPassword: string().required(message),
-      confirmPassword: string()
-        .required(message)
-        .oneOf([ref("password"), null], "Passwords must match"),
-    }),
-  });
+
   const formik = useFormik<IUser>({
     initialValues: {
       id: "",
@@ -90,12 +81,16 @@ const UserDetaisView = () => {
   } = useSelector((state: RootState) => state.changePassword);
   useEffect(() => {
     if (passwordChangingError) {
-      toast.error(passwordChangingError);
+      toast.error(passwordChangingError, {
+        onClose: () => dispatch({ type: CHANGE_PASSWORD_RESET }),
+      });
     }
     if (success) {
-      toast.success("Password changed successfully!");
+      toast.success("Password changed successfully!", {
+        onClose: () => dispatch({ type: CHANGE_PASSWORD_RESET }),
+      });
     }
-  }, [changing, passwordChangingError, success]);
+  }, [changing, passwordChangingError, success, dispatch]);
   const {
     loading: making,
     error: adminError,
@@ -103,12 +98,16 @@ const UserDetaisView = () => {
   } = useSelector((state: RootState) => state.makeAdmin);
   useEffect(() => {
     if (adminError) {
-      toast.error(adminError);
+      toast.error(adminError, {
+        onClose: () => dispatch({ type: MAKE_ADMIN_RESET }),
+      });
     }
     if (isAdmin) {
-      toast.success("User is now an admin");
+      toast.success("User is now an admin", {
+        onClose: () => dispatch({ type: MAKE_ADMIN_RESET }),
+      });
     }
-  }, [making, adminError, isAdmin]);
+  }, [making, adminError, isAdmin, dispatch]);
   useEffect(() => {
     if (!loading && !error && !user && id) {
       dispatch(getUserAction(id));
@@ -125,12 +124,16 @@ const UserDetaisView = () => {
 
   useEffect(() => {
     if (demoted) {
-      toast.success("User is no longer admin");
+      toast.success("User is no longer admin", {
+        onClose: () => dispatch({ type: DEMOTE_ADMIN_RESET }),
+      });
     }
     if (demotingError) {
-      toast.error(demotingError);
+      toast.error(demotingError, {
+        onClose: () => dispatch({ type: DEMOTE_ADMIN_RESET }),
+      });
     }
-  }, [demoting, demotingError, demoted]);
+  }, [demoting, demotingError, demoted, dispatch]);
   const {
     loading: activating,
     error: activationError,
@@ -138,12 +141,16 @@ const UserDetaisView = () => {
   } = useSelector((state: RootState) => state.activateUser);
   useEffect(() => {
     if (activationError) {
-      toast.error(activationError);
+      toast.error(activationError, {
+        onClose: () => dispatch({ type: ACTIVATE_USER_RESET }),
+      });
     }
     if (userIsActive) {
-      toast.success("User is now active!");
+      toast.success("User is now active!", {
+        onClose: () => dispatch({ type: ACTIVATE_USER_RESET }),
+      });
     }
-  }, [activating, activationError, userIsActive]);
+  }, [activating, activationError, userIsActive, dispatch]);
   const {
     loading: deActivating,
     error: deActivationError,
@@ -151,12 +158,16 @@ const UserDetaisView = () => {
   } = useSelector((state: RootState) => state.deactivateUser);
   useEffect(() => {
     if (deActivationError) {
-      toast.error(deActivationError);
+      toast.error(deActivationError, {
+        onClose: () => dispatch({ type: DEACTIVATE_USER_RESET }),
+      });
     }
     if (userIsInactive) {
-      toast.success("User is now active!");
+      toast.success("User is now Inactive!", {
+        onClose: () => dispatch({ type: DEACTIVATE_USER_RESET }),
+      });
     }
-  }, [deActivating, deActivationError, userIsInactive]);
+  }, [deActivating, deActivationError, userIsInactive, dispatch]);
   const {
     loading: updatingUser,
     error: userUpdateError,
@@ -189,26 +200,79 @@ const UserDetaisView = () => {
     user && formik.setValues(user);
     setIsEditing(!isEditing);
   };
+  const { user: loggedUser } = useAuth();
+  const canChangePassword = useMemo(() => {
+    let temp = false;
+    if (user) {
+      temp = user.username === loggedUser;
+    }
+    return temp;
+  }, [user, loggedUser]);
+
+  const { values, errors, touched, setFieldValue, submitForm } = useFormik<{
+    password: string;
+    newPassword: string;
+    confirmPassword: string;
+  }>({
+    initialValues: {
+      password: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+    onSubmit: (vals) => {
+      const { password: oldPassword, newPassword } = vals;
+      if (user.username === loggedUser) {
+        dispatch(changePasswordAction({ oldPassword, newPassword }));
+        return;
+      }
+      if (isAdmin) {
+        dispatch(
+          adminChangePasswordAction(user.id, { oldPassword, newPassword })
+        );
+        return;
+      }
+    },
+    validationSchema: object().shape({
+      password: string().required(message),
+      newPassword: string().required(message),
+      confirmPassword: string()
+        .required(message)
+        .oneOf(
+          [ref("newPassword"), null],
+          "new password and confirm password must match"
+        ),
+    }),
+  });
   const items = [
     {
       name: "Admin",
       link: "/",
       isActive: false,
-      icon: <Home sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Home className={customClasses.icon} />,
     },
     {
       name: "Users",
       link: "/users",
       isActive: false,
-      icon: <People sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <People className={customClasses.icon} />,
     },
     {
       name: user ? user.firstName : "",
       link: `/users/${user ? user.id : ""}`,
       isActive: true,
-      icon: <Person sx={{ mr: 0.5 }} fontSize="medium" />,
+      icon: <Person className={customClasses.icon} />,
     },
   ];
+  const userIsAdmin = useMemo(() => {
+    return user
+      ? Boolean(
+          user.roles.find((role: IRole) => role.roleName === "ROLE_ADMIN")
+        )
+      : false;
+  }, [user]);
+  useEffect(() => {
+    console.log(userIsAdmin);
+  }, [userIsAdmin, user]);
   return (
     <div className="m-3">
       <div className="flex flex-row justify-between my-3">
@@ -224,7 +288,7 @@ const UserDetaisView = () => {
           <div className="flex justify-center">
             {loading && (
               <div className="text-center mt-5">
-                {<CircularProgress variant="indeterminate" />}
+                {<CircularProgress size={20} variant="indeterminate" />}
               </div>
             )}
             {error && (
@@ -244,7 +308,7 @@ const UserDetaisView = () => {
                     <div className="col-span-1">
                       <DefaultText
                         label="Created On"
-                        value={format(user.createdOn, "dd/MM/yyyy")}
+                        value={format(parseISO(user.createdDate), "dd/MM/yyyy")}
                       />
                     </div>
                   </div>
@@ -322,7 +386,9 @@ const UserDetaisView = () => {
                         }
                         size="small"
                         style={{ width: "60%" }}
-                        disabled={updatingUser}
+                        disabled={
+                          updatingUser || (!canChangePassword && !user.isAdmin)
+                        }
                         helperText={
                           formik.touched.username
                             ? formik.errors.username
@@ -341,7 +407,7 @@ const UserDetaisView = () => {
                         <div>
                           <CustomCheckbox
                             color="primary"
-                            checked={user.isActive}
+                            checked={user.active}
                             disabled={false}
                             onChange={() => {}}
                             label={"Is Active"}
@@ -351,7 +417,11 @@ const UserDetaisView = () => {
                         <div>
                           <CustomCheckbox
                             color="primary"
-                            checked={user.isAdmin}
+                            checked={Boolean(
+                              user.roles.find(
+                                (role: IRole) => role.roleName === "ROLE_ADMIN"
+                              )
+                            )}
                             disabled={false}
                             onChange={() => {}}
                             label={"Is Admin"}
@@ -361,7 +431,10 @@ const UserDetaisView = () => {
                       </div>
                       {isEditing && (
                         <div>
-                          <CustomButton onClick={formik.submitForm}>
+                          <CustomButton
+                            disabled={!(canChangePassword || isAdmin)}
+                            onClick={formik.submitForm}
+                          >
                             Save Changes
                           </CustomButton>
                         </div>
@@ -381,7 +454,9 @@ const UserDetaisView = () => {
                     <div>
                       <TextField
                         size="small"
-                        disabled={changing}
+                        disabled={
+                          changing || (!canChangePassword && !user.isAdmin)
+                        }
                         label="Current Password"
                         value={values.password}
                         onChange={(event) =>
@@ -396,7 +471,9 @@ const UserDetaisView = () => {
                     <div>
                       <TextField
                         size="small"
-                        disabled={changing}
+                        disabled={
+                          changing || !(canChangePassword || user.isAdmin)
+                        }
                         label="New Password"
                         value={values.newPassword}
                         onChange={(event) =>
@@ -411,7 +488,9 @@ const UserDetaisView = () => {
                     <div>
                       <TextField
                         size="small"
-                        disabled={changing}
+                        disabled={
+                          changing || !(canChangePassword || user.isAdmin)
+                        }
                         label="Confirm Password"
                         value={values.confirmPassword}
                         onChange={(event) =>
@@ -434,6 +513,9 @@ const UserDetaisView = () => {
                           onClick={submitForm}
                           size="small"
                           variant="outlined"
+                          disabled={
+                            changing || !(canChangePassword || user.isAdmin)
+                          }
                         >
                           Change
                         </CustomButton>
@@ -441,7 +523,6 @@ const UserDetaisView = () => {
                     </div>
                   </div>
                 </Paper>
-
                 <Paper className="p-3">
                   <div className="flex flex-row gap-4 justify-center">
                     <div className="activate-button">
@@ -451,13 +532,11 @@ const UserDetaisView = () => {
                       {!activating && !deActivating && (
                         <CustomButton
                           onClick={() =>
-                            user.isActive
-                              ? handleDeactivate()
-                              : handleActivate()
+                            user.active ? handleDeactivate() : handleActivate()
                           }
                           variant="contained"
                         >
-                          {user.isActive ? "Deactivate" : "Activate"}
+                          {user.active ? "Deactivate" : "Activate"}
                         </CustomButton>
                       )}
                     </div>
@@ -468,11 +547,11 @@ const UserDetaisView = () => {
                       {!making && !demoting && (
                         <CustomButton
                           onClick={() =>
-                            user.isAdmin ? handleDemote() : handleMakeAdmin()
+                            userIsAdmin ? handleDemote() : handleMakeAdmin()
                           }
                           variant="contained"
                         >
-                          {user.isAdmin ? "Demote" : "Make Admin"}
+                          {userIsAdmin ? "Demote" : "Make Admin"}
                         </CustomButton>
                       )}
                     </div>

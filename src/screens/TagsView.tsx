@@ -139,7 +139,9 @@ const TagsView = () => {
             <div className="flex pt-3 flex-col">
               {(loading || error) && (
                 <div className="text-center mt-4">
-                  {loading && <CircularProgress variant="indeterminate" />}
+                  {loading && (
+                    <CircularProgress size={20} variant="indeterminate" />
+                  )}
                   {error && (
                     <CustomError message={error} onClick={handleRetry} />
                   )}

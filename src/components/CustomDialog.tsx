@@ -5,6 +5,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { MDBModal, MDBModalHeader, MDBModalBody } from "mdbreact";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -52,6 +53,14 @@ interface ICustomDialog {
   children: JSX.Element;
   width?: string;
 }
+export const ExtendedDialog = (props: ICustomDialog) => {
+  return (
+    <MDBModal size="lg" isOpen={props.open} centered toggle={props.onClose}>
+      <MDBModalHeader toggle={props.onClose}>{props.title}</MDBModalHeader>
+      <MDBModalBody>{props.children}</MDBModalBody>
+    </MDBModal>
+  );
+};
 export default function CustomDialog(props: ICustomDialog) {
   const handleClose = () => {
     props.onClose();
