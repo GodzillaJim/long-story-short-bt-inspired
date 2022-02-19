@@ -102,7 +102,7 @@
     "build:css": "cross-env TAILWIND_MODE=build NODE_ENV=production postcss src/styles/tailwind.css -o src/styles/index.css",
     "watch:css": "cross-env TAILWIND_MODE=watch NODE_ENV=development postcss src/styles/tailwind.css -o src/styles/index.css --watch",
     "react-scripts:start": "delay 5 && react-scripts start",
-    "react-scripts:build": "react-scripts build",
+    "react-scripts:build": "npx npm-force-resolutions && react-scripts build",
     "lint": "eslint . --ext .ts"
   },
   "eslintConfig": {
