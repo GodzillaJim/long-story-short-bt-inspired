@@ -1,5 +1,5 @@
 import { Home } from "@mui/icons-material";
-import { Paper, useMediaQuery } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router";

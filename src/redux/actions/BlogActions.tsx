@@ -59,7 +59,7 @@ import {
   UNARCHIVE_ARTICLE_SUCCESS,
   UNARCHIVE_ARTICLE_FAIL,
 } from "../constants/ArticleConstants";
-import { getArticles, ICategory } from "../../data/Articles";
+import { ICategory } from "../../data/Articles";
 import { useHttp } from "../../hooks/client";
 import { IArticle } from "../../types";
 
