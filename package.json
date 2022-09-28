@@ -56,7 +56,6 @@
     "lodash": "^4.17.21",
     "lorem-ipsum": "^2.0.4",
     "mdbreact": "^5.2.0",
-    "mini-css-extract-plugin": "2.4.5",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.5",
     "postcss-cli": "^8.3.1",
@@ -102,7 +101,7 @@
     "build:css": "cross-env TAILWIND_MODE=build NODE_ENV=production postcss src/styles/tailwind.css -o src/styles/index.css",
     "watch:css": "cross-env TAILWIND_MODE=watch NODE_ENV=development postcss src/styles/tailwind.css -o src/styles/index.css --watch",
     "react-scripts:start": "delay 5 && react-scripts start",
-    "react-scripts:build": "npx npm-force-resolutions && react-scripts build",
+    "react-scripts:build": "react-scripts build",
     "lint": "eslint . --ext .ts"
   },
   "eslintConfig": {
@@ -125,7 +124,6 @@
     "@typescript-eslint/parser": "^5.10.1",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-react": "^7.28.0",
-    "mini-css-extract-plugin": "2.4.5",
     "prettier": "2.5.1"
   },
   "resolutions": {
