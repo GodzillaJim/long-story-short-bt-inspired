@@ -24,4 +24,5 @@ yarn-error.log*
 
 # Tailwind processed CSS 
 index.css
-/node/node_modules/npm/
+# private key
+blog-ui.pem
