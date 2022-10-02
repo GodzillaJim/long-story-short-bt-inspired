@@ -1,0 +1,6 @@
+.add-many-tags-text-area:focus-visible {
+  outline: none;
+}
+.add-many-tags-text-area:focus-within {
+  outline: none;
+}
